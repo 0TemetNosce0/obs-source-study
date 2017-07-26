@@ -1,5 +1,5 @@
 project(image-source)
-
+#图片源
 if(MSVC)
 	set(image-source_PLATFORM_DEPS
 		w32-pthreads)

@@ -45,7 +45,7 @@
 # The rest is down to the usual make process.
 
 
-
+#c json
 cmake_minimum_required (VERSION 2.8)
 # required for exports? cmake_minimum_required (VERSION 2.8.6)
 project (jansson C)

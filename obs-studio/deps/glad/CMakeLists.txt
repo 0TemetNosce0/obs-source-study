@@ -32,7 +32,8 @@ target_include_directories(glad
 	PRIVATE ${X11_X11_INCLUDE_PATH} ${OPENGL_INCLUDE_DIR})
 target_compile_definitions(glad
 	PRIVATE GLAD_GLAPI_EXPORT_BUILD)
-
+#opengl添加
+#libobs-opengl调用
 if(NOT MSVC)
 	target_compile_options(glad
 		PRIVATE -DPIC -fvisibility=hidden)

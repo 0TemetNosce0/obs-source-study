@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.2)
-
+#压缩算法
 project(lzma)
 
 set(LIBLZMA_INCLUDE_DIRS 

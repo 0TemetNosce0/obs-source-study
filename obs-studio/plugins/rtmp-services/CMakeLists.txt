@@ -1,3 +1,4 @@
+#rtmp
 project(rtmp-services)
 
 include_directories(${OBS_JANSSON_INCLUDE_DIRS})

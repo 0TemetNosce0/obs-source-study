@@ -1,4 +1,5 @@
 # TODO: Add posix support
+#IPC 进程间通信
 if(NOT WIN32)
 	return()
 endif()

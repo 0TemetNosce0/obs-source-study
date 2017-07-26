@@ -1,5 +1,5 @@
 project(w32-pthreads)
-
+#w32线程
 if(NOT WIN32)
         return()
 endif()

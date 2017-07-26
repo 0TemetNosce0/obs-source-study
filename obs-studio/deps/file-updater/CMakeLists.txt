@@ -1,5 +1,5 @@
 project(file-updater)
-
+#rtmp-service调用
 find_package(Libcurl REQUIRED)
 
 include_directories(${LIBCURL_INCLUDE_DIRS})

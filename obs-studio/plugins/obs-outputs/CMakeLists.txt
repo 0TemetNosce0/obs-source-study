@@ -1,5 +1,5 @@
 project(obs-outputs)
-
+#输出
 option(USE_SSL "Enable rtmps support with OpenSSL" OFF)
 
 if (USE_SSL)

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.2)
-
+#BLAKE2是一个比MD5、sha - 1、sha - 2和sha - 3更快的加密哈希函数
 project(blake2)
 
 set(BLAKE2_INCLUDE_DIR

@@ -1,5 +1,5 @@
 project(coreaudio-encoder)
-
+#音频编码
 set(coreaudio-encoder_SOURCES
 	encoder.cpp)
 

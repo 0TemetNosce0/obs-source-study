@@ -1,3 +1,4 @@
+#文本
 if (NOT WIN32)
 	return()
 endif()

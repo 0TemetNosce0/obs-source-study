@@ -1,3 +1,4 @@
+#文本
 project(text-freetype2)
 
 if(DISABLE_FREETYPE)
