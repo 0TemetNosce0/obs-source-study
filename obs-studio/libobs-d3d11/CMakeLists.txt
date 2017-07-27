@@ -29,7 +29,7 @@ set_target_properties(libobs-d3d11
 		OUTPUT_NAME libobs-d3d11
 		PREFIX "")
 target_link_libraries(libobs-d3d11
-	libobs
+        libobs
 	d3d11
 	dxgi)
 
