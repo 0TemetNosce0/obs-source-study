@@ -364,7 +364,7 @@ struct obs_core_hotkeys {
 struct obs_core {
 	struct obs_module               *first_module;
     DARRAY(struct obs_module_path)  module_paths;//模块路径
-
+//obs_source_info
     DARRAY(struct obs_source_info)  source_types;//源类型
     DARRAY(struct obs_source_info)  input_types;//输入类型
     DARRAY(struct obs_source_info)  filter_types;//过滤类型

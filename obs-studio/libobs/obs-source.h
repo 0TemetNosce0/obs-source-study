@@ -30,12 +30,12 @@
 extern "C" {
 #endif
 
-
+//obssource源类型
 enum obs_source_type {
-	OBS_SOURCE_TYPE_INPUT,
-	OBS_SOURCE_TYPE_FILTER,
-	OBS_SOURCE_TYPE_TRANSITION,
-	OBS_SOURCE_TYPE_SCENE,
+    OBS_SOURCE_TYPE_INPUT,//输入源
+    OBS_SOURCE_TYPE_FILTER,//过滤源
+    OBS_SOURCE_TYPE_TRANSITION,//过渡源
+    OBS_SOURCE_TYPE_SCENE,//场景源
 };
 
 
@@ -156,7 +156,7 @@ struct obs_source_info {
 	 * OBS_SOURCE_TYPE_FILTER for filter sources, and
 	 * OBS_SOURCE_TYPE_TRANSITION for transition sources.
 	 */
-	enum obs_source_type type;
+    enum obs_source_type type;//源类型，输入过滤过渡场景
 
 	/** Source output flags */
 	uint32_t output_flags;
@@ -206,14 +206,14 @@ struct obs_source_info {
 
 	/**
 	 * Gets the property information of this source
-	 *
-	 * @return         The properties data
+     * 获取源属性
+     * @return         The properties data
 	 */
-	obs_properties_t *(*get_properties)(void *data);
+    obs_properties_t *(*get_properties)(void *data);
 
 	/**
 	 * Updates the settings for this source
-	 *
+     * 更新源的设置settings
 	 * @param data      Source data
 	 * @param settings  New settings for this source
 	 */
