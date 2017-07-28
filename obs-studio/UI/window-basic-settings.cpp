@@ -913,6 +913,7 @@ void OBSBasicSettings::LoadLanguageList()
 	ui->language->model()->sort(0);
 }
 
+//主题文件
 void OBSBasicSettings::LoadThemeList()
 {
 	/* Save theme if user presses Cancel */

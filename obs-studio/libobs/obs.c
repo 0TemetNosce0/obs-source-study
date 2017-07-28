@@ -249,7 +249,7 @@ static int obs_init_graphics(struct obs_video_info *ovi)
 	}
 
 	gs_enter_context(video->graphics);
-
+//加载effect文件，
 	char *filename = find_libobs_data_file("default.effect");
 	video->default_effect = gs_effect_create_from_file(filename,
 			NULL);
@@ -781,6 +781,7 @@ extern void uninitialize_com(void);
 #endif
 
 static const char *obs_startup_name = "obs_startup";
+// obs启动初始化
 bool obs_startup(const char *locale, const char *module_config_path,
 		profiler_name_store_t *store)
 {
@@ -788,20 +789,20 @@ bool obs_startup(const char *locale, const char *module_config_path,
 
 	profile_start(obs_startup_name);
 
-	if (obs) {
+    if (obs) {//已经启动了obs
 		blog(LOG_WARNING, "Tried to call obs_startup more than once");
 		return false;
 	}
 
 #ifdef _WIN32
-	initialize_crash_handler();
-	initialize_com();
+    initialize_crash_handler();//cransh初始化
+    initialize_com();//为当前线程初始化COM库
 #endif
 
 	success = obs_init(locale, module_config_path, store);
 	profile_end(obs_startup_name);
 	if (!success)
-		obs_shutdown();
+        obs_shutdown();//obs关闭
 
 	return success;
 }

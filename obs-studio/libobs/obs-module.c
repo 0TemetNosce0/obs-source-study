@@ -48,7 +48,7 @@ static int load_module_exports(struct obs_module *mod, const char *path)
 
 	/* optional exports */
 	mod->unload      = os_dlsym(mod->module, "obs_module_unload");
-	mod->set_locale  = os_dlsym(mod->module, "obs_module_set_locale");
+    mod->set_locale  = os_dlsym(mod->module, "obs_module_set_locale");//设置local
 	mod->free_locale = os_dlsym(mod->module, "obs_module_free_locale");
 	mod->name        = os_dlsym(mod->module, "obs_module_name");
 	mod->description = os_dlsym(mod->module, "obs_module_description");
@@ -74,7 +74,7 @@ static inline char *get_module_name(const char *file)
 #ifdef _WIN32
 extern void reset_win32_symbol_paths(void);
 #endif
-
+//打开插件模块
 int obs_open_module(obs_module_t **module, const char *path,
 		const char *data_path)
 {
@@ -85,13 +85,13 @@ int obs_open_module(obs_module_t **module, const char *path,
 		return MODULE_ERROR;
 
 	blog(LOG_DEBUG, "---------------------------------");
-
+//动态加载dll
 	mod.module = os_dlopen(path);
 	if (!mod.module) {
 		blog(LOG_WARNING, "Module '%s' not found", path);
 		return MODULE_FILE_NOT_FOUND;
 	}
-
+//load  插件模块
 	errorcode = load_module_exports(&mod, path);
 	if (errorcode != MODULE_SUCCESS)
 		return errorcode;
@@ -209,7 +209,9 @@ char *obs_module_get_config_path(obs_module_t *module, const char *file)
 
 	return output.array;
 }
-
+//添加插件模块路径
+//bin dll 目录路径
+//data  data 目录路径
 void obs_add_module_path(const char *bin, const char *data)
 {
 	struct obs_module_path omp;
@@ -218,7 +220,7 @@ void obs_add_module_path(const char *bin, const char *data)
 
 	omp.bin  = bstrdup(bin);
 	omp.data = bstrdup(data);
-	da_push_back(obs->module_paths, &omp);
+    da_push_back(obs->module_paths, &omp);//添加到obs->module_paths
 }
 
 static void load_all_callback(void *param, const struct obs_module_info *info)
@@ -437,7 +439,7 @@ void free_module(struct obs_module *mod)
 	bfree(mod->data_path);
 	bfree(mod);
 }
-
+//local
 lookup_t *obs_module_load_locale(obs_module_t *module,
 		const char *default_locale, const char *locale)
 {

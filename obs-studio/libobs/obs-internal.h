@@ -71,12 +71,12 @@ static inline bool obs_object_valid(const void *obj, const char *f,
 
 /* ------------------------------------------------------------------------- */
 /* modules */
-
+//obs插件模块
 struct obs_module {
 	char *mod_name;
 	const char *file;
-	char *bin_path;
-	char *data_path;
+    char *bin_path;//dll路径
+    char *data_path;//data路径
 	void *module;
 	bool loaded;
 
@@ -90,7 +90,7 @@ struct obs_module {
 	const char *(*description)(void);
 	const char *(*author)(void);
 
-	struct obs_module *next;
+    struct obs_module *next;//下一个插件模块
 };
 
 extern void free_module(struct obs_module *mod);
@@ -360,18 +360,18 @@ struct obs_core_hotkeys {
 	char                            *sceneitem_show;
 	char                            *sceneitem_hide;
 };
-
+//obs核
 struct obs_core {
 	struct obs_module               *first_module;
-	DARRAY(struct obs_module_path)  module_paths;
+    DARRAY(struct obs_module_path)  module_paths;//模块路径
 
-	DARRAY(struct obs_source_info)  source_types;
-	DARRAY(struct obs_source_info)  input_types;
-	DARRAY(struct obs_source_info)  filter_types;
-	DARRAY(struct obs_source_info)  transition_types;
-	DARRAY(struct obs_output_info)  output_types;
-	DARRAY(struct obs_encoder_info) encoder_types;
-	DARRAY(struct obs_service_info) service_types;
+    DARRAY(struct obs_source_info)  source_types;//源类型
+    DARRAY(struct obs_source_info)  input_types;//输入类型
+    DARRAY(struct obs_source_info)  filter_types;//过滤类型
+    DARRAY(struct obs_source_info)  transition_types;//过渡类型
+    DARRAY(struct obs_output_info)  output_types;//输出类型
+    DARRAY(struct obs_encoder_info) encoder_types;//编码类型
+    DARRAY(struct obs_service_info) service_types;//服务类型
 	DARRAY(struct obs_modal_ui)     modal_ui_callbacks;
 	DARRAY(struct obs_modeless_ui)  modeless_ui_callbacks;
 

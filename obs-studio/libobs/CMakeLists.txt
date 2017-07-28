@@ -394,7 +394,7 @@ endif()
 add_library(libobs SHARED ${libobs_SOURCES} ${libobs_HEADERS})
 
 set_target_properties(libobs PROPERTIES
-	OUTPUT_NAME obs
+        OUTPUT_NAME obs
 	VERSION "0"
 	SOVERSION "0")
 target_compile_definitions(libobs

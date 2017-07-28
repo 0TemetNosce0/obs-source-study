@@ -369,7 +369,7 @@ static void merge_context(profile_call *context)
 
 	free_call_context(prev_call);
 }
-
+//开始分析
 void profile_start(const char *name)
 {
 	if (!thread_enabled)

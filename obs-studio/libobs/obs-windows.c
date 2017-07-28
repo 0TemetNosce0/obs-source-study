@@ -35,12 +35,12 @@ const char *get_module_extension(void)
 #else
 #define BIT_STRING "32bit"
 #endif
-
+//加载插件的目录路径，插件的名字可以随意改
 static const char *module_bin[] = {
 	"obs-plugins/" BIT_STRING,
 	"../../obs-plugins/" BIT_STRING,
 };
-
+//插件模块data 目录路径
 static const char *module_data[] = {
 	"data/%module%",
 	"../../data/obs-plugins/%module%"
@@ -48,7 +48,7 @@ static const char *module_data[] = {
 
 static const int module_patterns_size =
 	sizeof(module_bin)/sizeof(module_bin[0]);
-
+//添加默认插件模块路径
 void add_default_module_paths(void)
 {
 	for (int i = 0; i < module_patterns_size; i++)
@@ -600,7 +600,7 @@ void reset_win32_symbol_paths(void)
 
 void initialize_com(void)
 {
-	CoInitializeEx(0, COINIT_MULTITHREADED);
+    CoInitializeEx(0, COINIT_MULTITHREADED);//为当前线程初始化COM库并设置并发模式
 }
 
 void uninitialize_com(void)
