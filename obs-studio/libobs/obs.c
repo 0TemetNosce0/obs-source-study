@@ -234,7 +234,7 @@ static int obs_init_graphics(struct obs_video_info *ovi)
 	struct gs_sampler_info point_sampler = {0};
 	bool success = true;
 	int errorcode;
-
+//图形渲染创建，
 	errorcode = gs_create(&video->graphics, ovi->graphics_module,
 			ovi->adapter);
 	if (errorcode != GS_SUCCESS) {

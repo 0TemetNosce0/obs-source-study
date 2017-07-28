@@ -18,7 +18,7 @@
 #include "graphics/vec4.h"
 #include "obs.h"
 #include "obs-internal.h"
-
+//display初始化
 bool obs_display_init(struct obs_display *display,
 		const struct gs_init_data *graphics_data)
 {
@@ -33,8 +33,8 @@ bool obs_display_init(struct obs_display *display,
 			return false;
 		}
 
-		display->cx = graphics_data->cx;
-		display->cy = graphics_data->cy;
+        display->cx = graphics_data->cx;
+        display->cy = graphics_data->cy;
 	}
 
 	if (pthread_mutex_init(&display->draw_callbacks_mutex, NULL) != 0) {
@@ -46,11 +46,11 @@ bool obs_display_init(struct obs_display *display,
 		return false;
 	}
 
-	display->background_color = 0x4C4C4C;
+    display->background_color = 0xffffff;
 	display->enabled = true;
 	return true;
 }
-
+//display创建
 obs_display_t *obs_display_create(const struct gs_init_data *graphics_data)
 {
 	struct obs_display *display = bzalloc(sizeof(struct obs_display));
@@ -74,7 +74,7 @@ obs_display_t *obs_display_create(const struct gs_init_data *graphics_data)
 
 	return display;
 }
-
+//display free
 void obs_display_free(obs_display_t *display)
 {
 	pthread_mutex_destroy(&display->draw_callbacks_mutex);
@@ -86,7 +86,7 @@ void obs_display_free(obs_display_t *display)
 		display->swap = NULL;
 	}
 }
-
+//display destroy
 void obs_display_destroy(obs_display_t *display)
 {
 	if (display) {
@@ -98,13 +98,16 @@ void obs_display_destroy(obs_display_t *display)
 		pthread_mutex_unlock(&obs->data.displays_mutex);
 
 		obs_enter_graphics();
-		obs_display_free(display);
+        obs_display_free(display);// free display
 		obs_leave_graphics();
 
 		bfree(display);
 	}
 }
-
+/****************
+ * display重置大小，是整个display(显示区域+不显示区域)
+ *
+ ****************/
 void obs_display_resize(obs_display_t *display, uint32_t cx, uint32_t cy)
 {
 	if (!display) return;
@@ -117,20 +120,20 @@ void obs_display_resize(obs_display_t *display, uint32_t cx, uint32_t cy)
 
 	pthread_mutex_unlock(&display->draw_info_mutex);
 }
-
+//添加display绘制回调
 void obs_display_add_draw_callback(obs_display_t *display,
 		void (*draw)(void *param, uint32_t cx, uint32_t cy),
 		void *param)
 {
-	if (!display) return;
+    if (!display) return;
 
-	struct draw_callback data = {draw, param};
+    struct draw_callback data = {draw, param};
 
-	pthread_mutex_lock(&display->draw_callbacks_mutex);
-	da_push_back(display->draw_callbacks, &data);
-	pthread_mutex_unlock(&display->draw_callbacks_mutex);
+    pthread_mutex_lock(&display->draw_callbacks_mutex);
+    da_push_back(display->draw_callbacks, &data);
+    pthread_mutex_unlock(&display->draw_callbacks_mutex);
 }
-
+//移除绘制回调
 void obs_display_remove_draw_callback(obs_display_t *display,
 		void (*draw)(void *param, uint32_t cx, uint32_t cy),
 		void *param)
@@ -143,33 +146,33 @@ void obs_display_remove_draw_callback(obs_display_t *display,
 	da_erase_item(display->draw_callbacks, &data);
 	pthread_mutex_unlock(&display->draw_callbacks_mutex);
 }
-
+//开始渲染绘制
 static inline void render_display_begin(struct obs_display *display,
 		uint32_t cx, uint32_t cy, bool size_changed)
 {
-	struct vec4 clear_color;
+    struct vec4 clear_color;
 
-	gs_load_swapchain(display->swap);
+    gs_load_swapchain(display->swap);
 
-	if (size_changed)
-		gs_resize(cx, cy);
+    if (size_changed)
+        gs_resize(cx, cy);
 
-	gs_begin_scene();
+    gs_begin_scene();
 
-	vec4_from_rgba(&clear_color, display->background_color);
-	clear_color.w = 1.0f;
+    vec4_from_rgba(&clear_color, display->background_color);
+    clear_color.w = 1.0f;
 
-	gs_clear(GS_CLEAR_COLOR | GS_CLEAR_DEPTH | GS_CLEAR_STENCIL,
-			&clear_color, 1.0f, 0);
+    gs_clear(GS_CLEAR_COLOR | GS_CLEAR_DEPTH | GS_CLEAR_STENCIL,
+            &clear_color, 1.0f, 0);
 
-	gs_enable_depth_test(false);
-	/* gs_enable_blending(false); */
-	gs_set_cull_mode(GS_NEITHER);
+    gs_enable_depth_test(false);
+    /* gs_enable_blending(false); */
+    gs_set_cull_mode(GS_NEITHER);
 
-	gs_ortho(0.0f, (float)cx, 0.0f, (float)cy, -100.0f, 100.0f);
-	gs_set_viewport(0, 0, cx, cy);
+    gs_ortho(0.0f, (float)cx, 0.0f, (float)cy, -100.0f, 100.0f);
+    gs_set_viewport(0, 0, cx, cy);
 }
-
+//渲染绘制结束
 static inline void render_display_end()
 {
 	gs_end_scene();
@@ -206,7 +209,7 @@ void render_display(struct obs_display *display)
 		struct draw_callback *callback;
 		callback = display->draw_callbacks.array+i;
 
-		callback->draw(callback->param, cx, cy);
+        callback->draw(callback->param, cx, cy);//callback->draw就是obs_display_add_draw_callback设置的回调函数
 	}
 
 	pthread_mutex_unlock(&display->draw_callbacks_mutex);
@@ -224,7 +227,7 @@ bool obs_display_enabled(obs_display_t *display)
 {
 	return display ? display->enabled : false;
 }
-
+//设置diplay显示区域背景颜色
 void obs_display_set_background_color(obs_display_t *display, uint32_t color)
 {
 	if (display)

@@ -66,7 +66,7 @@ static inline void render_displays(void)
 
 	display = obs->data.first_display;
 	while (display) {
-		render_display(display);
+        render_display(display);//对obs->data.first_display链表的display进行绘制
 		display = display->next;
 	}
 
@@ -582,7 +582,7 @@ static inline void output_frame(void)
 static const char *tick_sources_name = "tick_sources";
 static const char *render_displays_name = "render_displays";
 static const char *output_frame_name = "output_frame";
-void *obs_video_thread(void *param)
+void *obs_video_thread(void *param)//display绘制线程
 {
 	uint64_t last_time = 0;
 	uint64_t interval = video_output_get_frame_time(obs->video.video);
@@ -610,7 +610,7 @@ void *obs_video_thread(void *param)
 		profile_end(tick_sources_name);
 
 		profile_start(render_displays_name);
-		render_displays();
+        render_displays();//render_displays对obs->data.first_display链表的display进行绘制
 		profile_end(render_displays_name);
 
 		profile_start(output_frame_name);

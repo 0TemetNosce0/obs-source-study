@@ -191,19 +191,19 @@ extern void obs_view_free(struct obs_view *view);
 
 /* ------------------------------------------------------------------------- */
 /* displays */
-
+//displays obs显示，就是画面显示+显示区域+不显示区域
 struct obs_display {
-	bool                            size_changed;
+    bool                            size_changed;//大小改变
 	bool                            enabled;
-	uint32_t                        cx, cy;
-	uint32_t                        background_color;
+    uint32_t                        cx, cy;//display宽和高
+    uint32_t                        background_color;//不显示区域背景颜色,就是最外面的宽不显示的，
 	gs_swapchain_t                  *swap;
 	pthread_mutex_t                 draw_callbacks_mutex;
 	pthread_mutex_t                 draw_info_mutex;
-	DARRAY(struct draw_callback)    draw_callbacks;
+    DARRAY(struct draw_callback)    draw_callbacks;//绘制回调
 
-	struct obs_display              *next;
-	struct obs_display              **prev_next;
+    struct obs_display              *next; //下个显示
+    struct obs_display              **prev_next;//前一个显示
 };
 
 extern bool obs_display_init(struct obs_display *display,

@@ -31,7 +31,7 @@ OBSProjector::OBSProjector(QWidget *widget, obs_source_t *source_, bool window)
 	auto addDrawCallback = [this] ()
 	{
 		obs_display_add_draw_callback(GetDisplay(), OBSRender, this);
-		obs_display_set_background_color(GetDisplay(), 0x000000);
+        obs_display_set_background_color(GetDisplay(), 0xffffff);
 	};
 
 	connect(this, &OBSQTDisplay::DisplayCreated, addDrawCallback);
