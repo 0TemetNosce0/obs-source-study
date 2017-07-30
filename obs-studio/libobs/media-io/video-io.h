@@ -69,19 +69,19 @@ struct video_data {
 	uint32_t          linesize[MAX_AV_PLANES];
 	uint64_t          timestamp;
 };
-
+//视频输出info
 struct video_output_info {
 	const char        *name;
 
-	enum video_format format;
-	uint32_t          fps_num;
-	uint32_t          fps_den;
-	uint32_t          width;
-	uint32_t          height;
-	size_t            cache_size;
+    enum video_format format;//视频格式：yuv，rgb等
+    uint32_t          fps_num;//fps
+    uint32_t          fps_den;//
+    uint32_t          width;//视频宽
+    uint32_t          height;//视频高
+    size_t            cache_size;//缓存大小
 
-	enum video_colorspace colorspace;
-	enum video_range_type range;
+    enum video_colorspace colorspace;//颜色空间
+    enum video_range_type range;//视屏等级
 };
 
 static inline bool format_is_yuv(enum video_format format)

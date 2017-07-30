@@ -751,10 +751,10 @@ static void obs_x264_video_info(void *data, struct video_scale_info *info)
 }
 
 struct obs_encoder_info obs_x264_encoder = {
-	.id             = "obs_x264",
-	.type           = OBS_ENCODER_VIDEO,
+	.id             = "obs_x264",//±àÂëÆ÷id
+	.type           = OBS_ENCODER_VIDEO,//±àÂëÆ÷ÀàÐÍ
 	.codec          = "h264",
-	.get_name       = obs_x264_getname,
+	.get_name       = obs_x264_getname,//
 	.create         = obs_x264_create,
 	.destroy        = obs_x264_destroy,
 	.encode         = obs_x264_encode,

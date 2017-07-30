@@ -60,12 +60,15 @@ static const char *scene_getname(void *unused)
 	UNUSED_PARAMETER(unused);
 	return "Scene";
 }
-
+/*****************
+*创建场景
+*
+*******************/
 static void *scene_create(obs_data_t *settings, struct obs_source *source)
 {
 	pthread_mutexattr_t attr;
 	struct obs_scene *scene = bmalloc(sizeof(struct obs_scene));
-	scene->source     = source;
+    scene->source     = source;
 	scene->first_item = NULL;
 
 	signal_handler_add_array(obs_source_get_signal_handler(source),
@@ -200,7 +203,7 @@ static void scene_enum_all_sources(void *data,
 {
 	scene_enum_sources(data, enum_callback, param, false);
 }
-
+//场景item
 static inline void detach_sceneitem(struct obs_scene_item *item)
 {
 	if (item->prev)
@@ -395,7 +398,7 @@ static inline bool source_size_changed(struct obs_scene_item *item)
 
 	return item->last_width != width || item->last_height != height;
 }
-
+//裁切
 static inline bool crop_enabled(const struct obs_sceneitem_crop *crop)
 {
 	return crop->left || crop->right || crop->top || crop->bottom;
@@ -405,7 +408,7 @@ static inline bool scale_filter_enabled(const struct obs_scene_item *item)
 {
 	return item->scale_filter != OBS_SCALE_DISABLE;
 }
-
+//场景item是场景吗
 static inline bool item_is_scene(const struct obs_scene_item *item)
 {
 	return item->source && item->source->info.type == OBS_SOURCE_TYPE_SCENE;
@@ -561,7 +564,10 @@ static void scene_video_render(void *data, gs_effect_t *effect)
 
 	UNUSED_PARAMETER(effect);
 }
-
+/*****************
+*设置场景item是否显示
+*
+*******************/
 static void set_visibility(struct obs_scene_item *item, bool vis)
 {
 	pthread_mutex_lock(&item->actions_mutex);
@@ -991,7 +997,7 @@ const struct obs_source_info scene_info =
 	.enum_active_sources = scene_enum_active_sources,
 	.enum_all_sources = scene_enum_all_sources
 };
-
+//创建场景
 obs_scene_t *obs_scene_create(const char *name)
 {
 	struct obs_source *source = obs_source_create("scene", name, NULL,
@@ -1299,13 +1305,13 @@ static void init_hotkeys(obs_scene_t *scene, obs_sceneitem_t *item,
 	dstr_free(&show_desc);
 	dstr_free(&hide_desc);
 }
-
+//obs_source是否含有音频
 static inline bool source_has_audio(obs_source_t *source)
 {
 	return (source->info.output_flags &
 		(OBS_SOURCE_AUDIO | OBS_SOURCE_COMPOSITE)) != 0;
 }
-
+//obs_scene添加一个obs_source，返回obs_sceneitem
 obs_sceneitem_t *obs_scene_add(obs_scene_t *scene, obs_source_t *source)
 {
 	struct obs_scene_item *last;

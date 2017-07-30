@@ -129,7 +129,7 @@ struct os_cpu_usage_info {
 	union time_data last_time, last_sys_time, last_user_time;
 	DWORD core_count;
 };
-
+//cpu信息
 os_cpu_usage_info_t *os_cpu_usage_info_start(void)
 {
 	struct os_cpu_usage_info *info = bzalloc(sizeof(*info));

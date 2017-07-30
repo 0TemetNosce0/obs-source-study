@@ -28,7 +28,10 @@
 
 #include "obs.h"
 #include "obs-internal.h"
-
+/*****************
+*f 是都在source有效(可用)
+*
+*******************/
 static inline bool data_valid(const struct obs_source *source, const char *f)
 {
 	return obs_source_valid(source, f) && source->context.data;
@@ -133,6 +136,7 @@ static inline bool is_composite_source(const struct obs_source *source)
 extern char *find_libobs_data_file(const char *file);
 
 /* internal initialization */
+//obs_source 初始化
 bool obs_source_init(struct obs_source *source)
 {
 	pthread_mutexattr_t attr;
@@ -324,7 +328,7 @@ static obs_source_t *obs_source_create_internal(const char *id,
 	if (info && info->get_defaults)
 		info->get_defaults(source->context.settings);
 
-	if (!obs_source_init(source))
+    if (!obs_source_init(source))//
 		goto fail;
 
 	if (!private)
@@ -351,7 +355,8 @@ fail:
 	obs_source_destroy(source);
 	return NULL;
 }
-
+//obs_source创建
+//id:obs_source的source info id,对应于插件id，id为scene就是创建场景的obs_source
 obs_source_t *obs_source_create(const char *id, const char *name,
 		obs_data_t *settings, obs_data_t *hotkey_data)
 {
@@ -675,7 +680,7 @@ void obs_source_remove(obs_source_t *source)
 
 	if (!source->removed) {
 		source->removed = true;
-		obs_source_dosignal(source, "source_remove", "remove");
+        obs_source_dosignal(source, "source_remove", "remove");
 	}
 }
 

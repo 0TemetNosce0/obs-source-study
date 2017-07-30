@@ -109,6 +109,7 @@ struct encoder_frame {
  *
  * That being said, other encoders will be kept in mind for future use.
  */
+//编码器info，对应于插件的，在插件里实现。
 struct obs_encoder_info {
 	/* ----------------------------------------------------------------- */
 	/* Required implementation*/
@@ -117,14 +118,14 @@ struct obs_encoder_info {
 	const char *id;
 
 	/** Specifies the encoder type (video or audio) */
-	enum obs_encoder_type type;
+    enum obs_encoder_type type;//编码器类型:音频或者视频
 
 	/** Specifies the codec */
 	const char *codec;
 
 	/**
 	 * Gets the full translated name of this encoder
-	 *
+     *获取编码器的完整名字
 	 * @param  type_data  The type_data variable of this structure
 	 * @return            Translated name of the encoder
 	 */

@@ -178,7 +178,7 @@ static inline void render_display_end()
 	gs_end_scene();
 	gs_present();
 }
-
+//display渲染//
 void render_display(struct obs_display *display)
 {
 	uint32_t cx, cy;
@@ -216,13 +216,13 @@ void render_display(struct obs_display *display)
 
 	render_display_end();
 }
-
+//display设置显示使能
 void obs_display_set_enabled(obs_display_t *display, bool enable)
 {
 	if (display)
-		display->enabled = enable;
+        display->enabled = enable;
 }
-
+//返回display是否显示
 bool obs_display_enabled(obs_display_t *display)
 {
 	return display ? display->enabled : false;

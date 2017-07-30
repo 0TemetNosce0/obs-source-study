@@ -2000,11 +2000,11 @@ void OBSBasic::RemoveScene(OBSSource source)
 		break;
 	}
 
-	if (sel != nullptr) {
-		if (sel == ui->scenes->currentItem())
-			ClearListItems(ui->sources);
-		delete sel;
-	}
+    if (sel != nullptr) {
+        if (sel == ui->scenes->currentItem())
+            ClearListItems(ui->sources);
+        delete sel;
+    }
 
 	SaveProject();
 
@@ -2495,10 +2495,10 @@ void OBSBasic::SourceRemoved(void *data, calldata_t *params)
 {
 	obs_source_t *source = (obs_source_t*)calldata_ptr(params, "source");
 
-	if (obs_scene_from_source(source) != NULL)
-		QMetaObject::invokeMethod(static_cast<OBSBasic*>(data),
-				"RemoveScene",
-				Q_ARG(OBSSource, OBSSource(source)));
+    if (obs_scene_from_source(source) != NULL)
+        QMetaObject::invokeMethod(static_cast<OBSBasic*>(data),
+                "RemoveScene",
+                Q_ARG(OBSSource, OBSSource(source)));
 }
 
 void OBSBasic::SourceActivated(void *data, calldata_t *params)
@@ -4969,7 +4969,7 @@ void OBSBasic::on_actionCenterToScreen_triggered()
 
 void OBSBasic::EnablePreviewDisplay(bool enable)
 {
-	obs_display_set_enabled(ui->preview->GetDisplay(), enable);
+    obs_display_set_enabled(ui->preview->GetDisplay(), enable);
 	ui->preview->setVisible(enable);
 	ui->previewDisabledLabel->setVisible(!enable);
 }

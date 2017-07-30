@@ -309,10 +309,10 @@ void OBSBasic::SetTransition(OBSSource transition)
 		obs_transition_swap_begin(transition, oldTransition);
 		if (transition != GetCurrentTransition())
 			SetComboTransition(ui->transitions, transition);
-		obs_set_output_source(0, transition);
+        obs_set_output_source(0, transition);
 		obs_transition_swap_end(transition, oldTransition);
 	} else {
-		obs_set_output_source(0, transition);
+        obs_set_output_source(0, transition);
 	}
 
 	if (oldTransition)

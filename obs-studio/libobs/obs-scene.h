@@ -27,26 +27,26 @@ struct item_action {
 	bool visible;
 	uint64_t timestamp;
 };
-
+//场景item，一个场景item所属一个场景，包含一个来源
 struct obs_scene_item {
 	volatile long         ref;
 	volatile bool         removed;
 
 	int64_t               id;
 
-	struct obs_scene      *parent;
-	struct obs_source     *source;
+    struct obs_scene      *parent;//场景item所属的场景
+    struct obs_source     *source;//场景item的源
 	volatile long         active_refs;
 	volatile long         defer_update;
 	bool                  user_visible;
-	bool                  visible;
+    bool                  visible;//是否可见
 	bool                  selected;
 
 	gs_texrender_t        *item_render;
 	struct obs_sceneitem_crop crop;
 
-	struct vec2           pos;
-	struct vec2           scale;
+    struct vec2           pos;//item位置
+    struct vec2           scale;//
 	float                 rot;
 	uint32_t              align;
 
@@ -71,16 +71,16 @@ struct obs_scene_item {
 	DARRAY(struct item_action) audio_actions;
 
 	/* would do **prev_next, but not really great for reordering */
-	struct obs_scene_item *prev;
-	struct obs_scene_item *next;
+    struct obs_scene_item *prev;//上一个item
+    struct obs_scene_item *next;//下一个item
 };
-
+//场景
 struct obs_scene {
-	struct obs_source     *source;
+    struct obs_source     *source;//源
 
 	int64_t               id_counter;
 
 	pthread_mutex_t       video_mutex;
 	pthread_mutex_t       audio_mutex;
-	struct obs_scene_item *first_item;
+    struct obs_scene_item *first_item;//场景的第一item
 };

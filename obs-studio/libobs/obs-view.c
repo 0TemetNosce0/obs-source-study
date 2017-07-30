@@ -67,7 +67,10 @@ void obs_view_destroy(obs_view_t *view)
 		bfree(view);
 	}
 }
-
+/*****************
+*获取输出源，
+*channel：0 视频输出，1-5音频输出
+*******************/
 obs_source_t *obs_view_get_source(obs_view_t *view, uint32_t channel)
 {
 	obs_source_t *source;

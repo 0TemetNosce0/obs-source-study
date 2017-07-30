@@ -742,7 +742,7 @@ static inline void obs_free_hotkeys(void)
 extern const struct obs_source_info scene_info;
 
 extern void log_system_info(void);
-
+//obs初始化
 static bool obs_init(const char *locale, const char *module_config_path,
 		profiler_name_store_t *store)
 {
@@ -757,7 +757,7 @@ static bool obs_init(const char *locale, const char *module_config_path,
 		return false;
 	}
 
-	log_system_info();
+    log_system_info();//打印系统信息
 
 	if (!obs_init_data())
 		return false;
@@ -1011,7 +1011,7 @@ bool obs_reset_audio(const struct obs_audio_info *oai)
 
 	return obs_init_audio(&ai);
 }
-
+//获取obs->video->ovi到ovi
 bool obs_get_video_info(struct obs_video_info *ovi)
 {
 	struct obs_core_video *video = &obs->video;
@@ -1087,7 +1087,7 @@ bool obs_enum_output_types(size_t idx, const char **id)
 	*id = obs->output_types.array[idx].id;
 	return true;
 }
-
+//获取编码器id   idx:  id:获取到的编码器id获取到了返回true
 bool obs_enum_encoder_types(size_t idx, const char **id)
 {
 	if (!obs) return false;
@@ -1097,7 +1097,7 @@ bool obs_enum_encoder_types(size_t idx, const char **id)
 	*id = obs->encoder_types.array[idx].id;
 	return true;
 }
-
+//获取服务类型
 bool obs_enum_service_types(size_t idx, const char **id)
 {
 	if (!obs) return false;
@@ -1119,12 +1119,12 @@ void obs_leave_graphics(void)
 	if (obs && obs->video.graphics)
 		gs_leave_context();
 }
-
+//获取音频
 audio_t *obs_get_audio(void)
 {
 	return (obs != NULL) ? obs->audio.audio : NULL;
 }
-
+//获取视频
 video_t *obs_get_video(void)
 {
 	return (obs != NULL) ? obs->video.video : NULL;
@@ -1189,13 +1189,13 @@ void *obs_create_ui(const char *name, const char *task, const char *target,
 	callback = get_modeless_ui_callback(name, task, target);
 	return callback ? callback->create(data, ui_data) : NULL;
 }
-
+///设置channel通道输出的源：0视频输出，1-5音频频输出
 obs_source_t *obs_get_output_source(uint32_t channel)
 {
 	if (!obs) return NULL;
 	return obs_view_get_source(&obs->data.main_view, channel);
 }
-
+//设置channel通道输出的源
 void obs_set_output_source(uint32_t channel, obs_source_t *source)
 {
 	assert(channel < MAX_CHANNELS);
@@ -1232,7 +1232,9 @@ void obs_set_output_source(uint32_t channel, obs_source_t *source)
 		obs_source_release(prev_source);
 	}
 }
-
+//列出输入源，enum_proc回调函数，没列出一个，就回调enum_proc
+//param传递给enum_proc的参数
+//从obs的first_source指针，遭到源传递给回调自己处理，然后指针指向下一个源，一次类推
 void obs_enum_sources(bool (*enum_proc)(void*, obs_source_t*), void *param)
 {
 	obs_source_t *source;
@@ -1240,7 +1242,7 @@ void obs_enum_sources(bool (*enum_proc)(void*, obs_source_t*), void *param)
 	if (!obs) return;
 
 	pthread_mutex_lock(&obs->data.sources_mutex);
-	source = obs->data.first_source;
+	source = obs->data.first_source;//
 
 	while (source) {
 		obs_source_t *next_source =
@@ -1279,21 +1281,21 @@ static inline void obs_enum(void *pstart, pthread_mutex_t *mutex, void *proc,
 
 	pthread_mutex_unlock(mutex);
 }
-
+//列出输出
 void obs_enum_outputs(bool (*enum_proc)(void*, obs_output_t*), void *param)
 {
 	if (!obs) return;
 	obs_enum(&obs->data.first_output, &obs->data.outputs_mutex,
 			enum_proc, param);
 }
-
+//列出编码器
 void obs_enum_encoders(bool (*enum_proc)(void*, obs_encoder_t*), void *param)
 {
 	if (!obs) return;
 	obs_enum(&obs->data.first_encoder, &obs->data.encoders_mutex,
 			enum_proc, param);
 }
-
+//列出服务
 void obs_enum_services(bool (*enum_proc)(void*, obs_service_t*), void *param)
 {
 	if (!obs) return;
@@ -1346,28 +1348,40 @@ static inline void *obs_id_(void *data)
 {
 	return data;
 }
-
+/*****************
+*获取obs_source
+*
+*******************/
 obs_source_t *obs_get_source_by_name(const char *name)
 {
 	if (!obs) return NULL;
 	return get_context_by_name(&obs->data.first_source, name,
 			&obs->data.sources_mutex, obs_source_addref_safe_);
 }
-
+/*****************
+*获取obs_output
+*
+*******************/
 obs_output_t *obs_get_output_by_name(const char *name)
 {
 	if (!obs) return NULL;
 	return get_context_by_name(&obs->data.first_output, name,
 			&obs->data.outputs_mutex, obs_output_addref_safe_);
 }
-
+/*****************
+*获取obs_encoder
+*
+*******************/
 obs_encoder_t *obs_get_encoder_by_name(const char *name)
 {
 	if (!obs) return NULL;
 	return get_context_by_name(&obs->data.first_encoder, name,
 			&obs->data.encoders_mutex, obs_encoder_addref_safe_);
 }
-
+/*****************
+*获取obs_service
+*
+*******************/
 obs_service_t *obs_get_service_by_name(const char *name)
 {
 	if (!obs) return NULL;
@@ -1591,7 +1605,7 @@ void obs_load_sources(obs_data_array_t *array, obs_load_source_cb cb,
 
 	da_free(sources);
 }
-
+//保存source的相关数据到obs_data
 obs_data_t *obs_save_source(obs_source_t *source)
 {
 	obs_data_array_t *filters = obs_data_array_create();

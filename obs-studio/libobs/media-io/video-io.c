@@ -55,7 +55,7 @@ static inline void video_input_free(struct video_input *input)
 		video_frame_free(&input->frame[i]);
 	video_scaler_destroy(input->scaler);
 }
-
+//视频输出
 struct video_output {
 	struct video_output_info   info;
 
@@ -498,17 +498,17 @@ enum video_format video_output_get_format(const video_t *video)
 {
 	return video ? video->info.format : VIDEO_FORMAT_NONE;
 }
-
+//获取视屏输出的宽
 uint32_t video_output_get_width(const video_t *video)
 {
 	return video ? video->info.width : 0;
 }
-
+//获取视屏输出的高
 uint32_t video_output_get_height(const video_t *video)
 {
 	return video ? video->info.height : 0;
 }
-
+//
 double video_output_get_frame_rate(const video_t *video)
 {
 	if (!video)

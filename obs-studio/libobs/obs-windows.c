@@ -56,11 +56,11 @@ void add_default_module_paths(void)
 }
 
 /* on windows, points to [base directory]/data/libobs */
+//查找目录路径[base directory]/data/libobs/的文件file，存在返回文件路径
 char *find_libobs_data_file(const char *file)
 {
 	struct dstr path;
 	dstr_init(&path);
-
 	if (check_path(file, "data/libobs/", &path))
 		return path.array;
 
@@ -70,7 +70,7 @@ char *find_libobs_data_file(const char *file)
 	dstr_free(&path);
 	return NULL;
 }
-
+//打印
 static void log_processor_info(void)
 {
 	HKEY    key;
@@ -188,7 +188,7 @@ static void log_aero(void)
 	blog(LOG_INFO, "Aero is %s%s", bComposition ? "Enabled" : "Disabled",
 			aeroMessage);
 }
-
+//打印系统信息
 void log_system_info(void)
 {
 	struct win_version_info ver;
@@ -196,12 +196,12 @@ void log_system_info(void)
 
 	win_ver = (ver.major << 8) | ver.minor;
 
-	log_processor_info();
-	log_processor_cores();
-	log_available_memory();
-	log_windows_version();
-	log_admin_status();
-	log_aero();
+    log_processor_info();//打印cpuinfo
+    log_processor_cores();//打印Physical Cores
+    log_available_memory();//打印Physical Memory
+    log_windows_version();//打印Windows Version
+    log_admin_status();//打印Running as administrator
+    log_aero();//打印Aero is Enabled
 }
 
 
@@ -511,7 +511,7 @@ void reset_win32_symbol_paths(void)
 		HMODULE mod;
 		funcs_initialized = true;
 
-		mod = LoadLibraryW(L"DbgHelp");
+        mod = LoadLibraryW(L"DbgHelp");//dbghelp.dll是一种调试跟踪相关模块，用于跟踪进程工作，在进程崩溃时收集程序产生异常时的堆栈信息，以供开发人员分析，从而很快找出使程序出现异常的原因。
 		if (!mod)
 			return;
 

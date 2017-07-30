@@ -39,15 +39,15 @@
 struct matrix4;
 
 /* opaque types */
-struct obs_display;
+struct obs_display;//display
 struct obs_view;
 struct obs_source;
 struct obs_scene;
 struct obs_scene_item;
-struct obs_output;
-struct obs_encoder;
-struct obs_service;
-struct obs_module;
+struct obs_output;//输出
+struct obs_encoder;//编码�?
+struct obs_service;//服务
+struct obs_module;//插件
 struct obs_fader;
 struct obs_volmeter;
 

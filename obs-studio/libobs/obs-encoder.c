@@ -22,7 +22,7 @@
 	os_atomic_load_bool(&encoder->active)
 #define set_encoder_active(encoder, val) \
 	os_atomic_set_bool(&encoder->active, val)
-
+//通过id(obs_encoder_info的id)获取编码器info
 struct obs_encoder_info *find_encoder(const char *id)
 {
 	for (size_t i = 0; i < obs->encoder_types.num; i++) {
@@ -34,13 +34,14 @@ struct obs_encoder_info *find_encoder(const char *id)
 
 	return NULL;
 }
-
+//eg:id:ffmpeg_aac,mf_aac
 const char *obs_encoder_get_display_name(const char *id)
 {
 	struct obs_encoder_info *ei = find_encoder(id);
+    printf("111111111%s",ei->get_name(ei->type_data));
 	return ei ? ei->get_name(ei->type_data) : NULL;
 }
-
+//初始化 编码器
 static bool init_encoder(struct obs_encoder *encoder, const char *name,
 		obs_data_t *settings, obs_data_t *hotkey_data)
 {
@@ -69,7 +70,15 @@ static bool init_encoder(struct obs_encoder *encoder, const char *name,
 
 	return true;
 }
-
+/*****************
+* 创建编码器
+* id:编码器id，对应插件的id，比如obs_x264
+* type：音频或视频
+* name：自己取
+* settings：初始化编码器的，可以为NULL
+* mixer_idx：混合器id
+* hotkey_data：可以为NULL
+*******************/
 static struct obs_encoder *create_encoder(const char *id,
 		enum obs_encoder_type type, const char *name,
 		obs_data_t *settings, size_t mixer_idx, obs_data_t *hotkey_data)
@@ -94,7 +103,7 @@ static struct obs_encoder *create_encoder(const char *id,
 		encoder->info = *ei;
 	}
 
-	success = init_encoder(encoder, name, settings, hotkey_data);
+    success = init_encoder(encoder, name, settings, hotkey_data);//初始化
 	if (!success) {
 		blog(LOG_ERROR, "creating encoder '%s' (%s) failed", name, id);
 		obs_encoder_destroy(encoder);
@@ -111,7 +120,10 @@ static struct obs_encoder *create_encoder(const char *id,
 	blog(LOG_DEBUG, "encoder '%s' (%s) created", name, id);
 	return encoder;
 }
-
+/*****************
+*创建视屏编码器
+*
+*******************/
 obs_encoder_t *obs_video_encoder_create(const char *id, const char *name,
 		obs_data_t *settings, obs_data_t *hotkey_data)
 {
@@ -119,7 +131,10 @@ obs_encoder_t *obs_video_encoder_create(const char *id, const char *name,
 	return create_encoder(id, OBS_ENCODER_VIDEO, name, settings, 0,
 			hotkey_data);
 }
-
+/*****************
+*创建音频编码器
+*
+*******************/
 obs_encoder_t *obs_audio_encoder_create(const char *id, const char *name,
 		obs_data_t *settings, size_t mixer_idx, obs_data_t *hotkey_data)
 {
@@ -130,7 +145,11 @@ obs_encoder_t *obs_audio_encoder_create(const char *id, const char *name,
 
 static void receive_video(void *param, struct video_data *frame);
 static void receive_audio(void *param, size_t mix_idx, struct audio_data *data);
-
+/*****************
+*获取音频info
+* encoder：
+* info 获取到的音频info
+*******************/
 static inline void get_audio_info(const struct obs_encoder *encoder,
 		struct audio_convert_info *info)
 {
@@ -280,15 +299,15 @@ void obs_encoder_set_name(obs_encoder_t *encoder, const char *name)
 	if (name && *name && strcmp(name, encoder->context.name) != 0)
 		obs_context_data_setname(&encoder->context, name);
 }
-
+//获取info编码器信息的默认设置
 static inline obs_data_t *get_defaults(const struct obs_encoder_info *info)
 {
 	obs_data_t *settings = obs_data_create();
 	if (info->get_defaults)
-		info->get_defaults(settings);
+        info->get_defaults(settings);//获取info编码器信息的默认设置到settings
 	return settings;
 }
-
+//获取编码器id的默认设置
 obs_data_t *obs_encoder_defaults(const char *id)
 {
 	const struct obs_encoder_info *info = find_encoder(id);
@@ -551,7 +570,7 @@ enum obs_encoder_type obs_encoder_get_type(const obs_encoder_t *encoder)
 	return obs_encoder_valid(encoder, "obs_encoder_get_type") ?
 		encoder->info.type : OBS_ENCODER_AUDIO;
 }
-
+//通过id获取编码器类型：音频或视频
 enum obs_encoder_type obs_get_encoder_type(const char *id)
 {
 	struct obs_encoder_info *info = find_encoder(id);

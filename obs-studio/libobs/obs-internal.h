@@ -194,7 +194,7 @@ extern void obs_view_free(struct obs_view *view);
 //displays obs显示，就是画面显示+显示区域+不显示区域
 struct obs_display {
     bool                            size_changed;//大小改变
-	bool                            enabled;
+    bool                            enabled;//display显示使能,true显示
     uint32_t                        cx, cy;//display宽和高
     uint32_t                        background_color;//不显示区域背景颜色,就是最外面的宽不显示的，
 	gs_swapchain_t                  *swap;
@@ -303,12 +303,12 @@ struct obs_core_audio {
 
 /* user sources, output channels, and displays */
 struct obs_core_data {
-	struct obs_source               *first_source;
-	struct obs_source               *first_audio_source;
-	struct obs_display              *first_display;
-	struct obs_output               *first_output;
-	struct obs_encoder              *first_encoder;
-	struct obs_service              *first_service;
+	struct obs_source               *first_source;//源
+	struct obs_source               *first_audio_source;//音频源
+	struct obs_display              *first_display;//display
+	struct obs_output               *first_output;//输出
+	struct obs_encoder              *first_encoder;//编码器
+	struct obs_service              *first_service;//服务
 
 	pthread_mutex_t                 sources_mutex;
 	pthread_mutex_t                 displays_mutex;
@@ -370,7 +370,7 @@ struct obs_core {
     DARRAY(struct obs_source_info)  filter_types;//过滤类型
     DARRAY(struct obs_source_info)  transition_types;//过渡类型
     DARRAY(struct obs_output_info)  output_types;//输出类型
-    DARRAY(struct obs_encoder_info) encoder_types;//编码类型
+    DARRAY(struct obs_encoder_info) encoder_types;//编码器类型
     DARRAY(struct obs_service_info) service_types;//服务类型
 	DARRAY(struct obs_modal_ui)     modal_ui_callbacks;
 	DARRAY(struct obs_modeless_ui)  modeless_ui_callbacks;
@@ -387,7 +387,7 @@ struct obs_core {
 	 * clean and organized */
 	struct obs_core_video           video;
 	struct obs_core_audio           audio;
-	struct obs_core_data            data;
+	struct obs_core_data            data;//
 	struct obs_core_hotkeys         hotkeys;
 };
 
@@ -520,7 +520,7 @@ struct audio_cb_info {
 	obs_source_audio_capture_t callback;
 	void *param;
 };
-
+//obs源
 struct obs_source {
 	struct obs_context_data         context;
 	struct obs_source_info          info;
@@ -570,8 +570,8 @@ struct obs_source {
 	bool                            pending_stop;
 	bool                            user_muted;
 	bool                            muted;
-	struct obs_source               *next_audio_source;
-	struct obs_source               **prev_next_audio_source;
+    struct obs_source               *next_audio_source;//上一个音频
+    struct obs_source               **prev_next_audio_source;//下一个音频
 	uint64_t                        audio_ts;
 	struct circlebuf                audio_input_buf[MAX_AUDIO_CHANNELS];
 	size_t                          last_audio_input_buf_size;
@@ -916,10 +916,10 @@ struct encoder_callback {
 	void (*new_packet)(void *param, struct encoder_packet *packet);
 	void *param;
 };
-
+//编码器
 struct obs_encoder {
-	struct obs_context_data         context;
-	struct obs_encoder_info         info;
+    struct obs_context_data         context;//编码器上下文data
+    struct obs_encoder_info         info;//编码器info
 	struct obs_weak_encoder         *control;
 
 	pthread_mutex_t                 init_mutex;
@@ -967,7 +967,7 @@ struct obs_encoder {
 	bool                            destroy_on_stop;
 
 	/* stores the video/audio media output pointer.  video_t *or audio_t **/
-	void                            *media;
+    void                            *media;//保存了音频或视频输出的指针
 
 	pthread_mutex_t                 callbacks_mutex;
 	DARRAY(struct encoder_callback) callbacks;

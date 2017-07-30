@@ -41,7 +41,7 @@ struct obs_data_item {
 	size_t               autoselect_size;
 	size_t               capacity;
 };
-
+//obs data
 struct obs_data {
 	volatile long        ref;
 	char                 *json;
@@ -620,7 +620,7 @@ static json_t *obs_data_to_json(obs_data_t *data)
 }
 
 /* ------------------------------------------------------------------------- */
-
+//obs_data分配内存并初始化
 obs_data_t *obs_data_create()
 {
 	struct obs_data *data = bzalloc(sizeof(struct obs_data));

@@ -149,7 +149,10 @@ static void FindBestFilename(string &strPath, bool noSpace)
 }
 
 /* ------------------------------------------------------------------------ */
-
+/*****************
+*创建音频编码器（aac）
+*
+*******************/
 static bool CreateAACEncoder(OBSEncoder &res, string &id, int bitrate,
 		const char *name, size_t idx)
 {
