@@ -27,7 +27,7 @@ struct item_action {
 	bool visible;
 	uint64_t timestamp;
 };
-//场景item，一个场景item所属一个场景，包含一个来源
+//场景item，场景item有两个指针一个指向所属场景，一个指向obs_source输入源
 struct obs_scene_item {
 	volatile long         ref;
 	volatile bool         removed;

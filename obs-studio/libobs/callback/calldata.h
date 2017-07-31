@@ -30,28 +30,28 @@ extern "C" {
  *   This is used to store parameters (and return value) sent to/from signals,
  * procedures, and callbacks.
  */
-
+//calldata参数类型
 enum call_param_type {
-	CALL_PARAM_TYPE_VOID,
-	CALL_PARAM_TYPE_INT,
+    CALL_PARAM_TYPE_VOID,//void
+    CALL_PARAM_TYPE_INT,//int
 	CALL_PARAM_TYPE_FLOAT,
 	CALL_PARAM_TYPE_BOOL,
 	CALL_PARAM_TYPE_PTR,
 	CALL_PARAM_TYPE_STRING
 };
 
-#define CALL_PARAM_IN  (1<<0)
-#define CALL_PARAM_OUT (1<<1)
-
+#define CALL_PARAM_IN  (1<<0)//参数输入
+#define CALL_PARAM_OUT (1<<1)//参数输出
+//calldata
 struct calldata {
-	uint8_t *stack;
-	size_t  size;     /* size of the stack, in bytes */
-	size_t  capacity; /* capacity of the stack, in bytes */
+    uint8_t *stack;//整形指针
+    size_t  size;//stack大小     /* size of the stack, in bytes */
+    size_t  capacity;//stack容量 /* capacity of the stack, in bytes */
 	bool    fixed;    /* fixed size (using call stack) */
 };
 
 typedef struct calldata calldata_t;
-
+//calldata初始化
 static inline void calldata_init(struct calldata *data)
 {
 	memset(data, 0, sizeof(struct calldata));
@@ -79,7 +79,7 @@ EXPORT bool calldata_get_data(const calldata_t *data, const char *name,
 		void *out, size_t size);
 EXPORT void calldata_set_data(calldata_t *data, const char *name,
 		const void *in, size_t new_size);
-
+//calldata清空
 static inline void calldata_clear(struct calldata *data)
 {
 	if (data->stack) {

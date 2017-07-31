@@ -159,7 +159,7 @@ struct obs_source_info {
     enum obs_source_type type;//源类型，输入过滤过渡场景
 
 	/** Source output flags */
-	uint32_t output_flags;
+    uint32_t output_flags;//输出标志:
 
 	/**
 	 * Get the translated name of the source type

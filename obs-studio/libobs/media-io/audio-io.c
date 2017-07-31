@@ -50,11 +50,11 @@ struct audio_mix {
 	DARRAY(struct audio_input) inputs;
 	float buffer[MAX_AUDIO_CHANNELS][AUDIO_OUTPUT_FRAMES];
 };
-
+//音频输出
 struct audio_output {
 	struct audio_output_info   info;
 	size_t                     block_size;
-	size_t                     channels;
+    size_t                     channels;//音频通道:1单声道,2立体声
 	size_t                     planes;
 
 	pthread_t                  thread;
@@ -460,12 +460,12 @@ void audio_output_close(audio_t *audio)
 	os_event_destroy(audio->stop_event);
 	bfree(audio);
 }
-
+//获取audio_output_info
 const struct audio_output_info *audio_output_get_info(const audio_t *audio)
 {
 	return audio ? &audio->info : NULL;
 }
-
+//音频激活
 bool audio_output_active(const audio_t *audio)
 {
 	if (!audio) return false;
@@ -489,12 +489,13 @@ size_t audio_output_get_planes(const audio_t *audio)
 {
 	return audio ? audio->planes : 0;
 }
-
+//获取音频通道
 size_t audio_output_get_channels(const audio_t *audio)
 {
+
 	return audio ? audio->channels : 0;
 }
-
+//获取音频输出采样率
 uint32_t audio_output_get_sample_rate(const audio_t *audio)
 {
 	return audio ? audio->info.samples_per_sec : 0;

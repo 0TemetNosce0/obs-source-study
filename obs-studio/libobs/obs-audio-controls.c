@@ -33,32 +33,32 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 
 typedef float (*obs_fader_conversion_t)(const float val);
-
+//fader_cb回调
 struct fader_cb {
 	obs_fader_changed_t   callback;
 	void                  *param;
 };
-
+//obs音量控制器
 struct obs_fader {
 	pthread_mutex_t        mutex;
-	obs_fader_conversion_t def_to_db;
+    obs_fader_conversion_t def_to_db;//转换为db
 	obs_fader_conversion_t db_to_def;
-	obs_source_t           *source;
+    obs_source_t           *source;//音量控制器对应的源
 	enum obs_fader_type    type;
-	float                  max_db;
-	float                  min_db;
+    float                  max_db;//最大db
+    float                  min_db;//
 	float                  cur_db;
 	bool                   ignore_next_signal;
 
 	pthread_mutex_t        callback_mutex;
-	DARRAY(struct fader_cb)callbacks;
+    DARRAY(struct fader_cb)callbacks;//回调
 };
 
 struct meter_cb {
 	obs_volmeter_updated_t callback;
 	void                   *param;
 };
-
+// obs音量计
 struct obs_volmeter {
 	pthread_mutex_t        mutex;
 	obs_fader_conversion_t pos_to_db;
@@ -71,7 +71,7 @@ struct obs_volmeter {
 	DARRAY(struct meter_cb)callbacks;
 
 	unsigned int           channels;
-	unsigned int           update_ms;
+    unsigned int           update_ms;//更新时间间隔
 	unsigned int           update_frames;
 	unsigned int           peakhold_ms;
 	unsigned int           peakhold_frames;
@@ -193,17 +193,17 @@ static float log_db_to_def(const float db)
 	return (-log10f(-db + LOG_OFFSET_DB) - LOG_RANGE_VAL)
 			/ (LOG_OFFSET_VAL - LOG_RANGE_VAL);
 }
-
+//音量改变
 static void signal_volume_changed(struct obs_fader *fader, const float db)
 {
 	pthread_mutex_lock(&fader->callback_mutex);
 	for (size_t i = fader->callbacks.num; i > 0; i--) {
 		struct fader_cb cb = fader->callbacks.array[i - 1];
-		cb.callback(cb.param, db);
+        cb.callback(cb.param, db);//回调调用
 	}
 	pthread_mutex_unlock(&fader->callback_mutex);
 }
-
+//level更新
 static void signal_levels_updated(struct obs_volmeter *volmeter,
 		const float level, const float magnitude, const float peak,
 		bool muted)
@@ -390,7 +390,7 @@ static void volmeter_source_data_received(void *vptr, obs_source_t *source,
 
 	UNUSED_PARAMETER(source);
 }
-
+//更新设置
 static void volmeter_update_audio_settings(obs_volmeter_t *volmeter)
 {
 	audio_t *audio            = obs_get_audio();
@@ -460,7 +460,7 @@ void obs_fader_destroy(obs_fader_t *fader)
 
 	bfree(fader);
 }
-
+//设置db
 bool obs_fader_set_db(obs_fader_t *fader, const float db)
 {
 	if (!fader)
@@ -469,7 +469,7 @@ bool obs_fader_set_db(obs_fader_t *fader, const float db)
 	pthread_mutex_lock(&fader->mutex);
 
 	bool clamped  = false;
-	fader->cur_db = db;
+    fader->cur_db = db;//设置为当前db
 
 	if (fader->cur_db > fader->max_db) {
 		fader->cur_db = fader->max_db;
@@ -482,16 +482,16 @@ bool obs_fader_set_db(obs_fader_t *fader, const float db)
 
 	fader->ignore_next_signal = true;
 	obs_source_t *src         = fader->source;
-	const float mul           = db_to_mul(fader->cur_db);
+    const float mul           = db_to_mul(fader->cur_db);//db转换
 
 	pthread_mutex_unlock(&fader->mutex);
 
 	if (src)
-		obs_source_set_volume(src, mul);
+        obs_source_set_volume(src, mul);//设置音量
 
 	return !clamped;
 }
-
+//获取当前db
 float obs_fader_get_db(obs_fader_t *fader)
 {
 	if (!fader)
@@ -503,7 +503,7 @@ float obs_fader_get_db(obs_fader_t *fader)
 
 	return db;
 }
-
+//设置音量控制器fader的偏差
 bool obs_fader_set_deflection(obs_fader_t *fader, const float def)
 {
 	if (!fader)
@@ -511,19 +511,19 @@ bool obs_fader_set_deflection(obs_fader_t *fader, const float def)
 
 	return obs_fader_set_db(fader, fader->def_to_db(def));
 }
-
+//获取偏差,db转换的
 float obs_fader_get_deflection(obs_fader_t *fader)
 {
 	if (!fader)
 		return 0.0f;
 
 	pthread_mutex_lock(&fader->mutex);
-	const float def = fader->db_to_def(fader->cur_db);
+    const float def = fader->db_to_def(fader->cur_db);//转换
 	pthread_mutex_unlock(&fader->mutex);
 
 	return def;
 }
-
+//设置
 bool obs_fader_set_mul(obs_fader_t *fader, const float mul)
 {
 	if (!fader)
@@ -543,7 +543,7 @@ float obs_fader_get_mul(obs_fader_t *fader)
 
 	return mul;
 }
-
+//source源依附到fader,fader->source = source
 bool obs_fader_attach_source(obs_fader_t *fader, obs_source_t *source)
 {
 	signal_handler_t *sh;
@@ -552,7 +552,7 @@ bool obs_fader_attach_source(obs_fader_t *fader, obs_source_t *source)
 	if (!fader || !source)
 		return false;
 
-	obs_fader_detach_source(fader);
+    obs_fader_detach_source(fader);//分离
 
 	sh = obs_source_get_signal_handler(source);
 	signal_handler_connect(sh, "volume",
@@ -563,14 +563,14 @@ bool obs_fader_attach_source(obs_fader_t *fader, obs_source_t *source)
 
 	pthread_mutex_lock(&fader->mutex);
 
-	fader->source = source;
+    fader->source = source;//依附
 	fader->cur_db = mul_to_db(vol);
 
 	pthread_mutex_unlock(&fader->mutex);
 
 	return true;
 }
-
+//分离
 void obs_fader_detach_source(obs_fader_t *fader)
 {
 	signal_handler_t *sh;
@@ -594,7 +594,7 @@ void obs_fader_detach_source(obs_fader_t *fader)
 			fader_source_destroyed, fader);
 
 }
-
+//添加一个回调,音量改变的时候会调用fader->callbacks
 void obs_fader_add_callback(obs_fader_t *fader, obs_fader_changed_t callback,
 		void *param)
 {
@@ -604,10 +604,10 @@ void obs_fader_add_callback(obs_fader_t *fader, obs_fader_changed_t callback,
 		return;
 
 	pthread_mutex_lock(&fader->callback_mutex);
-	da_push_back(fader->callbacks, &cb);
+    da_push_back(fader->callbacks, &cb);//
 	pthread_mutex_unlock(&fader->callback_mutex);
 }
-
+//移除回调
 void obs_fader_remove_callback(obs_fader_t *fader, obs_fader_changed_t callback,
 		void *param)
 {
@@ -620,7 +620,7 @@ void obs_fader_remove_callback(obs_fader_t *fader, obs_fader_changed_t callback,
 	da_erase_item(fader->callbacks, &cb);
 	pthread_mutex_unlock(&fader->callback_mutex);
 }
-
+//音量计创建
 obs_volmeter_t *obs_volmeter_create(enum obs_fader_type type)
 {
 	struct obs_volmeter *volmeter = bzalloc(sizeof(struct obs_volmeter));
@@ -729,7 +729,7 @@ void obs_volmeter_detach_source(obs_volmeter_t *volmeter)
 	obs_source_remove_audio_capture_callback(source,
 			volmeter_source_data_received, volmeter);
 }
-
+//设置音量计更新间隔时间
 void obs_volmeter_set_update_interval(obs_volmeter_t *volmeter,
 		const unsigned int ms)
 {
@@ -737,10 +737,10 @@ void obs_volmeter_set_update_interval(obs_volmeter_t *volmeter,
 		return;
 
 	pthread_mutex_lock(&volmeter->mutex);
-	volmeter->update_ms = ms;
+    volmeter->update_ms = ms;//
 	pthread_mutex_unlock(&volmeter->mutex);
 
-	volmeter_update_audio_settings(volmeter);
+    volmeter_update_audio_settings(volmeter);//跟新设置
 }
 
 unsigned int obs_volmeter_get_update_interval(obs_volmeter_t *volmeter)
@@ -778,7 +778,7 @@ unsigned int obs_volmeter_get_peak_hold(obs_volmeter_t *volmeter)
 
 	return peakhold;
 }
-
+//添加回调
 void obs_volmeter_add_callback(obs_volmeter_t *volmeter,
 		obs_volmeter_updated_t callback, void *param)
 {

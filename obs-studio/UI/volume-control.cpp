@@ -73,18 +73,18 @@ void VolControl::VolumeMuted(bool muted)
 	if (mute->isChecked() != muted)
 		mute->setChecked(muted);
 }
-
+//设置静音
 void VolControl::SetMuted(bool checked)
 {
 	obs_source_set_muted(source, checked);
 }
-
+//滑块该变
 void VolControl::SliderChanged(int vol)
 {
 	obs_fader_set_deflection(obs_fader, float(vol) * 0.01f);
 	updateText();
 }
-
+//更新文字(XXdb)
 void VolControl::updateText()
 {
 	QString db = QString::number(obs_fader_get_db(obs_fader), 'f', 1)
@@ -122,7 +122,7 @@ VolControl::VolControl(OBSSource source_, bool showConfig)
 	  levelTotal    (0.0f),
 	  levelCount    (0.0f),
 	  obs_fader     (obs_fader_create(OBS_FADER_CUBIC)),
-	  obs_volmeter  (obs_volmeter_create(OBS_FADER_LOG))
+      obs_volmeter  (obs_volmeter_create(OBS_FADER_LOG))
 {
 	QHBoxLayout *volLayout  = new QHBoxLayout();
 	QVBoxLayout *mainLayout = new QVBoxLayout();
@@ -193,7 +193,7 @@ VolControl::VolControl(OBSSource source_, bool showConfig)
 
 	setLayout(mainLayout);
 
-	obs_fader_add_callback(obs_fader, OBSVolumeChanged, this);
+    obs_fader_add_callback(obs_fader, OBSVolumeChanged, this);//,音量改变会回调OBSVolumeChanged
 	obs_volmeter_add_callback(obs_volmeter, OBSVolumeLevel, this);
 
 	signal_handler_connect(obs_source_get_signal_handler(source),
@@ -204,8 +204,8 @@ VolControl::VolControl(OBSSource source_, bool showConfig)
 	QWidget::connect(mute, SIGNAL(clicked(bool)),
 			this, SLOT(SetMuted(bool)));
 
-	obs_fader_attach_source(obs_fader, source);
-	obs_volmeter_attach_source(obs_volmeter, source);
+    obs_fader_attach_source(obs_fader, source);//依附
+    obs_volmeter_attach_source(obs_volmeter, source);//依附
 
 	slider->setStyle(new SliderAbsoluteSetStyle(slider->style()));
 

@@ -51,7 +51,7 @@ struct draw_callback {
 
 /* ------------------------------------------------------------------------- */
 /* validity checks */
-
+//obj的f函数是否有效
 static inline bool obs_object_valid(const void *obj, const char *f,
 		const char *t)
 {
@@ -385,8 +385,8 @@ struct obs_core {
 
 	/* segmented into multiple sub-structures to keep things a bit more
 	 * clean and organized */
-	struct obs_core_video           video;
-	struct obs_core_audio           audio;
+    struct obs_core_video           video;//视频核
+    struct obs_core_audio           audio;//音频核
 	struct obs_core_data            data;//
 	struct obs_core_hotkeys         hotkeys;
 };
@@ -568,7 +568,7 @@ struct obs_source {
 	bool                            audio_failed;
 	bool                            audio_pending;
 	bool                            pending_stop;
-	bool                            user_muted;
+    bool                            user_muted;//静音标志
 	bool                            muted;
     struct obs_source               *next_audio_source;//上一个音频
     struct obs_source               **prev_next_audio_source;//下一个音频

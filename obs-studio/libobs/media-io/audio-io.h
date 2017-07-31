@@ -82,7 +82,7 @@ typedef bool (*audio_input_callback_t)(void *param,
 struct audio_output_info {
 	const char          *name;
 
-	uint32_t            samples_per_sec;
+    uint32_t            samples_per_sec;//采样率
 	enum audio_format   format;
 	enum speaker_layout speakers;
 

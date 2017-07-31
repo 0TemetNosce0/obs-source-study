@@ -2500,7 +2500,7 @@ void OBSBasic::SourceRemoved(void *data, calldata_t *params)
                 "RemoveScene",
                 Q_ARG(OBSSource, OBSSource(source)));
 }
-
+//输入源激活（输入源可见）
 void OBSBasic::SourceActivated(void *data, calldata_t *params)
 {
 	obs_source_t *source = (obs_source_t*)calldata_ptr(params, "source");

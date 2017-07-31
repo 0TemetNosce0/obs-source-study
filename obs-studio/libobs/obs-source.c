@@ -41,10 +41,10 @@ static inline bool deinterlacing_enabled(const struct obs_source *source)
 {
 	return source->deinterlace_mode != OBS_DEINTERLACE_MODE_DISABLE;
 }
-
+//获取为id的obs_source_info,从obs_sources的ource_types查找，ource_types是DARRAY(obs_source_info)类型，他存储了obs_source_info个数和值
 const struct obs_source_info *get_source_info(const char *id)
 {
-	for (size_t i = 0; i < obs->source_types.num; i++) {
+    for (size_t i = 0; i < obs->source_types.num; i++) {//obs(obs_sources) ource_types(obs_source_info)  ,
 		struct obs_source_info *info = &obs->source_types.array[i];
 		if (strcmp(info->id, id) == 0)
 			return info;
@@ -751,13 +751,13 @@ obs_properties_t *obs_source_properties(const obs_source_t *source)
 
 	return NULL;
 }
-
+//获取obs源source的输出标志
 uint32_t obs_source_get_output_flags(const obs_source_t *source)
 {
 	return obs_source_valid(source, "obs_source_get_output_flags") ?
 		source->info.output_flags : 0;
 }
-
+//获取obs_source_info为id的输出标志
 uint32_t obs_get_source_output_flags(const char *id)
 {
 	const struct obs_source_info *info = get_source_info(id);
@@ -3021,7 +3021,7 @@ proc_handler_t *obs_source_get_proc_handler(const obs_source_t *source)
 	return obs_source_valid(source, "obs_source_get_proc_handler") ?
 		source->context.procs : NULL;
 }
-
+//设置源source的声音
 void obs_source_set_volume(obs_source_t *source, float volume)
 {
 	if (obs_source_valid(source, "obs_source_set_volume")) {
@@ -3522,7 +3522,7 @@ bool obs_source_muted(const obs_source_t *source)
 	return obs_source_valid(source, "obs_source_muted") ?
 		source->user_muted : false;
 }
-
+//设置obs源source的user_muted(静音)
 void obs_source_set_muted(obs_source_t *source, bool muted)
 {
 	struct calldata data;
