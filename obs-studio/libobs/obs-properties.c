@@ -19,7 +19,7 @@
 #include "util/darray.h"
 #include "obs-internal.h"
 #include "obs-properties.h"
-
+//属性
 static inline void *get_property_data(struct obs_property *prop);
 
 /* ------------------------------------------------------------------------- */

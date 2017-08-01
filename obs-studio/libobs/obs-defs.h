@@ -16,7 +16,7 @@
 ******************************************************************************/
 
 #pragma once
-
+//一些宏的定义
 /** Maximum number of source channels for output and per display */
 #define MAX_CHANNELS 64
 

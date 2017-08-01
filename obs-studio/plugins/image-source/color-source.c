@@ -1,12 +1,12 @@
 #include <obs-module.h>
-
+//
 struct color_source {
-	uint32_t color;
+    uint32_t color;//一些属性
 
 	uint32_t width;
 	uint32_t height;
 
-	obs_source_t *src;
+    obs_source_t *src;//obs_source
 };
 
 static const char *color_source_get_name(void *unused)
@@ -14,7 +14,7 @@ static const char *color_source_get_name(void *unused)
 	UNUSED_PARAMETER(unused);
 	return obs_module_text("ColorSource");
 }
-
+//更新,settings的数据更新到data
 static void color_source_update(void *data, obs_data_t *settings)
 {
 	struct color_source *context = data;
@@ -66,23 +66,23 @@ static void color_source_render(void *data, gs_effect_t *effect)
 {
 	UNUSED_PARAMETER(effect);
 
-	struct color_source *context = data;
+    struct color_source *context = data;
 
-	gs_effect_t    *solid = obs_get_base_effect(OBS_EFFECT_SOLID);
-	gs_eparam_t    *color = gs_effect_get_param_by_name(solid, "color");
-	gs_technique_t *tech  = gs_effect_get_technique(solid, "Solid");
+    gs_effect_t    *solid = obs_get_base_effect(OBS_EFFECT_SOLID);
+    gs_eparam_t    *color = gs_effect_get_param_by_name(solid, "color");
+    gs_technique_t *tech  = gs_effect_get_technique(solid, "Solid");
 
-	struct vec4 colorVal;
-	vec4_from_rgba(&colorVal, context->color);
-	gs_effect_set_vec4(color, &colorVal);
+    struct vec4 colorVal;
+    vec4_from_rgba(&colorVal, context->color);
+    gs_effect_set_vec4(color, &colorVal);
 
-	gs_technique_begin(tech);
-	gs_technique_begin_pass(tech, 0);
+    gs_technique_begin(tech);
+    gs_technique_begin_pass(tech, 0);
 
-	gs_draw_sprite(0, 0, context->width, context->height);
+    gs_draw_sprite(0, 0, context->width, context->height);
 
-	gs_technique_end_pass(tech);
-	gs_technique_end(tech);
+    gs_technique_end_pass(tech);
+    gs_technique_end(tech);
 }
 
 static uint32_t color_source_getwidth(void *data)
@@ -103,18 +103,18 @@ static void color_source_defaults(obs_data_t *settings)
 	obs_data_set_default_int(settings, "width", 400);
 	obs_data_set_default_int(settings, "height", 400);
 }
-
+//通过
 struct obs_source_info color_source_info = {
-	.id             = "color_source",
-	.type           = OBS_SOURCE_TYPE_INPUT,
-	.output_flags   = OBS_SOURCE_VIDEO | OBS_SOURCE_CUSTOM_DRAW,
-	.create         = color_source_create,
-	.destroy        = color_source_destroy,
-	.update         = color_source_update,
+    .id             = "color_source",//创建源的时候是通过id来创建是哪个源
+    .type           = OBS_SOURCE_TYPE_INPUT,//源类型:场景,来源,过渡,过滤
+    .output_flags   = OBS_SOURCE_VIDEO | OBS_SOURCE_CUSTOM_DRAW,//输出标志:OBS_SOURCE_VIDEO源有视频,没有OBS_SOURCE_AUDIO说明没有音频
+    .create         = color_source_create,//创建
+    .destroy        = color_source_destroy,//销毁
+    .update         = color_source_update,//更新
 	.get_name       = color_source_get_name,
 	.get_defaults   = color_source_defaults,
 	.get_width      = color_source_getwidth,
 	.get_height     = color_source_getheight,
 	.video_render   = color_source_render,
-	.get_properties = color_source_properties
+    .get_properties = color_source_properties//属性
 };

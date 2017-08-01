@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 #pragma once
-
+//interracial交互
 #include "util/c99defs.h"
 
 enum obs_interaction_flags {

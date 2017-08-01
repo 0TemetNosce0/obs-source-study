@@ -17,7 +17,7 @@
 
 #include <inttypes.h>
 #include "obs-internal.h"
-
+//输出延时
 static inline bool delay_active(const struct obs_output *output)
 {
 	return os_atomic_load_bool(&output->delay_active);

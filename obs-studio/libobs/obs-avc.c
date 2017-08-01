@@ -18,7 +18,8 @@
 #include "obs.h"
 #include "obs-avc.h"
 #include "util/array-serializer.h"
-
+//AVC （高级视频编码Advanced Video Coding）
+//关键帧
 bool obs_avc_keyframe(const uint8_t *data, size_t size)
 {
 	const uint8_t *nal_start, *nal_end;
@@ -85,18 +86,19 @@ static const uint8_t *ff_avc_find_startcode_internal(const uint8_t *p,
 	return end + 3;
 }
 
+//查找开始代码
 const uint8_t *obs_avc_find_startcode(const uint8_t *p, const uint8_t *end)
 {
 	const uint8_t *out= ff_avc_find_startcode_internal(p, end);
 	if (p < out && out < end && !out[-1]) out--;
 	return out;
 }
-
+//获取丢包优先级
 static inline int get_drop_priority(int priority)
 {
 	return priority;
 }
-
+//串行化avc data
 static void serialize_avc_data(struct serializer *s, const uint8_t *data,
 		size_t size, bool *is_keyframe, int *priority)
 {

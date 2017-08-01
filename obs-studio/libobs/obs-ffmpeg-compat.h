@@ -1,5 +1,5 @@
 #pragma once
-
+//compat兼容
 #include <libavcodec/avcodec.h>
 
 /* LIBAVCODEC_VERSION_CHECK checks for the right version of libav and FFmpeg

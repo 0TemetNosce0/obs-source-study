@@ -16,7 +16,7 @@
 ******************************************************************************/
 
 #pragma once
-
+//internal内置
 #include "util/c99defs.h"
 #include "util/darray.h"
 #include "util/circlebuf.h"
@@ -446,32 +446,32 @@ extern void obs_context_data_setname(struct obs_context_data *context,
 
 /* ------------------------------------------------------------------------- */
 /* ref-counting  */
-
+//引用计数
 struct obs_weak_ref {
 	volatile long refs;
-	volatile long weak_refs;
+    volatile long weak_refs;//弱引用
 };
-
+//添加一个引用计数
 static inline void obs_ref_addref(struct obs_weak_ref *ref)
 {
-	os_atomic_inc_long(&ref->refs);
+    os_atomic_inc_long(&ref->refs);//对变量refs加1
 }
-
+//释放, refs = -1;
 static inline bool obs_ref_release(struct obs_weak_ref *ref)
 {
 	return os_atomic_dec_long(&ref->refs) == -1;
 }
-
+//添加一个弱引用计数
 static inline void obs_weak_ref_addref(struct obs_weak_ref *ref)
 {
 	os_atomic_inc_long(&ref->weak_refs);
 }
-
+//释放, weak_refs = -1;
 static inline bool obs_weak_ref_release(struct obs_weak_ref *ref)
 {
 	return os_atomic_dec_long(&ref->weak_refs) == -1;
 }
-
+//
 static inline bool obs_weak_ref_get_ref(struct obs_weak_ref *ref)
 {
 	long owners = ref->refs;
@@ -494,14 +494,14 @@ struct async_frame {
 	long unused_count;
 	bool used;
 };
-
+// 音频action类型
 enum audio_action_type {
 	AUDIO_ACTION_VOL,
 	AUDIO_ACTION_MUTE,
 	AUDIO_ACTION_PTT,
 	AUDIO_ACTION_PTM,
 };
-
+//audio_action
 struct audio_action {
 	uint64_t timestamp;
 	enum audio_action_type type;
@@ -517,7 +517,7 @@ struct obs_weak_source {
 };
 
 struct audio_cb_info {
-	obs_source_audio_capture_t callback;
+    obs_source_audio_capture_t callback;//音频捕获回调
 	void *param;
 };
 //obs源
@@ -801,7 +801,7 @@ struct caption_text {
 	char text[CAPTION_LINE_BYTES+1];
 	struct caption_text *next;
 };
-
+//
 struct obs_output {
 	struct obs_context_data         context;
 	struct obs_output_info          info;

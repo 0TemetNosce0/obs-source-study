@@ -42,7 +42,7 @@ static inline size_t convert_time_to_frames(size_t sample_rate, uint64_t t)
 {
 	return (size_t)(t * (uint64_t)sample_rate / 1000000000ULL);
 }
-
+//混音（英语：Audio Mixing，常简称为mix）是把多种来源的声音，整合至一个立体音轨（Stereo）或单音音轨（Mono）中
 static inline void mix_audio(struct audio_output_data *mixes,
 		obs_source_t *source, size_t channels, size_t sample_rate,
 		struct ts_info *ts)
@@ -93,7 +93,7 @@ static void ignore_audio(obs_source_t *source, size_t channels,
 			(uint64_t)sample_rate;
 	}
 }
-
+//抛弃如果停止
 static bool discard_if_stopped(obs_source_t *source, size_t channels)
 {
 	size_t last_size;
@@ -136,7 +136,7 @@ static bool discard_if_stopped(obs_source_t *source, size_t channels)
 }
 
 #define MAX_AUDIO_SIZE (AUDIO_OUTPUT_FRAMES * sizeof(float))
-
+//抛弃
 static inline void discard_audio(struct obs_core_audio *audio,
 		obs_source_t *source, size_t channels, size_t sample_rate,
 		struct ts_info *ts)
@@ -225,7 +225,7 @@ static inline void discard_audio(struct obs_core_audio *audio,
 	source->pending_stop = false;
 	source->audio_ts = ts->end;
 }
-
+//add audio buffer
 static void add_audio_buffering(struct obs_core_audio *audio,
 		size_t sample_rate, struct ts_info *ts, uint64_t min_ts)
 {
@@ -321,7 +321,8 @@ static bool audio_buffer_insuffient(struct obs_source *source,
 
 	return false;
 }
-
+//find min timestamp时间戳
+//source->audio_ts赋值给min_ts
 static inline void find_min_ts(struct obs_core_data *data,
 		uint64_t *min_ts)
 {
@@ -357,7 +358,7 @@ static inline void calc_min_ts(struct obs_core_data *data,
 	if (mark_invalid_sources(data, sample_rate, *min_ts))
 		find_min_ts(data, min_ts);
 }
-
+//释放音频资源
 static inline void release_audio_sources(struct obs_core_audio *audio)
 {
 	for (size_t i = 0; i < audio->render_order.num; i++)

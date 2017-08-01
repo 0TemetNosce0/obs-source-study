@@ -21,7 +21,7 @@
 #include "obs-defs.h"
 #include "obs-internal.h"
 #include "obs-module.h"
-
+//模块
 extern const char *get_module_extension(void);
 
 static inline int req_func_not_found(const char *name, const char *path)
