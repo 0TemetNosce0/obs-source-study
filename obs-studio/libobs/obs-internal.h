@@ -717,10 +717,10 @@ static inline void obs_source_dosignal(struct obs_source *source,
 	calldata_init_fixed(&data, stack, sizeof(stack));
 	calldata_set_ptr(&data, "source", source);
 	if (signal_obs && !source->context.private)
-		signal_handler_signal(obs->signals, signal_obs, &data);
+        signal_handler_signal(obs->signals, signal_obs, &data);//
 	if (signal_source)
 		signal_handler_signal(source->context.signals, signal_source,
-				&data);
+                &data);//信号处理 (会调用回调)
 }
 
 /* maximum timestamp variance in nanoseconds */

@@ -1132,9 +1132,16 @@ void OBSBasic::InitOBSCallbacks()
 	ProfileScope("OBSBasic::InitOBSCallbacks");
 
 	signalHandlers.reserve(signalHandlers.size() + 6);
+//vector添加一个OBSSignal,
+//    OBSSignal(signal_handler_t *handler_,const char *signal_,signal_callback_t callback_,void *param_)
+//    handler_:哪个的信号
+//    signal_:发送的信号
+//    callback_:信号处理的回调函数
+//    param_:传递给callback_参数
 	signalHandlers.emplace_back(obs_get_signal_handler(), "source_remove",
-			OBSBasic::SourceRemoved, this);
-	signalHandlers.emplace_back(obs_get_signal_handler(), "source_activate",
+            OBSBasic::SourceRemoved, this);
+
+    signalHandlers.emplace_back(obs_get_signal_handler(), "source_activate",
 			OBSBasic::SourceActivated, this);
 	signalHandlers.emplace_back(obs_get_signal_handler(), "source_deactivate",
 			OBSBasic::SourceDeactivated, this);
@@ -3400,7 +3407,7 @@ void OBSBasic::CreateSourcePopupMenu(QListWidgetItem *item, bool preview)
 	QPointer<QMenu> previewProjector;
 	QPointer<QMenu> sourceProjector;
 
-	if (preview) {
+    if (preview) {//preview右键需要创建的
 		QAction *action = popup.addAction(
 				QTStr("Basic.Main.PreviewConextMenu.Enable"),
 				this, SLOT(TogglePreview()));
@@ -3428,7 +3435,7 @@ void OBSBasic::CreateSourcePopupMenu(QListWidgetItem *item, bool preview)
 		popup.addSeparator();
 	}
 
-	QPointer<QMenu> addSourceMenu = CreateAddSourcePopupMenu();
+    QPointer<QMenu> addSourceMenu = CreateAddSourcePopupMenu();//创建添加菜单
 	if (addSourceMenu)
 		popup.addMenu(addSourceMenu);
 
@@ -3505,10 +3512,10 @@ void OBSBasic::CreateSourcePopupMenu(QListWidgetItem *item, bool preview)
 	popup.exec(QCursor::pos());
 }
 
-void OBSBasic::on_sources_customContextMenuRequested(const QPoint &pos)
+void OBSBasic::on_sources_customContextMenuRequested(const QPoint &pos)//来源右键
 {
 	if (ui->scenes->count())
-		CreateSourcePopupMenu(ui->sources->itemAt(pos), false);
+        CreateSourcePopupMenu(ui->sources->itemAt(pos), false);//右键菜单
 }
 
 void OBSBasic::on_sources_itemDoubleClicked(QListWidgetItem *witem)
@@ -3522,14 +3529,14 @@ void OBSBasic::on_sources_itemDoubleClicked(QListWidgetItem *witem)
 	if (source)
 		CreatePropertiesWindow(source);
 }
-
+//添加源
 void OBSBasic::AddSource(const char *id)
 {
 	if (id && *id) {
 		OBSBasicSourceSelect sourceSelect(this, id);
 		sourceSelect.exec();
 		if (sourceSelect.newSource)
-			CreatePropertiesWindow(sourceSelect.newSource);
+            CreatePropertiesWindow(sourceSelect.newSource);//属性
 	}
 }
 
@@ -3571,7 +3578,7 @@ QMenu *OBSBasic::CreateAddSourcePopupMenu()
 	while (obs_enum_input_types(idx++, &type)) {
 		const char *name = obs_source_get_display_name(type);
 		uint32_t caps = obs_get_source_output_flags(type);
-
+        //action源
 		if ((caps & OBS_SOURCE_DEPRECATED) == 0) {
 			addSource(popup, type, name);
 		} else {
@@ -3581,7 +3588,7 @@ QMenu *OBSBasic::CreateAddSourcePopupMenu()
 		foundValues = true;
 	}
 
-	addSource(popup, "scene", Str("Basic.Scene"));
+    addSource(popup, "scene", Str("Basic.Scene"));//action场景
 
 	if (!foundDeprecated) {
 		delete deprecated;
@@ -3599,7 +3606,7 @@ QMenu *OBSBasic::CreateAddSourcePopupMenu()
 	return popup;
 }
 
-void OBSBasic::AddSourceFromAction()
+void OBSBasic::AddSourceFromAction()//从action添加源
 {
 	QAction *action = qobject_cast<QAction*>(sender());
 	if (!action)
