@@ -20,21 +20,24 @@
 #include "decl.h"
 #include "signal.h"
 
+//信号 回调
 struct signal_callback {
-	signal_callback_t callback;
+    signal_callback_t callback;//回调函数
 	void              *data;
 	bool              remove;
 };
 
+//信号info
 struct signal_info {
 	struct decl_info               func;
-	DARRAY(struct signal_callback) callbacks;
+    DARRAY(struct signal_callback) callbacks;//回调结构体数组
 	pthread_mutex_t                mutex;
 	bool                           signalling;
 
-	struct signal_info             *next;
+    struct signal_info             *next;//下一个信号info
 };
 
+//信号info创建
 static inline struct signal_info *signal_info_create(struct decl_info *info)
 {
 	pthread_mutexattr_t attr;
@@ -63,6 +66,7 @@ static inline struct signal_info *signal_info_create(struct decl_info *info)
 	return si;
 }
 
+//信号info销毁
 static inline void signal_info_destroy(struct signal_info *si)
 {
 	if (si) {
@@ -73,6 +77,7 @@ static inline void signal_info_destroy(struct signal_info *si)
 	}
 }
 
+//获取信号回调函数callback在signal_info的idx
 static inline size_t signal_get_callback_idx(struct signal_info *si,
 		signal_callback_t callback, void *data)
 {
@@ -86,19 +91,20 @@ static inline size_t signal_get_callback_idx(struct signal_info *si,
 	return DARRAY_INVALID;
 }
 
+//信号
 struct signal_handler {
 	struct signal_info *first;
 	pthread_mutex_t    mutex;
 };
-
+//获取信号info
 static struct signal_info *getsignal(signal_handler_t *handler,
 		const char *name, struct signal_info **p_last)
 {
 	struct signal_info *signal, *last= NULL;
 
-	signal = handler->first;
-	while (signal != NULL) {
-		if (strcmp(signal->func.name, name) == 0)
+    signal = handler->first;//signal_handler的first指向signal_info
+    while (signal != NULL) {//name比较
+        if (strcmp(signal->func.name, name) == 0)//signal_info的func是一个decl_info含有信号名字
 			break;
 
 		last = signal;
@@ -112,6 +118,7 @@ static struct signal_info *getsignal(signal_handler_t *handler,
 
 /* ------------------------------------------------------------------------- */
 
+//信号handler创建
 signal_handler_t *signal_handler_create(void)
 {
 	struct signal_handler *handler = bmalloc(sizeof(struct signal_handler));
@@ -125,7 +132,7 @@ signal_handler_t *signal_handler_create(void)
 
 	return handler;
 }
-
+//信号handler销毁
 void signal_handler_destroy(signal_handler_t *handler)
 {
 	if (handler) {
@@ -141,6 +148,7 @@ void signal_handler_destroy(signal_handler_t *handler)
 	}
 }
 
+////信号handler添加
 bool signal_handler_add(signal_handler_t *handler, const char *signal_decl)
 {
 	struct decl_info func = {0};
@@ -172,6 +180,7 @@ bool signal_handler_add(signal_handler_t *handler, const char *signal_decl)
 	return success;
 }
 
+//信号handler链接(检查信号是否有,回调函数添加到signal_callback)
 void signal_handler_connect(signal_handler_t *handler, const char *signal,
 		signal_callback_t callback, void *data)
 {
@@ -183,7 +192,7 @@ void signal_handler_connect(signal_handler_t *handler, const char *signal,
 		return;
 
 	pthread_mutex_lock(&handler->mutex);
-	sig = getsignal(handler, signal, &last);
+    sig = getsignal(handler, signal, &last);//获取信号(handler是否含有信号signal)
 	pthread_mutex_unlock(&handler->mutex);
 
 	if (!sig) {
@@ -197,8 +206,8 @@ void signal_handler_connect(signal_handler_t *handler, const char *signal,
 	pthread_mutex_lock(&sig->mutex);
 
 	idx = signal_get_callback_idx(sig, callback, data);
-	if (idx == DARRAY_INVALID)
-		da_push_back(sig->callbacks, &cb_data);
+    if (idx == DARRAY_INVALID)//如果signal_callback没找到对应回调函数callback则添加
+        da_push_back(sig->callbacks, &cb_data);//添加sig->callbacks到signal_callback
 	
 	pthread_mutex_unlock(&sig->mutex);
 }
@@ -218,6 +227,7 @@ static inline struct signal_info *getsignal_locked(signal_handler_t *handler,
 	return sig;
 }
 
+//断开链接
 void signal_handler_disconnect(signal_handler_t *handler, const char *signal,
 		signal_callback_t callback, void *data)
 {
@@ -239,7 +249,7 @@ void signal_handler_disconnect(signal_handler_t *handler, const char *signal,
 	
 	pthread_mutex_unlock(&sig->mutex);
 }
-
+//信号处理,会调用回调函数
 void signal_handler_signal(signal_handler_t *handler, const char *signal,
 		calldata_t *params)
 {
@@ -250,11 +260,11 @@ void signal_handler_signal(signal_handler_t *handler, const char *signal,
 
 	pthread_mutex_lock(&sig->mutex);
 	sig->signalling = true;
-
-	for (size_t i = 0; i < sig->callbacks.num; i++) {
+//signal_info的callbacks指向signal_callback
+    for (size_t i = 0; i < sig->callbacks.num; i++) {//回调函数signal_callback遍历
 		struct signal_callback *cb = sig->callbacks.array+i;
 		if (!cb->remove)
-			cb->callback(cb->data, params);
+            cb->callback(cb->data, params);// 调用回调
 	}
 
 	for (size_t i = sig->callbacks.num; i > 0; i--) {

@@ -621,8 +621,9 @@ static void obs_free_data(void)
 	da_free(data->draw_callbacks);
 }
 
+//信号
 static const char *obs_signals[] = {
-	"void source_create(ptr source)",
+    "void source_create(ptr source)",
 	"void source_destroy(ptr source)",
 	"void source_remove(ptr source)",
 	"void source_save(ptr source)",
@@ -649,10 +650,10 @@ static const char *obs_signals[] = {
 
 	NULL
 };
-
+//初始化
 static inline bool obs_init_handlers(void)
 {
-	obs->signals = signal_handler_create();
+    obs->signals = signal_handler_create();//信号处理创建
 	if (!obs->signals)
 		return false;
 
@@ -1422,6 +1423,7 @@ gs_effect_t *obs_get_default_rect_effect(void)
 	return obs->video.default_rect_effect;
 }
 
+//获取obs->signals
 signal_handler_t *obs_get_signal_handler(void)
 {
 	if (!obs) return NULL;

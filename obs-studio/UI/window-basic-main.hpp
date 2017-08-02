@@ -110,7 +110,7 @@ private:
 
 	std::vector<VolControl*> volumes;
 
-	std::vector<OBSSignal> signalHandlers;
+    std::vector<OBSSignal> signalHandlers;//OBSSignal vector
 
 	std::vector<std::string> projectorArray;
 	std::vector<int> previewProjectorArray;

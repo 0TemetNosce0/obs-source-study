@@ -142,7 +142,7 @@ static void AddExisting(const char *name, bool visible, bool duplicate)
 		obs_source_release(source);
 	}
 }
-
+//添加一个源
 bool AddNew(QWidget *parent, const char *id, const char *name,
 		const bool visible, OBSSource &newSource)
 {
@@ -159,7 +159,7 @@ bool AddNew(QWidget *parent, const char *id, const char *name,
 				QTStr("NameExists.Text"));
 
 	} else {
-		source = obs_source_create(id, name, NULL, nullptr);
+        source = obs_source_create(id, name, NULL, nullptr);//源创建
 
 		if (source) {
 			AddSourceData data;

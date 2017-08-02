@@ -211,7 +211,7 @@ public:
 		  callback (callback_),
 		  param    (param_)
 	{
-		signal_handler_connect(handler, signal, callback, param);
+        signal_handler_connect(handler, signal, callback, param);//信号
 	}
 
 	inline void Disconnect()

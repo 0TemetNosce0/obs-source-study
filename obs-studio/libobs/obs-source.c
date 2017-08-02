@@ -293,14 +293,14 @@ static void obs_source_init_audio_hotkeys(struct obs_source *source)
 			"libobs.push-to-talk", obs->hotkeys.push_to_talk,
 			obs_source_hotkey_push_to_talk, source);
 }
-
+//obs_source创建 obs_source的obs_source_info指向为id的obs_source_info(一个obs_source_info对应一个id(id比如window_capture))
 static obs_source_t *obs_source_create_internal(const char *id,
 		const char *name, obs_data_t *settings,
 		obs_data_t *hotkey_data, bool private)
 {
 	struct obs_source *source = bzalloc(sizeof(struct obs_source));
 
-	const struct obs_source_info *info = get_source_info(id);
+    const struct obs_source_info *info = get_source_info(id);//获取为id的obs_source_info
 	if (!info) {
 		blog(LOG_ERROR, "Source ID '%s' not found", id);
 
@@ -680,7 +680,7 @@ void obs_source_remove(obs_source_t *source)
 
 	if (!source->removed) {
 		source->removed = true;
-        obs_source_dosignal(source, "source_remove", "remove");
+        obs_source_dosignal(source, "source_remove", "remove");//源移除信号(相当于发送了信号)
 	}
 }
 
