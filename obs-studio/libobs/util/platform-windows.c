@@ -209,7 +209,7 @@ void os_sleep_ms(uint32_t duration)
 
 	Sleep(duration);
 }
-
+//获取时间
 uint64_t os_gettime_ns(void)
 {
 	LARGE_INTEGER current_time;

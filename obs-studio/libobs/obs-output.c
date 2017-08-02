@@ -55,6 +55,7 @@ static inline bool data_capture_ending(const struct obs_output *output)
 	return os_atomic_load_bool(&output->end_data_capture_thread_active);
 }
 
+//找到为id的输出
 const struct obs_output_info *find_output(const char *id)
 {
 	size_t i;

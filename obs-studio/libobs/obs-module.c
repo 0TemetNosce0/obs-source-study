@@ -541,7 +541,7 @@ cleanup:
 	blog(LOG_WARNING, "obs_register_encoder: " format, ##__VA_ARGS__)
 #define service_warn(format, ...) \
 	blog(LOG_WARNING, "obs_register_service: " format, ##__VA_ARGS__)
-
+//注册源
 void obs_register_source_s(const struct obs_source_info *info, size_t size)
 {
 	struct obs_source_info data = {0};
@@ -559,13 +559,13 @@ void obs_register_source_s(const struct obs_source_info *info, size_t size)
 		goto error;
 	}
 
-	if (get_source_info(info->id)) {
+    if (get_source_info(info->id)) {//源是否存在，存在就不注册了
 		source_warn("Source '%s' already exists!  "
 		                  "Duplicate library?", info->id);
 		goto error;
 	}
 
-	memcpy(&data, info, size);
+    memcpy(&data, info, size);//更具输入还是输出等类型赋值到obs_core的input_types或filter_types等
 
 	/* mark audio-only filters as an async filter categorically */
 	if (data.type == OBS_SOURCE_TYPE_FILTER) {
@@ -628,7 +628,7 @@ void obs_register_source_s(const struct obs_source_info *info, size_t size)
 
 	if (array)
 		darray_push_back(sizeof(struct obs_source_info), array, &data);
-	da_push_back(obs->source_types, &data);
+    da_push_back(obs->source_types, &data);//obs_source_info添加到obs->source_types
 	return;
 
 error:
@@ -664,7 +664,7 @@ void obs_register_output_s(const struct obs_output_info *info, size_t size)
 	}
 #undef CHECK_REQUIRED_VAL_
 
-	REGISTER_OBS_DEF(size, obs_output_info, obs->output_types, info);
+    REGISTER_OBS_DEF(size, obs_output_info, obs->output_types, info);//obs_output_info添加到obs->output_types
 	return;
 
 error:

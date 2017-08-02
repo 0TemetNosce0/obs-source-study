@@ -346,7 +346,7 @@ static inline void set_video_matrix(struct obs_core_video *video,
 
 	memcpy(video->color_matrix, &mat, sizeof(float) * 16);
 }
-
+//video初始化
 static int obs_init_video(struct obs_video_info *ovi)
 {
 	struct obs_core_video *video = &obs->video;
@@ -385,7 +385,7 @@ static int obs_init_video(struct obs_video_info *ovi)
 	gs_leave_context();
 
 	errorcode = pthread_create(&video->video_thread, NULL,
-			obs_video_thread, obs);
+            obs_video_thread, obs);//obs_video_thread线程创建
 	if (errorcode != 0)
 		return OBS_VIDEO_FAIL;
 

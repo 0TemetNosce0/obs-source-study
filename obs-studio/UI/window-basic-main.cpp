@@ -54,7 +54,7 @@
 #include "display-helpers.hpp"
 #include "volume-control.hpp"
 #include "remote-text.hpp"
-
+#include <QDebug>
 #if defined(_WIN32) && defined(ENABLE_WIN_UPDATER)
 #include "win-update/win-update.hpp"
 #endif
@@ -1247,7 +1247,8 @@ extern obs_frontend_callbacks *InitializeAPIInterface(OBSBasic *main);
 void OBSBasic::OBSInit()
 {
 	ProfileScope("OBSBasic::OBSInit");
-
+   
+   
 	const char *sceneCollection = config_get_string(App()->GlobalConfig(),
 			"Basic", "SceneCollectionFile");
 	char savePath[512];

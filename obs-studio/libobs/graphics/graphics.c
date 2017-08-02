@@ -1034,7 +1034,7 @@ void gs_draw_sprite(gs_texture_t *tex, uint32_t flip, uint32_t width,
 	gs_load_vertexbuffer(graphics->sprite_buffer);
 	gs_load_indexbuffer(NULL);
 
-	gs_draw(GS_TRISTRIP, 0, 0);
+    gs_draw(GS_TRISTRIP, 0, 0);
 }
 
 void gs_draw_sprite_subregion(gs_texture_t *tex, uint32_t flip,
@@ -1685,8 +1685,8 @@ void gs_draw(enum gs_draw_mode draw_mode, uint32_t start_vert,
 	if (!gs_valid("gs_draw"))
 		return;
 
-	graphics->exports.device_draw(graphics->device, draw_mode,
-			start_vert, num_verts);
+    graphics->exports.device_draw(graphics->device, draw_mode,
+            start_vert, num_verts);//绘制
 }
 
 void gs_end_scene(void)
