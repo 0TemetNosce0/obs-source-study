@@ -483,7 +483,7 @@ static void obs_free_graphics(void)
 		video->graphics = NULL;
 	}
 }
-
+//audio初始化
 static bool obs_init_audio(struct audio_output_info *ai)
 {
 	struct obs_core_audio *audio = &obs->audio;
@@ -982,7 +982,7 @@ int obs_reset_video(struct obs_video_info *ovi)
 
 	return obs_init_video(ovi);
 }
-
+//audio初始化
 bool obs_reset_audio(const struct obs_audio_info *oai)
 {
 	struct audio_output_info ai;

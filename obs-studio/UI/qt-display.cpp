@@ -86,3 +86,4 @@ QPaintEngine *OBSQTDisplay::paintEngine() const
 {
 	return nullptr;
 }
+

@@ -152,7 +152,7 @@ private:
 	bool          sceneChanging = false;
 	bool          ignoreSelectionUpdate = false;
 
-	int           previewX = 0,  previewY = 0;
+    int           previewX = 0,  previewY = 0;//previewX：显示区域的x坐标
 	int           previewCX = 0, previewCY = 0;
 	float         previewScale = 0.0f;
 
@@ -472,17 +472,17 @@ public:
 	bool StreamingActive() const;
 	bool Active() const;
 
-	int  ResetVideo();
-	bool ResetAudio();
+    int  ResetVideo();//video
+    bool ResetAudio();//audio
 
-	void ResetOutputs();
+    void ResetOutputs();//ouput
 
 	void ResetAudioDevice(const char *sourceId, const char *deviceId,
-			const char *deviceDesc, int channel);
+            const char *deviceDesc, int channel);//音频设备
 
 	void NewProject();
 	void LoadProject();
-
+//获取显示区域位置，大小
 	inline void GetDisplayRect(int &x, int &y, int &cx, int &cy)
 	{
 		x  = previewX;

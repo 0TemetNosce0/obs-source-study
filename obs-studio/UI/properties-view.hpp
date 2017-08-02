@@ -131,5 +131,5 @@ public:
 	inline obs_data_t *GetSettings() const {return settings;}
 
 	inline void UpdateSettings() {callback(obj, settings);}
-	inline bool DeferUpdate() const {return deferUpdate;}
+    inline bool DeferUpdate() const {return deferUpdate;}
 };
