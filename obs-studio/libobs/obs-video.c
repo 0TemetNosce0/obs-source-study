@@ -20,7 +20,7 @@
 #include "graphics/vec4.h"
 #include "media-io/format-conversion.h"
 #include "media-io/video-frame.h"
-
+//获取捕获的视频帧
 static uint64_t tick_sources(uint64_t cur_time, uint64_t last_time)
 {
 	struct obs_core_data *data = &obs->data;
@@ -65,11 +65,10 @@ static inline void render_displays(void)
 	pthread_mutex_lock(&obs->data.displays_mutex);
 
 	display = obs->data.first_display;
-	while (display) {
-        render_display(display);//对obs->data.first_display链表的display进行绘制
-		display = display->next;
+    while (display) {//一个场景对应一个display
+       render_display(display);//对obs->data.first_display链表的display进行绘制
+       display = display->next;//下一个display，就是下一个场景
 	}
-
 	pthread_mutex_unlock(&obs->data.displays_mutex);
 
 	gs_leave_context();
@@ -477,7 +476,8 @@ static inline void copy_rgbx_frame(
 		}
 	}
 }
-
+//obs_video_thread==>output_frame==>output_video_data==>video_output_unlock_frame==>update_semaphore；
+//可以看到在obs_video_thread线程中，通知video_thread线程对采集的数据编码推流
 static inline void output_video_data(struct obs_core_video *video,
 		struct video_data *input_frame, int count)
 {
@@ -563,14 +563,14 @@ static inline void output_frame(void)
 	profile_end(output_frame_gs_context_name);
 
 	if (frame_ready) {
-		struct obs_vframe_info vframe_info;
-		circlebuf_pop_front(&video->vframe_info_buffer, &vframe_info,
-				sizeof(vframe_info));
+        struct obs_vframe_info vframe_info;
+        circlebuf_pop_front(&video->vframe_info_buffer, &vframe_info,
+                sizeof(vframe_info));
 
-		frame.timestamp = vframe_info.timestamp;
-		profile_start(output_frame_output_video_data_name);
-		output_video_data(video, &frame, vframe_info.count);
-		profile_end(output_frame_output_video_data_name);
+        frame.timestamp = vframe_info.timestamp;
+        profile_start(output_frame_output_video_data_name);
+        output_video_data(video, &frame, vframe_info.count);//输出video数据
+        profile_end(output_frame_output_video_data_name);
 	}
 
 	if (++video->cur_texture == NUM_TEXTURES)
@@ -584,62 +584,64 @@ static const char *render_displays_name = "render_displays";
 static const char *output_frame_name = "output_frame";
 void *obs_video_thread(void *param)//display绘制线程
 {
-	uint64_t last_time = 0;
-	uint64_t interval = video_output_get_frame_time(obs->video.video);
-	uint64_t frame_time_total_ns = 0;
-	uint64_t fps_total_ns = 0;
-	uint32_t fps_total_frames = 0;
+    uint64_t last_time = 0;
+    uint64_t interval = video_output_get_frame_time(obs->video.video);
+    uint64_t frame_time_total_ns = 0;
+    uint64_t fps_total_ns = 0;
+    uint32_t fps_total_frames = 0;
 
-	obs->video.video_time = os_gettime_ns();
+    obs->video.video_time = os_gettime_ns();
 
-	os_set_thread_name("libobs: graphics thread");
+    os_set_thread_name("libobs: graphics thread");
 
-	const char *video_thread_name =
-		profile_store_name(obs_get_profiler_name_store(),
-			"obs_video_thread(%g"NBSP"ms)", interval / 1000000.);
-	profile_register_root(video_thread_name, interval);
+    const char *video_thread_name =
+        profile_store_name(obs_get_profiler_name_store(),
+            "obs_video_thread(%g"NBSP"ms)", interval / 1000000.);
+    profile_register_root(video_thread_name, interval);
 
-	while (!video_output_stopped(obs->video.video)) {
-		uint64_t frame_start = os_gettime_ns();
-		uint64_t frame_time_ns;
+    while (!video_output_stopped(obs->video.video)) {//循环绘制
+        uint64_t frame_start = os_gettime_ns();
+        uint64_t frame_time_ns;
 
-		profile_start(video_thread_name);
+        profile_start(video_thread_name);
 
-		profile_start(tick_sources_name);
-		last_time = tick_sources(obs->video.video_time, last_time);
-		profile_end(tick_sources_name);
+        profile_start(tick_sources_name);
+        last_time = tick_sources(obs->video.video_time, last_time);//获取捕获的视频帧
+        profile_end(tick_sources_name);
 
-		profile_start(render_displays_name);
+        profile_start(render_displays_name);
+        //渲染显示出画面
         render_displays();//render_displays对obs->data.first_display链表的display进行绘制
-		profile_end(render_displays_name);
+        profile_end(render_displays_name);
 
-		profile_start(output_frame_name);
-		output_frame();
-		profile_end(output_frame_name);
+        profile_start(output_frame_name);
+        //输出帧，保存video
+        output_frame();
+        profile_end(output_frame_name);
 
-		frame_time_ns = os_gettime_ns() - frame_start;
+        frame_time_ns = os_gettime_ns() - frame_start;
 
-		profile_end(video_thread_name);
+        profile_end(video_thread_name);
 
-		profile_reenable_thread();
+        profile_reenable_thread();
 
-		video_sleep(&obs->video, &obs->video.video_time, interval);
+        video_sleep(&obs->video, &obs->video.video_time, interval);
 
-		frame_time_total_ns += frame_time_ns;
-		fps_total_ns += (obs->video.video_time - last_time);
-		fps_total_frames++;
+        frame_time_total_ns += frame_time_ns;
+        fps_total_ns += (obs->video.video_time - last_time);
+        fps_total_frames++;
 
-		if (fps_total_ns >= 1000000000ULL) {
-			obs->video.video_fps = (double)fps_total_frames /
-				((double)fps_total_ns / 1000000000.0);
-			obs->video.video_avg_frame_time_ns =
-				frame_time_total_ns / (uint64_t)fps_total_frames;
+        if (fps_total_ns >= 1000000000ULL) {
+            obs->video.video_fps = (double)fps_total_frames /
+                ((double)fps_total_ns / 1000000000.0);
+            obs->video.video_avg_frame_time_ns =
+                frame_time_total_ns / (uint64_t)fps_total_frames;
 
-			frame_time_total_ns = 0;
-			fps_total_ns = 0;
-			fps_total_frames = 0;
-		}
-	}
+            frame_time_total_ns = 0;
+            fps_total_ns = 0;
+            fps_total_frames = 0;
+        }
+    }
 
 	UNUSED_PARAMETER(param);
 	return NULL;

@@ -362,16 +362,17 @@ struct obs_core_hotkeys {
 };
 //obs核
 struct obs_core {
-	struct obs_module               *first_module;
+    struct obs_module               *first_module;//模块
     DARRAY(struct obs_module_path)  module_paths;//模块路径
 //obs_source_info
-    DARRAY(struct obs_source_info)  source_types;//源类型
-    DARRAY(struct obs_source_info)  input_types;//输入类型
-    DARRAY(struct obs_source_info)  filter_types;//过滤类型
-    DARRAY(struct obs_source_info)  transition_types;//过渡类型
-    DARRAY(struct obs_output_info)  output_types;//输出类型
-    DARRAY(struct obs_encoder_info) encoder_types;//编码器类型
-    DARRAY(struct obs_service_info) service_types;//服务类型
+    //数组
+    DARRAY(struct obs_source_info)  source_types;//存的是所有的源
+    DARRAY(struct obs_source_info)  input_types;//存的是所有的输入源
+    DARRAY(struct obs_source_info)  filter_types;//存的是所有的过滤源
+    DARRAY(struct obs_source_info)  transition_types;//存的是所有的过渡源
+    DARRAY(struct obs_output_info)  output_types;//存的是所有的输出
+    DARRAY(struct obs_encoder_info) encoder_types;//存的是所有的编码器
+    DARRAY(struct obs_service_info) service_types;//存的是所有的服务
 	DARRAY(struct obs_modal_ui)     modal_ui_callbacks;
 	DARRAY(struct obs_modeless_ui)  modeless_ui_callbacks;
 

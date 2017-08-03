@@ -346,7 +346,7 @@ static inline void set_video_matrix(struct obs_core_video *video,
 
 	memcpy(video->color_matrix, &mat, sizeof(float) * 16);
 }
-
+//video初始化
 static int obs_init_video(struct obs_video_info *ovi)
 {
 	struct obs_core_video *video = &obs->video;
@@ -385,7 +385,7 @@ static int obs_init_video(struct obs_video_info *ovi)
 	gs_leave_context();
 
 	errorcode = pthread_create(&video->video_thread, NULL,
-			obs_video_thread, obs);
+            obs_video_thread, obs);//obs_video_thread线程创建
 	if (errorcode != 0)
 		return OBS_VIDEO_FAIL;
 
@@ -483,7 +483,7 @@ static void obs_free_graphics(void)
 		video->graphics = NULL;
 	}
 }
-
+//audio初始化
 static bool obs_init_audio(struct audio_output_info *ai)
 {
 	struct obs_core_audio *audio = &obs->audio;
@@ -982,7 +982,7 @@ int obs_reset_video(struct obs_video_info *ovi)
 
 	return obs_init_video(ovi);
 }
-
+//audio初始化
 bool obs_reset_audio(const struct obs_audio_info *oai)
 {
 	struct audio_output_info ai;

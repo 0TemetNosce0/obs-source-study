@@ -81,6 +81,7 @@ static log_handler_t log_handler = def_log_handler;
 //默认crash_handler初始值为def_crash_handler
 static void (*crash_handler)(const char *, va_list, void *) = def_crash_handler;//函数名赋值
 
+//获取log_handler，参数：输出handler和param，log_handler_t是一个函数指针
 void base_get_log_handler(log_handler_t *handler, void **param)
 {
 	if (handler)
@@ -88,7 +89,7 @@ void base_get_log_handler(log_handler_t *handler, void **param)
 	if (param)
 		*param = log_param;
 }
-
+//设置log处理函数
 void base_set_log_handler(log_handler_t handler, void *param)
 {
 	if (!handler)

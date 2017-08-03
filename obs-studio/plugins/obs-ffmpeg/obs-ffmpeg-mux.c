@@ -268,35 +268,35 @@ static inline void start_pipe(struct ffmpeg_muxer *stream, const char *path)
 	stream->pipe = os_process_pipe_create(cmd.array, "w");
 	dstr_free(&cmd);
 }
-
+//开始读取stream->pipe
 static bool ffmpeg_mux_start(void *data)
 {
-	struct ffmpeg_muxer *stream = data;
-	obs_data_t *settings;
-	const char *path;
+    struct ffmpeg_muxer *stream = data;
+    obs_data_t *settings;
+    const char *path;
 
-	if (!obs_output_can_begin_data_capture(stream->output, 0))
-		return false;
-	if (!obs_output_initialize_encoders(stream->output, 0))
-		return false;
+    if (!obs_output_can_begin_data_capture(stream->output, 0))
+        return false;
+    if (!obs_output_initialize_encoders(stream->output, 0))
+        return false;
 
-	settings = obs_output_get_settings(stream->output);
-	path = obs_data_get_string(settings, "path");
-	start_pipe(stream, path);
-	obs_data_release(settings);
+    settings = obs_output_get_settings(stream->output);
+    path = obs_data_get_string(settings, "path");
+    start_pipe(stream, path);
+    obs_data_release(settings);
 
-	if (!stream->pipe) {
-		warn("Failed to create process pipe");
-		return false;
-	}
+    if (!stream->pipe) {
+        warn("Failed to create process pipe");
+        return false;
+    }
 
-	/* write headers and start capture */
-	os_atomic_set_bool(&stream->active, true);
-	os_atomic_set_bool(&stream->capturing, true);
-	stream->total_bytes = 0;
-	obs_output_begin_data_capture(stream->output, 0);
+    /* write headers and start capture */
+    os_atomic_set_bool(&stream->active, true);
+    os_atomic_set_bool(&stream->capturing, true);
+    stream->total_bytes = 0;
+    obs_output_begin_data_capture(stream->output, 0);
 
-	info("Writing file '%s'...", stream->path.array);
+    info("Writing file '%s'...", stream->path.array);
 	return true;
 }
 
@@ -368,7 +368,7 @@ static bool write_packet(struct ffmpeg_muxer *stream,
 		signal_failure(stream);
 		return false;
 	}
-
+//packet->data写入到stream->pipe，就可以读取stream->pipe的数据保存了
 	ret = os_process_pipe_write(stream->pipe, packet->data, packet->size);
 	if (ret != packet->size) {
 		warn("os_process_pipe_write for packet data failed");
@@ -429,26 +429,26 @@ static bool send_headers(struct ffmpeg_muxer *stream)
 
 static void ffmpeg_mux_data(void *data, struct encoder_packet *packet)
 {
-	struct ffmpeg_muxer *stream = data;
+    struct ffmpeg_muxer *stream = data;
 
-	if (!active(stream))
-		return;
+    if (!active(stream))
+        return;
 
-	if (!stream->sent_headers) {
-		if (!send_headers(stream))
-			return;
+    if (!stream->sent_headers) {
+        if (!send_headers(stream))
+            return;
 
-		stream->sent_headers = true;
-	}
+        stream->sent_headers = true;
+    }
 
-	if (stopping(stream)) {
-		if (packet->sys_dts_usec >= stream->stop_ts) {
-			deactivate(stream);
-			return;
-		}
-	}
+    if (stopping(stream)) {
+        if (packet->sys_dts_usec >= stream->stop_ts) {
+            deactivate(stream);
+            return;
+        }
+    }
 
-	write_packet(stream, packet);
+    write_packet(stream, packet);
 }
 
 static obs_properties_t *ffmpeg_mux_properties(void *unused)

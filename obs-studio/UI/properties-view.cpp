@@ -198,7 +198,7 @@ OBSPropertiesView::OBSPropertiesView(OBSData settings_, const char *type_,
 	  minSize        (minSize_)
 {
 	setFrameShape(QFrame::NoFrame);
-	ReloadProperties();
+    ReloadProperties();
 }
 
 void OBSPropertiesView::resizeEvent(QResizeEvent *event)
@@ -1097,7 +1097,7 @@ static OBSFrameRatePropertyWidget *CreateFrameRateWidget(obs_property_t *prop,
 
 	auto fps_label = widget->currentFPS = new QLabel{"FPS: 22"};
 	auto time_label = widget->timePerFrame =
-		new QLabel{"Frame Interval: 0.123 ms"};
+		new QLabel{"Frame Interval: 0.123 ms"};
 	auto min_label = widget->minLabel = new QLabel{"Min FPS: 1/1"};
 	auto max_label = widget->maxLabel = new QLabel{"Max FPS: 2/1"};
 
@@ -1205,7 +1205,7 @@ static void UpdateFPSLabels(OBSFrameRatePropertyWidget *w)
 
 	w->currentFPS->setText(QString("FPS: %1")
 			.arg(convert_to_fps(*valid_fps)));
-	w->timePerFrame->setText(QString("Frame Interval: %1 ms")
+	w->timePerFrame->setText(QString("Frame Interval: %1 ms")
 			.arg(convert_to_frame_interval(*valid_fps) * 1000));
 }
 

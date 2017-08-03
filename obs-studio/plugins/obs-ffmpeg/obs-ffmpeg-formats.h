@@ -1,12 +1,12 @@
 #pragma once
-
+//换算pts
 static inline int64_t rescale_ts(int64_t val, AVCodecContext *context,
 		AVRational new_base)
 {
 	return av_rescale_q_rnd(val, context->time_base, new_base,
 			AV_ROUND_NEAR_INF | AV_ROUND_PASS_MINMAX);
 }
-
+//格式， yuv rgb等
 static inline enum AVPixelFormat obs_to_ffmpeg_video_format(
 		enum video_format format)
 {
@@ -26,7 +26,7 @@ static inline enum AVPixelFormat obs_to_ffmpeg_video_format(
 
 	return AV_PIX_FMT_NONE;
 }
-
+//格式， yuv rgb等
 static inline enum video_format ffmpeg_to_obs_video_format(
 		enum AVPixelFormat format)
 {
@@ -43,12 +43,12 @@ static inline enum video_format ffmpeg_to_obs_video_format(
 	default:                 return VIDEO_FORMAT_NONE;
 	}
 }
-
+//采样格式，采样占用位数
 static inline enum audio_format convert_ffmpeg_sample_format(
 		enum AVSampleFormat format)
 {//AVSampleFormat
 	switch ((uint32_t)format) {
-	case AV_SAMPLE_FMT_U8:   return AUDIO_FORMAT_U8BIT;
+    case AV_SAMPLE_FMT_U8:   return AUDIO_FORMAT_U8BIT;// 8 bit
 	case AV_SAMPLE_FMT_S16:  return AUDIO_FORMAT_16BIT;
 	case AV_SAMPLE_FMT_S32:  return AUDIO_FORMAT_32BIT;
 	case AV_SAMPLE_FMT_FLT:  return AUDIO_FORMAT_FLOAT;

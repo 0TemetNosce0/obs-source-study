@@ -188,7 +188,7 @@ static inline void clamp_audio_output(struct audio_output *audio, size_t bytes)
 		}
 	}
 }
-
+//音频输入和输出
 static void input_and_output(struct audio_output *audio,
 		uint64_t audio_time, uint64_t prev_time)
 {
@@ -237,7 +237,7 @@ static void input_and_output(struct audio_output *audio,
 	for (size_t i = 0; i < MAX_AUDIO_MIXES; i++)
 		do_audio_output(audio, i, new_ts, AUDIO_OUTPUT_FRAMES);
 }
-
+//音频线程创建
 static void *audio_thread(void *param)
 {
 	struct audio_output *audio = param;
@@ -256,7 +256,7 @@ static void *audio_thread(void *param)
 		profile_store_name(obs_get_profiler_name_store(),
 				"audio_thread(%s)", audio->info.name);
 
-	while (os_event_try(audio->stop_event) == EAGAIN) {
+    while (os_event_try(audio->stop_event) == EAGAIN) {//音频循环处理
 		uint64_t cur_time;
 
 		os_sleep_ms(audio_wait_time);
@@ -394,7 +394,7 @@ static inline bool valid_audio_params(const struct audio_output_info *info)
 	return info->format && info->name && info->samples_per_sec > 0 &&
 	       info->speakers > 0;
 }
-
+//音频输出打开
 int audio_output_open(audio_t **audio, struct audio_output_info *info)
 {
 	struct audio_output *out;

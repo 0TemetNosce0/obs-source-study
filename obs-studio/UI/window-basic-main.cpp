@@ -54,7 +54,7 @@
 #include "display-helpers.hpp"
 #include "volume-control.hpp"
 #include "remote-text.hpp"
-
+#include <QDebug>
 #if defined(_WIN32) && defined(ENABLE_WIN_UPDATER)
 #include "win-update/win-update.hpp"
 #endif
@@ -1254,7 +1254,8 @@ extern obs_frontend_callbacks *InitializeAPIInterface(OBSBasic *main);
 void OBSBasic::OBSInit()
 {
 	ProfileScope("OBSBasic::OBSInit");
-
+   
+   
 	const char *sceneCollection = config_get_string(App()->GlobalConfig(),
 			"Basic", "SceneCollectionFile");
 	char savePath[512];
@@ -1278,7 +1279,7 @@ void OBSBasic::OBSInit()
 	if (!ResetAudio())
 		throw "Failed to initialize audio";
 
-	ret = ResetVideo();
+    ret = ResetVideo();//video初始化
 
 	switch (ret) {
 	case OBS_VIDEO_MODULE_NOT_FOUND:
@@ -2701,7 +2702,7 @@ static inline enum video_format GetVideoFormatFromName(const char *name)
 	else
 		return VIDEO_FORMAT_RGBA;
 }
-
+//obs_video_info初始化，video初始化
 int OBSBasic::ResetVideo()
 {
 	if (outputHandler && outputHandler->Active())
@@ -2709,7 +2710,7 @@ int OBSBasic::ResetVideo()
 
 	ProfileScope("OBSBasic::ResetVideo");
 
-	struct obs_video_info ovi;
+    struct obs_video_info ovi;//video info
 	int ret;
 
 	GetConfigFPS(ovi.fps_num, ovi.fps_den);
@@ -2755,7 +2756,7 @@ int OBSBasic::ResetVideo()
 				ovi.base_height);
 	}
 
-	ret = AttemptToResetVideo(&ovi);
+    ret = AttemptToResetVideo(&ovi);//初始化video
 	if (IS_WIN32 && ret != OBS_VIDEO_SUCCESS) {
 		if (ret == OBS_VIDEO_CURRENTLY_ACTIVE) {
 			blog(LOG_WARNING, "Tried to reset when "
@@ -2773,15 +2774,15 @@ int OBSBasic::ResetVideo()
 			ovi.graphics_module = DL_OPENGL;
 			ret = AttemptToResetVideo(&ovi);
 		}
-	} else if (ret == OBS_VIDEO_SUCCESS) {
-		ResizePreview(ovi.base_width, ovi.base_height);
-		if (program)
+    } else if (ret == OBS_VIDEO_SUCCESS) {//成功
+        ResizePreview(ovi.base_width, ovi.base_height);
+        if (program)
 			ResizeProgram(ovi.base_width, ovi.base_height);
 	}
 
 	return ret;
 }
-
+//音频初始化
 bool OBSBasic::ResetAudio()
 {
 	ProfileScope("OBSBasic::ResetAudio");
@@ -2846,33 +2847,32 @@ void OBSBasic::ResizePreview(uint32_t cx, uint32_t cy)
 	scalingMode = ui->preview->GetScalingMode();
 	obs_get_video_info(&ovi);
 
-	if (scalingMode == ScalingMode::Canvas) {
-		previewScale = 1.0f;
-		GetCenterPosFromFixedScale(int(cx), int(cy),
-				targetSize.width() - PREVIEW_EDGE_SIZE * 2,
-				targetSize.height() - PREVIEW_EDGE_SIZE * 2,
-				previewX, previewY, previewScale);
-		previewX += ui->preview->ScrollX();
-		previewY += ui->preview->ScrollY();
+    if (scalingMode == ScalingMode::Canvas) {
+        previewScale = 1.0f;
+        GetCenterPosFromFixedScale(int(cx), int(cy),
+                targetSize.width() - PREVIEW_EDGE_SIZE * 2,
+                targetSize.height() - PREVIEW_EDGE_SIZE * 2,
+                previewX, previewY, previewScale);
+        previewX += ui->preview->ScrollX();
+        previewY += ui->preview->ScrollY();
 
-	} else if (scalingMode == ScalingMode::Output) {
-		previewScale = float(ovi.output_width) / float(ovi.base_width);
-		GetCenterPosFromFixedScale(int(cx), int(cy),
-				targetSize.width() - PREVIEW_EDGE_SIZE * 2,
-				targetSize.height() - PREVIEW_EDGE_SIZE * 2,
-				previewX, previewY, previewScale);
-		previewX += ui->preview->ScrollX();
-		previewY += ui->preview->ScrollY();
+    } else if (scalingMode == ScalingMode::Output) {
+        previewScale = float(ovi.output_width) / float(ovi.base_width);
+        GetCenterPosFromFixedScale(int(cx), int(cy),
+                targetSize.width() - PREVIEW_EDGE_SIZE * 2,
+                targetSize.height() - PREVIEW_EDGE_SIZE * 2,
+                previewX, previewY, previewScale);
+        previewX += ui->preview->ScrollX();
+        previewY += ui->preview->ScrollY();
 
-	} else {
-		GetScaleAndCenterPos(int(cx), int(cy),
-				targetSize.width() - PREVIEW_EDGE_SIZE * 2,
-				targetSize.height() - PREVIEW_EDGE_SIZE * 2,
-				previewX, previewY, previewScale);
-	}
-
-	previewX += float(PREVIEW_EDGE_SIZE);
-	previewY += float(PREVIEW_EDGE_SIZE);
+    } else {
+        GetScaleAndCenterPos(int(cx), int(cy),
+                targetSize.width() - PREVIEW_EDGE_SIZE * 2,
+                targetSize.height() - PREVIEW_EDGE_SIZE * 2,
+                previewX, previewY, previewScale);
+    }
+    previewX += float(PREVIEW_EDGE_SIZE);//previewX：显示区域的x坐标
+    previewY += float(PREVIEW_EDGE_SIZE);//
 }
 
 void OBSBasic::CloseDialogs()
@@ -4296,19 +4296,19 @@ void OBSBasic::StopRecording()
 
 void OBSBasic::RecordingStart()
 {
-	ui->statusbar->RecordingStarted(outputHandler->fileOutput);
-	ui->recordButton->setText(QTStr("Basic.Main.StopRecording"));
+    ui->statusbar->RecordingStarted(outputHandler->fileOutput);
+    ui->recordButton->setText(QTStr("Basic.Main.StopRecording"));
 
-	if (sysTrayRecord)
-		sysTrayRecord->setText(ui->recordButton->text());
+    if (sysTrayRecord)
+        sysTrayRecord->setText(ui->recordButton->text());
 
-	recordingStopping = false;
-	if (api)
-		api->on_event(OBS_FRONTEND_EVENT_RECORDING_STARTED);
+    recordingStopping = false;
+    if (api)
+        api->on_event(OBS_FRONTEND_EVENT_RECORDING_STARTED);
 
-	OnActivate();
+    OnActivate();
 
-	blog(LOG_INFO, RECORDING_START);
+    blog(LOG_INFO, RECORDING_START);
 }
 
 void OBSBasic::RecordingStop(int code)
@@ -4484,7 +4484,11 @@ void OBSBasic::ReplayBufferStop(int code)
 
 void OBSBasic::on_streamButton_clicked()
 {
-	if (outputHandler->StreamingActive()) {
+     //测试用
+    int x,y,cx,cy;
+        GetDisplayRect(x,y,cx,cy);
+qDebug()<<x<<y<<cx<<cy;
+    if (outputHandler->StreamingActive()) {
 		bool confirm = config_get_bool(GetGlobalConfig(), "BasicWindow",
 				"WarnBeforeStoppingStream");
 
@@ -4527,7 +4531,7 @@ void OBSBasic::on_recordButton_clicked()
 
 void OBSBasic::on_settingsButton_clicked()
 {
-	on_action_Settings_triggered();
+      on_action_Settings_triggered();
 }
 
 void OBSBasic::on_actionWebsite_triggered()

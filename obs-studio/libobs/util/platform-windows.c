@@ -145,6 +145,7 @@ os_cpu_usage_info_t *os_cpu_usage_info_start(void)
 	return info;
 }
 
+//cpu信息
 double os_cpu_usage_info_query(os_cpu_usage_info_t *info)
 {
 	union time_data cur_time, cur_sys_time, cur_user_time;
@@ -209,7 +210,7 @@ void os_sleep_ms(uint32_t duration)
 
 	Sleep(duration);
 }
-
+//获取时间
 uint64_t os_gettime_ns(void)
 {
 	LARGE_INTEGER current_time;
@@ -845,7 +846,7 @@ os_inhibit_t *os_inhibit_sleep_create(const char *reason)
 	UNUSED_PARAMETER(reason);
 	return bzalloc(sizeof(struct os_inhibit_info));
 }
-
+//禁止睡眠
 bool os_inhibit_sleep_set_active(os_inhibit_t *info, bool active)
 {
 	if (!info)

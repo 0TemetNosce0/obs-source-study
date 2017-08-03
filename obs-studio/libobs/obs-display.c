@@ -46,7 +46,7 @@ bool obs_display_init(struct obs_display *display,
 		return false;
 	}
 
-    display->background_color = 0xffffff;
+    display->background_color = 0x333333;
 	display->enabled = true;
 	return true;
 }

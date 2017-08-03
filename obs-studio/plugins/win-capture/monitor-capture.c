@@ -1,6 +1,6 @@
 #include <util/dstr.h>
 #include "dc-capture.h"
-
+//显示器，采用dc拷贝（win8以下）
 #define TEXT_MONITOR_CAPTURE obs_module_text("MonitorCapture")
 #define TEXT_CAPTURE_CURSOR  obs_module_text("CaptureCursor")
 #define TEXT_COMPATIBILITY   obs_module_text("Compatibility")

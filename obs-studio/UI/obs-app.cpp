@@ -1327,7 +1327,7 @@ static int run_program(fstream &logFile, int argc, char *argv[])
 
 	OBSApp program(argc, argv, profilerNameStore.get());
 	try {
-		program.AppInit();
+        program.AppInit();//一些初始化
 
 		OBSTranslator translator;
 
@@ -1376,7 +1376,7 @@ static int run_program(fstream &logFile, int argc, char *argv[])
 		/* --------------------------------------- */
 #endif
 
-		if (!program.OBSInit())
+        if (!program.OBSInit())//obs初始化
 			return 0;
 
 		prof.Stop();
@@ -1836,16 +1836,16 @@ int main(int argc, char *argv[])
 #endif
 
 #ifdef _WIN32
-	load_debug_privilege();
+    load_debug_privilege();//修改了下进程的权限
     base_set_crash_handler(main_crash_handler, nullptr);//设置异常处理，不设置有个默认的，不需要则填nullptr
 #endif
 
-	base_get_log_handler(&def_log_handler, nullptr);
+    base_get_log_handler(&def_log_handler, nullptr);//获取log_handler
 
 #if defined(USE_XDG) && defined(IS_UNIX)
 	move_to_xdg();
 #endif
-
+//参数处理
 	for (int i = 1; i < argc; i++) {
 		if (arg_is(argv[i], "--portable", "-p")) {
 			portable_mode = true;
@@ -1881,7 +1881,7 @@ int main(int argc, char *argv[])
 			opt_minimize_tray = true;
 
 		} else if (arg_is(argv[i], "--studio-mode", nullptr)) {
-			opt_studio_mode = true;
+            opt_studio_mode = true;//工作模式
 
 		} else if (arg_is(argv[i], "--allow-opengl", nullptr)) {
 			opt_allow_opengl = true;
@@ -1928,10 +1928,10 @@ int main(int argc, char *argv[])
 
 	fstream logFile;
 
-	curl_global_init(CURL_GLOBAL_ALL);
+    curl_global_init(CURL_GLOBAL_ALL);//curl
 	int ret = run_program(logFile, argc, argv);
 
 	blog(LOG_INFO, "Number of memory leaks: %ld", bnum_allocs());
-	base_set_log_handler(nullptr, nullptr);
+    base_set_log_handler(nullptr, nullptr);//设置log处理函数，nullptr即为没有log处理hanshu
 	return ret;
 }

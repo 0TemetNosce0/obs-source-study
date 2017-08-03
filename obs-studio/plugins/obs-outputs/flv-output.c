@@ -156,35 +156,35 @@ static void write_headers(struct flv_output *stream)
 	write_audio_header(stream);
 	write_video_header(stream);
 }
-
+//flv输出
 static bool flv_output_start(void *data)
 {
-	struct flv_output *stream = data;
-	obs_data_t *settings;
-	const char *path;
+    struct flv_output *stream = data;
+    obs_data_t *settings;
+    const char *path;
 
-	if (!obs_output_can_begin_data_capture(stream->output, 0))
-		return false;
-	if (!obs_output_initialize_encoders(stream->output, 0))
-		return false;
+    if (!obs_output_can_begin_data_capture(stream->output, 0))
+        return false;
+    if (!obs_output_initialize_encoders(stream->output, 0))
+        return false;
 
-	/* get path */
-	settings = obs_output_get_settings(stream->output);
-	path = obs_data_get_string(settings, "path");
-	dstr_copy(&stream->path, path);
-	obs_data_release(settings);
+    /* get path */
+    settings = obs_output_get_settings(stream->output);
+    path = obs_data_get_string(settings, "path");
+    dstr_copy(&stream->path, path);
+    obs_data_release(settings);
 
-	stream->file = os_fopen(stream->path.array, "wb");
-	if (!stream->file) {
-		warn("Unable to open FLV file '%s'", stream->path.array);
-		return false;
-	}
+    stream->file = os_fopen(stream->path.array, "wb");
+    if (!stream->file) {
+        warn("Unable to open FLV file '%s'", stream->path.array);
+        return false;
+    }
 
-	/* write headers and start capture */
-	stream->active = true;
-	obs_output_begin_data_capture(stream->output, 0);
+    /* write headers and start capture */
+    stream->active = true;
+    obs_output_begin_data_capture(stream->output, 0);
 
-	info("Writing FLV file '%s'...", stream->path.array);
+    info("Writing FLV file '%s'...", stream->path.array);
 	return true;
 }
 

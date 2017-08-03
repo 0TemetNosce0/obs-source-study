@@ -966,7 +966,7 @@ static inline struct obs_source_frame *get_closest_frame(obs_source_t *source,
 		uint64_t sys_time);
 bool set_async_texture_size(struct obs_source *source,
 		const struct obs_source_frame *frame);
-
+//获取捕获的视频帧
 static void async_tick(obs_source_t *source)
 {
 	uint64_t sys_time = obs->video.video_time;
@@ -983,7 +983,7 @@ static void async_tick(obs_source_t *source)
 		}
 
 		source->cur_async_frame = get_closest_frame(source,
-				sys_time);
+                sys_time);//获取捕获的视频帧,放到source的cur_async_frame指针中
 	}
 
 	source->last_sys_timestamp = sys_time;
@@ -1506,7 +1506,7 @@ static bool update_async_texrender(struct obs_source *source,
 {
 	gs_texrender_reset(texrender);
 
-	upload_raw_frame(tex, frame);
+    upload_raw_frame(tex, frame);//raw frame
 
 	uint32_t cx = source->async_width;
 	uint32_t cy = source->async_height;
@@ -1568,7 +1568,7 @@ bool update_async_texture(struct obs_source *source,
 			sizeof frame->color_range_max);
 
 	if (source->async_gpu_conversion && texrender)
-		return update_async_texrender(source, frame, tex, texrender);
+        return update_async_texrender(source, frame, tex, texrender);//
 
 	if (type == CONVERT_NONE) {
 		gs_texture_set_image(tex, frame->data[0], frame->linesize[0],
@@ -1664,10 +1664,10 @@ static void obs_source_draw_async_texture(struct obs_source *source)
 static void obs_source_update_async_video(obs_source_t *source)
 {
 	if (!source->async_rendered) {
-		struct obs_source_frame *frame = obs_source_get_frame(source);
+        struct obs_source_frame *frame = obs_source_get_frame(source);//获取帧
 
 		if (frame)
-			frame = filter_async_video(source, frame);
+            frame = filter_async_video(source, frame);//帧加上过滤
 
 		source->async_rendered = true;
 		if (frame) {
@@ -1678,7 +1678,7 @@ static void obs_source_update_async_video(obs_source_t *source)
 			if (source->async_update_texture) {
 				update_async_texture(source, frame,
 						source->async_texture,
-						source->async_texrender);
+                        source->async_texrender);//绘制
 				source->async_update_texture = false;
 			}
 
@@ -1775,7 +1775,7 @@ void obs_source_video_render(obs_source_t *source)
 		return;
 
 	obs_source_addref(source);
-	render_video(source);
+    render_video(source);
 	obs_source_release(source);
 }
 
@@ -2705,6 +2705,7 @@ static bool ready_async_frame(obs_source_t *source, uint64_t sys_time)
 	return frame != NULL;
 }
 
+//
 static inline struct obs_source_frame *get_closest_frame(obs_source_t *source,
 		uint64_t sys_time)
 {
