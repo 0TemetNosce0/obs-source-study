@@ -706,7 +706,7 @@ video_t *obs_encoder_video(const obs_encoder_t *encoder)
 
 	return encoder->media;
 }
-
+//从obs_encoder_t获取audio_t
 audio_t *obs_encoder_audio(const obs_encoder_t *encoder)
 {
 	if (!obs_encoder_valid(encoder, "obs_encoder_audio"))

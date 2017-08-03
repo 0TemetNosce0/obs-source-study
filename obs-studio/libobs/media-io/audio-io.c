@@ -460,7 +460,7 @@ void audio_output_close(audio_t *audio)
 	os_event_destroy(audio->stop_event);
 	bfree(audio);
 }
-//获取audio_output_info
+//从audio_t中获取audio_output_info
 const struct audio_output_info *audio_output_get_info(const audio_t *audio)
 {
 	return audio ? &audio->info : NULL;

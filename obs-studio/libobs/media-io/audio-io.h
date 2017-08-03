@@ -37,7 +37,7 @@ extern "C" {
 struct audio_output;
 typedef struct audio_output audio_t;
 
-enum audio_format {
+enum audio_format {//音频格式,主要是音频raw data的解释方法
 	AUDIO_FORMAT_UNKNOWN,
 
 	AUDIO_FORMAT_U8BIT,
@@ -95,7 +95,7 @@ struct audio_convert_info {
 	enum audio_format   format;
 	enum speaker_layout speakers;
 };
-
+//声道数
 static inline uint32_t get_audio_channels(enum speaker_layout speakers)
 {
 	switch (speakers) {
@@ -115,6 +115,7 @@ static inline uint32_t get_audio_channels(enum speaker_layout speakers)
 	return 0;
 }
 
+//  当前声道字节
 static inline size_t get_audio_bytes_per_channel(enum audio_format format)
 {
 	switch (format) {
@@ -139,6 +140,7 @@ static inline size_t get_audio_bytes_per_channel(enum audio_format format)
 	return 0;
 }
 
+//  是否是planar,planar平面方式组织数据，其它的是交错方式，目前好像只有这两种
 static inline bool is_audio_planar(enum audio_format format)
 {
 	switch (format) {
@@ -174,7 +176,7 @@ static inline size_t get_audio_size(enum audio_format format,
 
 	return (planar ? 1 : get_audio_channels(speakers)) *
 	       get_audio_bytes_per_channel(format) *
-	       frames;
+           frames;//声道数*声道字节数*采样率 = 音频大小
 }
 
 static inline uint64_t audio_frames_to_ns(size_t sample_rate,

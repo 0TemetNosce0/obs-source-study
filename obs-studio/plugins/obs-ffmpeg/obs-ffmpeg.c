@@ -114,7 +114,7 @@ static void ffmpeg_log_callback(void* context, int level, const char* format,
 cleanup:
 	destroy_log_context(log_context);
 }
-
+//nvenc是否指,支持就加载nvenc
 static bool nvenc_supported(void)
 {
 	AVCodec *nvenc = avcodec_find_encoder_by_name("nvenc_h264");
@@ -135,7 +135,7 @@ static bool nvenc_supported(void)
 	os_dlclose(lib);
 	return !!lib;
 }
-
+// 加载模块
 bool obs_module_load(void)
 {
 	da_init(active_log_contexts);
@@ -143,14 +143,14 @@ bool obs_module_load(void)
 
 	//av_log_set_callback(ffmpeg_log_callback);
 
-	obs_register_source(&ffmpeg_source);
-	obs_register_output(&ffmpeg_output);
-	obs_register_output(&ffmpeg_muxer);
-	obs_register_output(&replay_buffer);
-	obs_register_encoder(&aac_encoder_info);
+    obs_register_source(&ffmpeg_source);//源
+    obs_register_output(&ffmpeg_output);//输出
+    obs_register_output(&ffmpeg_muxer);//复用器
+    obs_register_output(&replay_buffer);//延时
+    obs_register_encoder(&aac_encoder_info);//aac编码器
 	if (nvenc_supported()) {
 		blog(LOG_INFO, "NVENC supported");
-		obs_register_encoder(&nvenc_encoder_info);
+        obs_register_encoder(&nvenc_encoder_info);//nvenc
 	}
 	return true;
 }
