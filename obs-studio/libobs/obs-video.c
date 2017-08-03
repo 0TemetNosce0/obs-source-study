@@ -20,7 +20,7 @@
 #include "graphics/vec4.h"
 #include "media-io/format-conversion.h"
 #include "media-io/video-frame.h"
-
+//获取捕获的视频帧
 static uint64_t tick_sources(uint64_t cur_time, uint64_t last_time)
 {
 	struct obs_core_data *data = &obs->data;
@@ -476,7 +476,8 @@ static inline void copy_rgbx_frame(
 		}
 	}
 }
-
+//obs_video_thread==>output_frame==>output_video_data==>video_output_unlock_frame==>update_semaphore；
+//可以看到在obs_video_thread线程中，通知video_thread线程对采集的数据编码推流
 static inline void output_video_data(struct obs_core_video *video,
 		struct video_data *input_frame, int count)
 {
@@ -605,7 +606,7 @@ void *obs_video_thread(void *param)//display绘制线程
         profile_start(video_thread_name);
 
         profile_start(tick_sources_name);
-        last_time = tick_sources(obs->video.video_time, last_time);
+        last_time = tick_sources(obs->video.video_time, last_time);//获取捕获的视频帧
         profile_end(tick_sources_name);
 
         profile_start(render_displays_name);

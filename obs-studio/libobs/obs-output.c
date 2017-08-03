@@ -1042,7 +1042,7 @@ static inline void send_interleaved(struct obs_output *output)
 #endif
 	}
 
-	output->info.encoded_packet(output->context.data, &out);
+    output->info.encoded_packet(output->context.data, &out);//编码  保存
 	obs_encoder_packet_release(&out);
 }
 
@@ -1411,18 +1411,18 @@ static void interleave_packets(void *data, struct encoder_packet *packet)
 
 	/* when both video and audio have been received, we're ready
 	 * to start sending out packets (one at a time) */
-	if (output->received_audio && output->received_video) {
-		if (!was_started) {
-			if (prune_interleaved_packets(output)) {
-				if (initialize_interleaved_packets(output)) {
-					resort_interleaved_packets(output);
-					send_interleaved(output);
-				}
-			}
-		} else {
-			send_interleaved(output);
-		}
-	}
+    if (output->received_audio && output->received_video) {
+        if (!was_started) {
+            if (prune_interleaved_packets(output)) {
+                if (initialize_interleaved_packets(output)) {
+                    resort_interleaved_packets(output);
+                    send_interleaved(output);
+                }
+            }
+        } else {
+            send_interleaved(output);//录制才会保存xialai
+        }
+    }
 
 	pthread_mutex_unlock(&output->interleaved_mutex);
 }

@@ -1775,7 +1775,7 @@ void obs_source_video_render(obs_source_t *source)
 		return;
 
 	obs_source_addref(source);
-	render_video(source);
+    render_video(source);
 	obs_source_release(source);
 }
 

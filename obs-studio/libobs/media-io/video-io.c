@@ -111,61 +111,62 @@ static inline bool scale_video_output(struct video_input *input,
 
 	return success;
 }
-
+//输出当前帧
 static inline bool video_output_cur_frame(struct video_output *video)
 {
-	struct cached_frame_info *frame_info;
-	bool complete;
-	bool skipped;
+    struct cached_frame_info *frame_info;
+    bool complete;
+    bool skipped;
 
-	/* -------------------------------- */
+    /* -------------------------------- */
 
-	pthread_mutex_lock(&video->data_mutex);
+    pthread_mutex_lock(&video->data_mutex);
 
-	frame_info = &video->cache[video->first_added];
+    frame_info = &video->cache[video->first_added];
 
-	pthread_mutex_unlock(&video->data_mutex);
+    pthread_mutex_unlock(&video->data_mutex);
 
-	/* -------------------------------- */
+    /* -------------------------------- */
 
-	pthread_mutex_lock(&video->input_mutex);
+    pthread_mutex_lock(&video->input_mutex);
 
-	for (size_t i = 0; i < video->inputs.num; i++) {
-		struct video_input *input = video->inputs.array+i;
-		struct video_data frame = frame_info->frame;
+    for (size_t i = 0; i < video->inputs.num; i++) {
+        struct video_input *input = video->inputs.array+i;
+        struct video_data frame = frame_info->frame;
 
-		if (scale_video_output(input, &frame))
-			input->callback(input->param, &frame);
-	}
+        if (scale_video_output(input, &frame));
+            input->callback(input->param, &frame);//回调,会调用到receive_video函数进行编码
+    }
 
-	pthread_mutex_unlock(&video->input_mutex);
+    pthread_mutex_unlock(&video->input_mutex);
 
-	/* -------------------------------- */
+    /* -------------------------------- */
 
-	pthread_mutex_lock(&video->data_mutex);
+    pthread_mutex_lock(&video->data_mutex);
 
-	frame_info->frame.timestamp += video->frame_time;
-	complete = --frame_info->count == 0;
-	skipped = frame_info->skipped > 0;
+    frame_info->frame.timestamp += video->frame_time;
+    complete = --frame_info->count == 0;
+    skipped = frame_info->skipped > 0;
 
-	if (complete) {
-		if (++video->first_added == video->info.cache_size)
-			video->first_added = 0;
+    if (complete) {
+        if (++video->first_added == video->info.cache_size)
+            video->first_added = 0;
 
-		if (++video->available_frames == video->info.cache_size)
-			video->last_added = video->first_added;
-	} else if (skipped) {
-		--frame_info->skipped;
-		++video->skipped_frames;
-	}
+        if (++video->available_frames == video->info.cache_size)
+            video->last_added = video->first_added;
+    } else if (skipped) {
+        --frame_info->skipped;
+        ++video->skipped_frames;
+    }
 
-	pthread_mutex_unlock(&video->data_mutex);
+    pthread_mutex_unlock(&video->data_mutex);
 
 	/* -------------------------------- */
 
 	return complete;
 }
-
+//在video_thread中，一直等待update_semaphore后，这个信号是采集到视频图像后post出来的（obs_video_thread中）
+//video_thread等到数据到来，最终调用receive_video函数进行编码
 static void *video_thread(void *param)
 {
 	struct video_output *video = param;
@@ -176,7 +177,7 @@ static void *video_thread(void *param)
 		profile_store_name(obs_get_profiler_name_store(),
 				"video_thread(%s)", video->info.name);
 
-	while (os_sem_wait(video->update_semaphore) == 0) {
+    while (os_sem_wait(video->update_semaphore) == 0) {//video_output_unlock_frame 发出的
 		if (video->stop)
 			break;
 
@@ -245,7 +246,7 @@ int video_output_open(video_t **video, struct video_output_info *info)
 		goto fail;
 	if (os_sem_init(&out->update_semaphore, 0) != 0)
 		goto fail;
-	if (pthread_create(&out->thread, NULL, video_thread, out) != 0)
+    if (pthread_create(&out->thread, NULL, video_thread, out) != 0)//video_thread线程创建
 		goto fail;
 
 	init_cache(out);
@@ -461,7 +462,7 @@ void video_output_unlock_frame(video_t *video)
 	pthread_mutex_lock(&video->data_mutex);
 
 	video->available_frames--;
-	os_sem_post(video->update_semaphore);
+    os_sem_post(video->update_semaphore);//update_semaphore,通知video_thread线程对采集的数据进行编码
 
 	pthread_mutex_unlock(&video->data_mutex);
 }

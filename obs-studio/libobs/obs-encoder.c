@@ -790,6 +790,7 @@ static void full_stop(struct obs_encoder *encoder)
 }
 
 static const char *do_encode_name = "do_encode";
+//编码，推流
 static inline void do_encode(struct obs_encoder *encoder,
 		struct encoder_frame *frame)
 {
@@ -832,11 +833,11 @@ static inline void do_encode(struct obs_encoder *encoder,
 
 		pthread_mutex_lock(&encoder->callbacks_mutex);
 
-		for (size_t i = encoder->callbacks.num; i > 0; i--) {
-			struct encoder_callback *cb;
-			cb = encoder->callbacks.array+(i-1);
-			send_packet(encoder, cb, &pkt);
-		}
+        for (size_t i = encoder->callbacks.num; i > 0; i--) {
+            struct encoder_callback *cb;
+            cb = encoder->callbacks.array+(i-1);
+            send_packet(encoder, cb, &pkt);//编码保存，推流
+        }
 
 		pthread_mutex_unlock(&encoder->callbacks_mutex);
 	}
@@ -846,6 +847,7 @@ error:
 }
 
 static const char *receive_video_name = "receive_video";
+//接受到视频数据，对数据进行编码，推流
 static void receive_video(void *param, struct video_data *frame)
 {
 	profile_start(receive_video_name);
@@ -874,7 +876,7 @@ static void receive_video(void *param, struct video_data *frame)
 	enc_frame.frames = 1;
 	enc_frame.pts    = encoder->cur_pts;
 
-	do_encode(encoder, &enc_frame);
+    do_encode(encoder, &enc_frame);//编码
 
 	encoder->cur_pts += encoder->timebase_num;
 

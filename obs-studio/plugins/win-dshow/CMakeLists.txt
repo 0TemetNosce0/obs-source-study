@@ -2,7 +2,7 @@ if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/libdshowcapture/dshowcapture.hpp")
 	message(STATUS "libdshowcapture submodule not found!  Please fetch submodules.  win-dshow plugin disabled.")
 	return()
 endif()
-
+#视频采集
 project(win-dshow)
 
 find_package(FFmpeg REQUIRED COMPONENTS avcodec avutil)
