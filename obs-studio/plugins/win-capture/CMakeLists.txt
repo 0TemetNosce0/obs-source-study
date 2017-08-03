@@ -1,4 +1,4 @@
-#捕获
+#捕获窗口(window_capture)和显示器(monitor_capture)
 project(win-capture)
 
 set(win-capture_HEADERS
