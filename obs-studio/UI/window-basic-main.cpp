@@ -1394,8 +1394,8 @@ void OBSBasic::OBSInit()
 				OBSBasic::RenderMain, this);
 
 		struct obs_video_info ovi;
-		if (obs_get_video_info(&ovi))
-			ResizePreview(ovi.base_width, ovi.base_height);
+        if (obs_get_video_info(&ovi))
+            ResizePreview(ovi.base_width, ovi.base_height);
 	};
 
 	connect(ui->preview, &OBSQTDisplay::DisplayCreated, addDisplay);
@@ -2543,34 +2543,34 @@ void OBSBasic::SourceRenamed(void *data, calldata_t *params)
 
 	blog(LOG_INFO, "Source '%s' renamed to '%s'", prevName, newName);
 }
-
+//画显示区域的黑色背景
 void OBSBasic::DrawBackdrop(float cx, float cy)
 {
-	if (!box)
-		return;
+    if (!box)
+        return;
 
-	gs_effect_t    *solid = obs_get_base_effect(OBS_EFFECT_SOLID);
-	gs_eparam_t    *color = gs_effect_get_param_by_name(solid, "color");
-	gs_technique_t *tech  = gs_effect_get_technique(solid, "Solid");
+    gs_effect_t    *solid = obs_get_base_effect(OBS_EFFECT_SOLID);
+    gs_eparam_t    *color = gs_effect_get_param_by_name(solid, "color");
+    gs_technique_t *tech  = gs_effect_get_technique(solid, "Solid");
 
-	vec4 colorVal;
-	vec4_set(&colorVal, 0.0f, 0.0f, 0.0f, 1.0f);
-	gs_effect_set_vec4(color, &colorVal);
+    vec4 colorVal;
+    vec4_set(&colorVal, 0.0f, 0.0f, 0.0f, 1.0f);
+    gs_effect_set_vec4(color, &colorVal);
 
-	gs_technique_begin(tech);
-	gs_technique_begin_pass(tech, 0);
-	gs_matrix_push();
-	gs_matrix_identity();
-	gs_matrix_scale3f(float(cx), float(cy), 1.0f);
+    gs_technique_begin(tech);
+    gs_technique_begin_pass(tech, 0);
+    gs_matrix_push();
+    gs_matrix_identity();
+    gs_matrix_scale3f(float(cx), float(cy), 1.0f);
 
-	gs_load_vertexbuffer(box);
-	gs_draw(GS_TRISTRIP, 0, 0);
+    gs_load_vertexbuffer(box);
+    gs_draw(GS_TRISTRIP, 0, 0);
 
-	gs_matrix_pop();
-	gs_technique_end_pass(tech);
-	gs_technique_end(tech);
+    gs_matrix_pop();
+    gs_technique_end_pass(tech);
+    gs_technique_end(tech);
 
-	gs_load_vertexbuffer(nullptr);
+    gs_load_vertexbuffer(nullptr);
 }
 
 void OBSBasic::RenderMain(void *data, uint32_t cx, uint32_t cy)
@@ -2593,7 +2593,7 @@ void OBSBasic::RenderMain(void *data, uint32_t cx, uint32_t cy)
 	gs_set_viewport(window->previewX, window->previewY,
 			window->previewCX, window->previewCY);
 
-	window->DrawBackdrop(float(ovi.base_width), float(ovi.base_height));
+    window->DrawBackdrop(float(ovi.base_width), float(ovi.base_height));// 画黑色背景
 
 	if (window->IsPreviewProgramMode()) {
 		OBSScene scene = window->GetCurrentScene();
@@ -2723,8 +2723,8 @@ int OBSBasic::ResetVideo()
 			"ColorRange");
 
 	ovi.graphics_module = App()->GetRenderModule();
-	ovi.base_width     = (uint32_t)config_get_uint(basicConfig,
-			"Video", "BaseCX");
+    ovi.base_width     = (uint32_t)config_get_uint(basicConfig,
+            "Video", "BaseCX");
 	ovi.base_height    = (uint32_t)config_get_uint(basicConfig,
 			"Video", "BaseCY");
 	ovi.output_width   = (uint32_t)config_get_uint(basicConfig,
@@ -4981,8 +4981,8 @@ void OBSBasic::on_actionCenterToScreen_triggered()
 void OBSBasic::EnablePreviewDisplay(bool enable)
 {
     obs_display_set_enabled(ui->preview->GetDisplay(), enable);
-	ui->preview->setVisible(enable);
-	ui->previewDisabledLabel->setVisible(!enable);
+    ui->preview->setVisible(enable);
+    ui->previewDisabledLabel->setVisible(!enable);
 }
 
 void OBSBasic::TogglePreview()

@@ -196,7 +196,7 @@ struct obs_display {
     bool                            size_changed;//大小改变
     bool                            enabled;//display显示使能,true显示
     uint32_t                        cx, cy;//display宽和高
-    uint32_t                        background_color;//不显示区域背景颜色,就是最外面的宽不显示的，
+    uint32_t                        background_color;//背景颜色
 	gs_swapchain_t                  *swap;
 	pthread_mutex_t                 draw_callbacks_mutex;
 	pthread_mutex_t                 draw_info_mutex;

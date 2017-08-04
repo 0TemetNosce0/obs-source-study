@@ -17,6 +17,7 @@
 OBSBasicPreview::OBSBasicPreview(QWidget *parent, Qt::WindowFlags flags)
 	: OBSQTDisplay(parent, flags)
 {
+
 	ResetScrollingOffset();
 	setMouseTracking(true);
 }
