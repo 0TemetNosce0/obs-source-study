@@ -46,7 +46,7 @@ static inline enum video_format ffmpeg_to_obs_video_format(
 //采样格式，采样占用位数
 static inline enum audio_format convert_ffmpeg_sample_format(
 		enum AVSampleFormat format)
-{
+{//AVSampleFormat
 	switch ((uint32_t)format) {
     case AV_SAMPLE_FMT_U8:   return AUDIO_FORMAT_U8BIT;// 8 bit
 	case AV_SAMPLE_FMT_S16:  return AUDIO_FORMAT_16BIT;

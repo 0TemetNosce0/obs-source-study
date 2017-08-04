@@ -1162,7 +1162,7 @@ const char *obs_data_get_string(obs_data_t *data, const char *name)
 {
 	return obs_data_item_get_string(get_item(data, name));
 }
-
+//从obs_data获取为name的值,值类型是int
 long long obs_data_get_int(obs_data_t *data, const char *name)
 {
 	return obs_data_item_get_int(get_item(data, name));

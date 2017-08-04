@@ -32,15 +32,15 @@
 #define warn(format, ...)  do_log(LOG_WARNING, format, ##__VA_ARGS__)
 #define info(format, ...)  do_log(LOG_INFO,    format, ##__VA_ARGS__)
 #define debug(format, ...) do_log(LOG_DEBUG,   format, ##__VA_ARGS__)
-
+//aac
 struct aac_encoder {
 	obs_encoder_t    *encoder;
 
-	AVCodec          *aac;
+    AVCodec          *aac;//AVCodec是存储编解码器信息的结构体
 	AVCodecContext   *context;
 
 	uint8_t          *samples[MAX_AV_PLANES];
-	AVFrame          *aframe;
+    AVFrame          *aframe;//AVFrame,这个结构体应该是保存视频帧的信息的
 	int64_t          total_samples;
 
 	DARRAY(uint8_t)  packet_buffer;
@@ -52,10 +52,11 @@ struct aac_encoder {
 	int              frame_size_bytes;
 };
 
+//模块名称
 static const char *aac_getname(void *unused)
 {
 	UNUSED_PARAMETER(unused);
-	return obs_module_text("FFmpegAAC");
+    return obs_module_text("FFmpegAAC");
 }
 
 static void aac_destroy(void *data)
@@ -73,17 +74,18 @@ static void aac_destroy(void *data)
 	bfree(enc);
 }
 
+//初始化aac_encoder
 static bool initialize_codec(struct aac_encoder *enc)
 {
 	int ret;
 
-	enc->aframe  = av_frame_alloc();
+    enc->aframe  = av_frame_alloc();//av_frame_alloc(void)函数来分配一个AVFrame结构体。这个函数只是分配AVFrame结构体，但data指向的内存并没有分配，需要我们指定。
 	if (!enc->aframe) {
 		warn("Failed to allocate audio frame");
 		return false;
 	}
 
-	ret = avcodec_open2(enc->context, enc->aac, NULL);
+    ret = avcodec_open2(enc->context, enc->aac, NULL);//该函数用于打开FFmpeg的输入输出文件,enc->context：函数调用成功之后创建的AVIOContext结构体。enc->aac：输入输出协议的地址（文件也是一种“广义”的协议，对于文件来说就是文件的路径）。
 	if (ret < 0) {
 		warn("Failed to open AAC codec: %s", av_err2str(ret));
 		return false;
@@ -111,10 +113,10 @@ static void init_sizes(struct aac_encoder *enc, audio_t *audio)
 	enum audio_format format;
 
 	aoi    = audio_output_get_info(audio);
-	format = convert_ffmpeg_sample_format(enc->context->sample_fmt);
+    format = convert_ffmpeg_sample_format(enc->context->sample_fmt);//把AVSampleFormat换了一下写法而已
 
-	enc->audio_planes = get_audio_planes(format, aoi->speakers);
-	enc->audio_size   = get_audio_size(format, aoi->speakers, 1);
+    enc->audio_planes = get_audio_planes(format, aoi->speakers);//音频声道数
+    enc->audio_size   = get_audio_size(format, aoi->speakers, 1);//音频大小
 }
 
 #ifndef MIN
@@ -125,9 +127,9 @@ static void *aac_create(obs_data_t *settings, obs_encoder_t *encoder)
 {
 	struct aac_encoder *enc;
 	int                bitrate = (int)obs_data_get_int(settings, "bitrate");
-	audio_t            *audio   = obs_encoder_audio(encoder);
+    audio_t            *audio   = obs_encoder_audio(encoder);//获取audio_t
 
-	avcodec_register_all();
+    avcodec_register_all();//注册编解码器
 
 	enc          = bzalloc(sizeof(struct aac_encoder));
 	enc->encoder = encoder;
@@ -145,16 +147,16 @@ static void *aac_create(obs_data_t *settings, obs_encoder_t *encoder)
 		return NULL;
 	}
 
-	enc->context = avcodec_alloc_context3(enc->aac);
+    enc->context = avcodec_alloc_context3(enc->aac);//AVCodecContext初始化
 	if (!enc->context) {
 		warn("Failed to create codec context");
 		goto fail;
 	}
 
-	enc->context->bit_rate    = bitrate * 1000;
-	enc->context->channels    = (int)audio_output_get_channels(audio);
-	enc->context->sample_rate = audio_output_get_sample_rate(audio);
-	enc->context->sample_fmt  = enc->aac->sample_fmts ?
+    enc->context->bit_rate    = bitrate * 1000;// 比特率
+    enc->context->channels    = (int)audio_output_get_channels(audio);//声道数
+    enc->context->sample_rate = audio_output_get_sample_rate(audio);//采样率
+    enc->context->sample_fmt  = enc->aac->sample_fmts ?//采样格式
 		enc->aac->sample_fmts[0] : AV_SAMPLE_FMT_FLTP;
 
 	/* if using FFmpeg's AAC encoder, at least set a cutoff value

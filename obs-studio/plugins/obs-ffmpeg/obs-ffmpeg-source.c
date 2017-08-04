@@ -49,15 +49,15 @@ struct ffmpeg_source {
 	obs_source_t *source;
 	obs_hotkey_id hotkey;
 
-	char *input;
-	char *input_format;
+    char *input;//输入
+    char *input_format;//输入格式
 	int buffering_mb;
-	bool is_looping;
-	bool is_local_file;
-	bool is_hw_decoding;
-	bool is_clear_on_media_end;
-	bool restart_on_activate;
-	bool close_when_inactive;
+    bool is_looping;//循环
+    bool is_local_file;//   本地文件
+    bool is_hw_decoding;//硬件解码
+    bool is_clear_on_media_end;//播放结束影藏源
+    bool restart_on_activate;//当源为活动状态时重新启动播放
+    bool close_when_inactive;//非货源时关闭文件
 };
 
 static bool is_local_file_modified(obs_properties_t *props,
@@ -150,10 +150,10 @@ static obs_properties_t *ffmpeg_source_getproperties(void *data)
 
 	obs_properties_add_bool(props, "restart_on_activate",
 			obs_module_text("RestartWhenActivated"));
-
+//输入
 	obs_properties_add_text(props, "input",
 			obs_module_text("Input"), OBS_TEXT_DEFAULT);
-
+//输入格式
 	obs_properties_add_text(props, "input_format",
 			obs_module_text("InputFormat"), OBS_TEXT_DEFAULT);
 
