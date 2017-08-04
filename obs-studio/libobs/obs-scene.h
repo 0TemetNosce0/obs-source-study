@@ -40,7 +40,7 @@ struct obs_scene_item {
 	volatile long         defer_update;
 	bool                  user_visible;
     bool                  visible;//是否可见
-	bool                  selected;
+    bool                  selected;//是否选中了
 
 	gs_texrender_t        *item_render;
 	struct obs_sceneitem_crop crop;
@@ -58,7 +58,7 @@ struct obs_scene_item {
 	struct vec2           output_scale;
 	enum obs_scale_type   scale_filter;
 
-	struct matrix4        box_transform;
+    struct matrix4        box_transform;//4X4矩阵
 	struct matrix4        draw_transform;
 
 	enum obs_bounds_type  bounds_type;

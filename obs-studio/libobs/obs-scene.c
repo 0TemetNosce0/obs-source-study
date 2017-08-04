@@ -1722,8 +1722,8 @@ void obs_sceneitem_get_draw_transform(const obs_sceneitem_t *item,
 void obs_sceneitem_get_box_transform(const obs_sceneitem_t *item,
 		struct matrix4 *transform)
 {
-	if (item)
-		matrix4_copy(transform, &item->box_transform);
+    if (item)
+        matrix4_copy(transform, &item->box_transform);
 }
 
 bool obs_sceneitem_visible(const obs_sceneitem_t *item)

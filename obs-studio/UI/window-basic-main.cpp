@@ -4792,11 +4792,11 @@ static void GetItemBox(obs_sceneitem_t *item, vec3 &tl, vec3 &br)
 
 	auto GetMinPos = [&] (float x, float y)
 	{
-		vec3 pos;
-		vec3_set(&pos, x, y, 0.0f);
-		vec3_transform(&pos, &pos, &boxTransform);
-		vec3_min(&tl, &tl, &pos);
-		vec3_max(&br, &br, &pos);
+        vec3 pos;
+        vec3_set(&pos, x, y, 0.0f);
+        vec3_transform(&pos, &pos, &boxTransform);
+        vec3_min(&tl, &tl, &pos);
+        vec3_max(&br, &br, &pos);
 	};
 
 	GetMinPos(0.0f, 0.0f);

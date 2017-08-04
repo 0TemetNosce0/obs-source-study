@@ -22,6 +22,7 @@ OBSBasicPreview::OBSBasicPreview(QWidget *parent, Qt::WindowFlags flags)
 	setMouseTracking(true);
 }
 
+//获取鼠标事件xy坐标 vec2保存了xy
 vec2 OBSBasicPreview::GetMouseEventPos(QMouseEvent *event)
 {
 	OBSBasic *main = reinterpret_cast<OBSBasic*>(App()->GetMainWindow());
@@ -50,20 +51,20 @@ struct SceneFindData {
 		  selectBelow (selectBelow_)
 	{}
 };
-
+//场景item是否有video，video会有画面显示
 static bool SceneItemHasVideo(obs_sceneitem_t *item)
 {
 	obs_source_t *source = obs_sceneitem_get_source(item);
 	uint32_t flags = obs_source_get_output_flags(source);
-	return (flags & OBS_SOURCE_VIDEO) != 0;
+    return (flags & OBS_SOURCE_VIDEO) != 0;
 }
-
+//a几乎等于b
 static bool CloseFloat(float a, float b, float epsilon=0.01)
 {
 	using std::abs;
 	return abs(a-b) <= epsilon;
 }
-
+//在位置pos的场景item
 static bool FindItemAtPos(obs_scene_t *scene, obs_sceneitem_t *item,
 		void *param)
 {
@@ -119,7 +120,7 @@ static vec3 GetTransformedPosScaled(float x, float y, const matrix4 &mat,
 	vec3_mulf(&result, &result, scale);
 	return result;
 }
-
+//获取场景尺寸，也就是显示区域大小
 static inline vec2 GetOBSScreenSize()
 {
 	obs_video_info ovi;
@@ -413,7 +414,7 @@ void OBSBasicPreview::keyReleaseEvent(QKeyEvent *event)
 
 	OBSQTDisplay::keyReleaseEvent(event);
 }
-
+//鼠标按下
 void OBSBasicPreview::mousePressEvent(QMouseEvent *event)
 {
 	if (scrollMode && GetScalingMode() != ScalingMode::Window &&
@@ -426,10 +427,10 @@ void OBSBasicPreview::mousePressEvent(QMouseEvent *event)
 
 	if (event->button() == Qt::RightButton) {
 		scrollMode = false;
-		setCursor(Qt::ArrowCursor);
+        setCursor(Qt::ArrowCursor);
 	}
 
-	if (locked) {
+    if (locked) {//锁定
 		OBSQTDisplay::mousePressEvent(event);
 		return;
 	}
@@ -438,7 +439,7 @@ void OBSBasicPreview::mousePressEvent(QMouseEvent *event)
 	float pixelRatio = main->devicePixelRatio();
 	float x = float(event->x()) - main->previewX / pixelRatio;
 	float y = float(event->y()) - main->previewY / pixelRatio;
-	Qt::KeyboardModifiers modifiers = QGuiApplication::keyboardModifiers();
+    Qt::KeyboardModifiers modifiers = QGuiApplication::keyboardModifiers();//获取组合键（键盘按住某键，鼠标组合实现）
 	bool altDown = (modifiers & Qt::AltModifier);
 
 	OBSQTDisplay::mousePressEvent(event);
@@ -448,12 +449,12 @@ void OBSBasicPreview::mousePressEvent(QMouseEvent *event)
 		return;
 
 	if (event->button() == Qt::LeftButton)
-		mouseDown = true;
+        mouseDown = true;//鼠标按下
 
 	if (altDown)
 		cropping = true;
 
-	vec2_set(&startPos, x, y);
+    vec2_set(&startPos, x, y);//设置按下鼠标时的xy坐标
 	GetStretchHandleData(startPos);
 
 	vec2_divf(&startPos, &startPos, main->previewScale / pixelRatio);
@@ -474,6 +475,7 @@ static bool select_one(obs_scene_t *scene, obs_sceneitem_t *item, void *param)
 	return true;
 }
 
+//
 void OBSBasicPreview::DoSelect(const vec2 &pos)
 {
 	OBSBasic *main = reinterpret_cast<OBSBasic*>(App()->GetMainWindow());
@@ -494,14 +496,15 @@ void OBSBasicPreview::DoCtrlSelect(const vec2 &pos)
 	obs_sceneitem_select(item, !selected);
 }
 
+//点击选择
 void OBSBasicPreview::ProcessClick(const vec2 &pos)
 {
-	Qt::KeyboardModifiers modifiers = QGuiApplication::keyboardModifiers();
+    Qt::KeyboardModifiers modifiers = QGuiApplication::keyboardModifiers();//获取组合建
 
-	if (modifiers & Qt::ControlModifier)
-		DoCtrlSelect(pos);
-	else
-		DoSelect(pos);
+    if (modifiers & Qt::ControlModifier)//ctrl 多个选择
+        DoCtrlSelect(pos);
+    else
+        DoSelect(pos);
 }
 
 void OBSBasicPreview::mouseReleaseEvent(QMouseEvent *event)
@@ -517,16 +520,16 @@ void OBSBasicPreview::mouseReleaseEvent(QMouseEvent *event)
 	if (mouseDown) {
 		vec2 pos = GetMouseEventPos(event);
 
-		if (!mouseMoved)
-			ProcessClick(pos);
-
+        if (!mouseMoved)
+            ProcessClick(pos);//点击选中
+//变量还原默认
 		stretchItem = nullptr;
 		mouseDown   = false;
 		mouseMoved  = false;
 		cropping    = false;
 	}
 }
-
+//边界
 struct SelectedItemBounds {
 	bool first = true;
 	vec3 tl, br;
@@ -535,33 +538,33 @@ struct SelectedItemBounds {
 static bool AddItemBounds(obs_scene_t *scene, obs_sceneitem_t *item,
 		void *param)
 {
-	SelectedItemBounds *data = reinterpret_cast<SelectedItemBounds*>(param);
+    SelectedItemBounds *data = reinterpret_cast<SelectedItemBounds*>(param);
 
-	if (!obs_sceneitem_selected(item))
-		return true;
+    if (!obs_sceneitem_selected(item))
+        return true;
 
-	matrix4 boxTransform;
-	obs_sceneitem_get_box_transform(item, &boxTransform);
+    matrix4 boxTransform;
+    obs_sceneitem_get_box_transform(item, &boxTransform);
 
-	vec3 t[4] = {
-		GetTransformedPos(0.0f, 0.0f, boxTransform),
-		GetTransformedPos(1.0f, 0.0f, boxTransform),
-		GetTransformedPos(0.0f, 1.0f, boxTransform),
-		GetTransformedPos(1.0f, 1.0f, boxTransform)
-	};
+    vec3 t[4] = {
+        GetTransformedPos(0.0f, 0.0f, boxTransform),
+        GetTransformedPos(1.0f, 0.0f, boxTransform),
+        GetTransformedPos(0.0f, 1.0f, boxTransform),
+        GetTransformedPos(1.0f, 1.0f, boxTransform)
+    };
 
-	for (const vec3 &v : t) {
-		if (data->first) {
-			vec3_copy(&data->tl, &v);
-			vec3_copy(&data->br, &v);
-			data->first = false;
-		} else {
-			vec3_min(&data->tl, &data->tl, &v);
-			vec3_max(&data->br, &data->br, &v);
-		}
-	}
+    for (const vec3 &v : t) {
+        if (data->first) {
+            vec3_copy(&data->tl, &v);
+            vec3_copy(&data->br, &v);
+            data->first = false;
+        } else {
+            vec3_min(&data->tl, &data->tl, &v);
+            vec3_max(&data->br, &data->br, &v);
+        }
+    }
 
-	UNUSED_PARAMETER(scene);
+    UNUSED_PARAMETER(scene);
 	return true;
 }
 
@@ -627,64 +630,64 @@ static bool GetSourceSnapOffset(obs_scene_t *scene, obs_sceneitem_t *item,
 
 void OBSBasicPreview::SnapItemMovement(vec2 &offset)
 {
-	OBSBasic *main = reinterpret_cast<OBSBasic*>(App()->GetMainWindow());
-	OBSScene scene = main->GetCurrentScene();
+    OBSBasic *main = reinterpret_cast<OBSBasic*>(App()->GetMainWindow());
+    OBSScene scene = main->GetCurrentScene();
 
-	SelectedItemBounds data;
-	obs_scene_enum_items(scene, AddItemBounds, &data);
+    SelectedItemBounds data;
+    obs_scene_enum_items(scene, AddItemBounds, &data);
 
-	data.tl.x += offset.x;
-	data.tl.y += offset.y;
-	data.br.x += offset.x;
-	data.br.y += offset.y;
+    data.tl.x += offset.x;
+    data.tl.y += offset.y;
+    data.br.x += offset.x;
+    data.br.y += offset.y;
 
-	vec3 snapOffset = GetSnapOffset(data.tl, data.br);
+    vec3 snapOffset = GetSnapOffset(data.tl, data.br);
 
-	const bool snap = config_get_bool(GetGlobalConfig(),
-			"BasicWindow", "SnappingEnabled");
-	const bool sourcesSnap = config_get_bool(GetGlobalConfig(),
-			"BasicWindow", "SourceSnapping");
-	if (snap == false)
-		return;
-	if (sourcesSnap == false) {
-		offset.x += snapOffset.x;
-		offset.y += snapOffset.y;
-		return;
-	}
+    const bool snap = config_get_bool(GetGlobalConfig(),
+            "BasicWindow", "SnappingEnabled");
+    const bool sourcesSnap = config_get_bool(GetGlobalConfig(),
+            "BasicWindow", "SourceSnapping");
+    if (snap == false)
+        return;
+    if (sourcesSnap == false) {
+        offset.x += snapOffset.x;
+        offset.y += snapOffset.y;
+        return;
+    }
 
-	const float clampDist = config_get_double(GetGlobalConfig(),
-			"BasicWindow", "SnapDistance") / main->previewScale;
+    const float clampDist = config_get_double(GetGlobalConfig(),
+            "BasicWindow", "SnapDistance") / main->previewScale;
 
-	OffsetData offsetData;
-	offsetData.clampDist = clampDist;
-	offsetData.tl = data.tl;
-	offsetData.br = data.br;
-	vec3_copy(&offsetData.offset, &snapOffset);
+    OffsetData offsetData;
+    offsetData.clampDist = clampDist;
+    offsetData.tl = data.tl;
+    offsetData.br = data.br;
+    vec3_copy(&offsetData.offset, &snapOffset);
 
-	obs_scene_enum_items(scene, GetSourceSnapOffset, &offsetData);
+    obs_scene_enum_items(scene, GetSourceSnapOffset, &offsetData);
 
-	if (fabsf(offsetData.offset.x) > EPSILON ||
-	    fabsf(offsetData.offset.y) > EPSILON) {
-		offset.x += offsetData.offset.x;
-		offset.y += offsetData.offset.y;
-	} else {
-		offset.x += snapOffset.x;
-		offset.y += snapOffset.y;
-	}
+    if (fabsf(offsetData.offset.x) > EPSILON ||
+        fabsf(offsetData.offset.y) > EPSILON) {
+        offset.x += offsetData.offset.x;
+        offset.y += offsetData.offset.y;
+    } else {
+        offset.x += snapOffset.x;
+        offset.y += snapOffset.y;
+    }
 }
-
+//移动item
 static bool move_items(obs_scene_t *scene, obs_sceneitem_t *item, void *param)
 {
-	vec2 *offset = reinterpret_cast<vec2*>(param);
+    vec2 *offset = reinterpret_cast<vec2*>(param);
 
-	if (obs_sceneitem_selected(item)) {
-		vec2 pos;
-		obs_sceneitem_get_pos(item, &pos);
-		vec2_add(&pos, &pos, offset);
-		obs_sceneitem_set_pos(item, &pos);
-	}
+    if (obs_sceneitem_selected(item)) {
+        vec2 pos;
+        obs_sceneitem_get_pos(item, &pos);//获取item的xy
+        vec2_add(&pos, &pos, offset);
+        obs_sceneitem_set_pos(item, &pos);
+    }
 
-	UNUSED_PARAMETER(scene);
+    UNUSED_PARAMETER(scene);
 	return true;
 }
 
@@ -826,7 +829,7 @@ static float maxfunc(float x, float y)
 {
 	return x > y ? x : y;
 }
-
+//
 static float minfunc(float x, float y)
 {
 	return x < y ? x : y;
@@ -1019,40 +1022,41 @@ void OBSBasicPreview::StretchItem(const vec2 &pos)
 	obs_sceneitem_set_pos(stretchItem, &newPos);
 }
 
+//鼠标移动
 void OBSBasicPreview::mouseMoveEvent(QMouseEvent *event)
 {
-	if (scrollMode && event->buttons() == Qt::LeftButton) {
-		scrollingOffset.x += event->x() - scrollingFrom.x;
-		scrollingOffset.y += event->y() - scrollingFrom.y;
-		scrollingFrom.x = event->x();
-		scrollingFrom.y = event->y();
-		emit DisplayResized();
-		return;
-	}
+    if (scrollMode && event->buttons() == Qt::LeftButton) {//？？
+        scrollingOffset.x += event->x() - scrollingFrom.x;
+        scrollingOffset.y += event->y() - scrollingFrom.y;
+        scrollingFrom.x = event->x();
+        scrollingFrom.y = event->y();
+        emit DisplayResized();
+        return;
+    }
 
-	if (locked)
+    if (locked)//锁定
 		return;
 
-	if (mouseDown) {
-		vec2 pos = GetMouseEventPos(event);
+    if (mouseDown) {//鼠标按下
+        vec2 pos = GetMouseEventPos(event);//鼠标位置
 
 		if (!mouseMoved && !mouseOverItems &&
-		    stretchHandle == ItemHandle::None) {
-			ProcessClick(startPos);
-			mouseOverItems = SelectedAtPos(startPos);
+            stretchHandle == ItemHandle::None) {
+            ProcessClick(startPos);
+            mouseOverItems = SelectedAtPos(startPos);
 		}
 
 		pos.x = std::round(pos.x);
 		pos.y = std::round(pos.y);
 
 		if (stretchHandle != ItemHandle::None) {
-			if (cropping)
+            if (cropping)//裁切
 				CropItem(pos);
 			else
-				StretchItem(pos);
+                StretchItem(pos);//拉伸
 
 		} else if (mouseOverItems) {
-			MoveItems(pos);
+            MoveItems(pos);//移动item
 		}
 
 		mouseMoved = true;
