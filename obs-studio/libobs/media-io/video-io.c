@@ -135,7 +135,7 @@ static inline bool video_output_cur_frame(struct video_output *video)
         struct video_data frame = frame_info->frame;
 
         if (scale_video_output(input, &frame));
-            input->callback(input->param, &frame);//回调,会调用到receive_video函数进行编码
+            input->callback(input->param, &frame);//回调,会调用到receive_video函数对当前帧进行编码
     }
 
     pthread_mutex_unlock(&video->input_mutex);

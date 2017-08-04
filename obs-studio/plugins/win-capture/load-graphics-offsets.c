@@ -179,11 +179,11 @@ bool load_graphics_offsets(bool is32bit)
 	}
 
 	for (;;) {
-		size_t len = os_process_pipe_read(pp, (uint8_t*)data, 128);
-		if (!len)
-			break;
+        size_t len = os_process_pipe_read(pp, (uint8_t*)data, 128);
+        if (!len)
+            break;
 
-		dstr_ncat(&str, data, len);
+        dstr_ncat(&str, data, len);
 	}
 
 	config_ini = obs_module_config_path(is32bit ? "32.ini" : "64.ini");

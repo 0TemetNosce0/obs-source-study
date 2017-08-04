@@ -20,7 +20,7 @@
 #include "platform.h"
 #include "bmem.h"
 #include "pipe.h"
-
+//管道
 struct os_process_pipe {
 	bool read_pipe;
 	HANDLE handle;
@@ -140,20 +140,20 @@ int os_process_pipe_destroy(os_process_pipe_t *pp)
 
 size_t os_process_pipe_read(os_process_pipe_t *pp, uint8_t *data, size_t len)
 {
-	DWORD bytes_read;
-	bool success;
+    DWORD bytes_read;
+    bool success;
 
-	if (!pp) {
-		return 0;
-	}
-	if (!pp->read_pipe) {
-		return 0;
-	}
+    if (!pp) {
+        return 0;
+    }
+    if (!pp->read_pipe) {
+        return 0;
+    }
 
-	success = !!ReadFile(pp->handle, data, (DWORD)len, &bytes_read, NULL);
-	if (success && bytes_read) {
-		return bytes_read;
-	}
+    success = !!ReadFile(pp->handle, data, (DWORD)len, &bytes_read, NULL);
+    if (success && bytes_read) {
+        return bytes_read;
+    }
 
 	return 0;
 }
