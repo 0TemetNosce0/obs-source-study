@@ -57,8 +57,8 @@ struct audio_output {
     size_t                     channels;//音频通道:1单声道,2立体声
 	size_t                     planes;
 
-	pthread_t                  thread;
-	os_event_t                 *stop_event;
+    pthread_t                  thread;//音频线程
+    os_event_t                 *stop_event;//停止事件,如果停止了,在音频线程中while就终止了循环了.
 
 	bool                       initialized;
 
@@ -114,7 +114,7 @@ static inline size_t min_size(size_t a, size_t b)
 #define CLAMP(val, minval, maxval) \
 	((val > maxval) ? maxval : ((val < minval) ? minval : val))
 #endif
-
+//重新采样
 static bool resample_audio_output(struct audio_input *input,
 		struct audio_data *data)
 {
@@ -226,7 +226,7 @@ static void input_and_output(struct audio_output *audio,
 
 	/* get new audio data */
 	success = audio->input_cb(audio->input_param, prev_time, audio_time,
-			&new_ts, active_mixes, data);
+            &new_ts, active_mixes, data);//音频输入回调
 	if (!success)
 		return;
 
@@ -489,7 +489,7 @@ size_t audio_output_get_planes(const audio_t *audio)
 {
 	return audio ? audio->planes : 0;
 }
-//获取音频通道
+//获取音频通道数:左声道1,立体声2
 size_t audio_output_get_channels(const audio_t *audio)
 {
 
