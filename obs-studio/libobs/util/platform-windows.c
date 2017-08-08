@@ -338,7 +338,7 @@ struct os_dir {
 	bool             first;
 	struct os_dirent out;
 };
-
+//打开目录路径
 os_dir_t *os_opendir(const char *path)
 {
 	struct dstr     path_str = {0};
