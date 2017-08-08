@@ -73,20 +73,20 @@ static inline bool obs_object_valid(const void *obj, const char *f,
 /* modules */
 //obs插件模块
 struct obs_module {
-	char *mod_name;
-	const char *file;
+    char *mod_name;//dll的name
+    const char *file;// XXXX.dll
     char *bin_path;//dll路径
     char *data_path;//data路径
-	void *module;
+    void *module;//dll地址
 	bool loaded;
-
-	bool        (*load)(void);
-	void        (*unload)(void);
+//对应模块的dll函数
+    bool        (*load)(void);//dll obs_module_load
+    void        (*unload)(void);//dll obs_module_unload
 	void        (*set_locale)(const char *locale);
 	void        (*free_locale)(void);
 	uint32_t    (*ver)(void);
-	void        (*set_pointer)(obs_module_t *module);
-	const char *(*name)(void);
+    void        (*set_pointer)(obs_module_t *module);//dll obs_module_set_pointer
+    const char *(*name)(void);//dll obs_module_name
 	const char *(*description)(void);
 	const char *(*author)(void);
 
