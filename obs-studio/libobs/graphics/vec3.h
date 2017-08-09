@@ -29,7 +29,7 @@ struct plane;
 struct matrix3;
 struct matrix4;
 struct quat;
-
+//三维向量
 struct vec3 {
 	union {
 		struct {

@@ -42,7 +42,12 @@ static const char *image_source_get_name(void *unused)
 	UNUSED_PARAMETER(unused);
 	return obs_module_text("ImageInput");
 }
-
+/***************************
+ * brief:image 加载
+ * input:
+ * output:
+ * return:
+ **************************/
 static void image_source_load(struct image_source *context)
 {
 	char *file = context->file;

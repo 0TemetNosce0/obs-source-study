@@ -19,13 +19,13 @@
 
 #include "graphics.h"
 #include "libnsgif/libnsgif.h"
-
+//图片文件
 struct gs_image_file {
 	gs_texture_t *texture;
 	enum gs_color_format format;
 	uint32_t cx;
 	uint32_t cy;
-	bool is_animated_gif;
+    bool is_animated_gif;// gif
 	bool frame_updated;
 	bool loaded;
 

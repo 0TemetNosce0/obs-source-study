@@ -17,7 +17,7 @@
 #include <stdio.h>
 #include "libnsgif.h"
 
-
+//添加图片 添加gif相关
 #ifdef NDEBUG
 #  define LOG(x) ((void) 0)
 #else

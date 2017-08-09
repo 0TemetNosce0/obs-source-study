@@ -26,7 +26,7 @@ extern "C" {
 
 struct vec3;
 struct matrix4;
-
+//四维向量
 struct vec4 {
 	union {
 		struct {

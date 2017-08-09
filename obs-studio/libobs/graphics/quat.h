@@ -37,7 +37,7 @@ extern "C" {
 struct matrix3;
 struct matrix4;
 struct axisang;
-
+//四元数quat
 struct quat {
 	union {
 		struct {float x, y, z, w;};
