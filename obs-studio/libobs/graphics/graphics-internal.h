@@ -22,7 +22,7 @@
 #include "graphics.h"
 #include "matrix3.h"
 #include "matrix4.h"
-
+//gs 导入结构体，gs_exports结构体存入了函数指正，指针指向导入的图形渲染dll对应地址
 struct gs_exports {
 	const char *(*device_get_name)(void);
 	int (*device_get_type)(void);
@@ -259,7 +259,7 @@ struct gs_exports {
 				uint32_t handle);
 #endif
 };
-
+//混合状态
 struct blend_state {
 	bool               enabled;
 	enum gs_blend_type src_c;

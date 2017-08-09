@@ -1,4 +1,4 @@
-/******************************************************************************
+﻿/******************************************************************************
     Copyright (C) 2016 by Hugh Bailey <obs.jim@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
@@ -153,7 +153,7 @@ not_animated:
 	return is_animated_gif;
 }
 /***************************
- * brief: image file init，添加图片来源调�?
+ * brief: image file init，添加图片来源调�?
  * input:
  * output:
  * return:

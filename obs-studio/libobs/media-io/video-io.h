@@ -30,7 +30,7 @@ struct video_frame;
 struct video_output;
 typedef struct video_output video_t;
 
-enum video_format {
+enum video_format {//I420 YVYU UYVY YUY2
 	VIDEO_FORMAT_NONE,
 
 	/* planar 420 format */
@@ -54,8 +54,8 @@ enum video_format {
 
 enum video_colorspace {
 	VIDEO_CS_DEFAULT,
-	VIDEO_CS_601,
-	VIDEO_CS_709,
+    VIDEO_CS_601,//601
+    VIDEO_CS_709,//709
 };
 
 enum video_range_type {

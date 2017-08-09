@@ -20,6 +20,7 @@
 #include "../util/platform.h"
 #include "effect-parser.h"
 #include "effect.h"
+//effect 解析
 
 void ep_free(struct effect_parser *ep)
 {
