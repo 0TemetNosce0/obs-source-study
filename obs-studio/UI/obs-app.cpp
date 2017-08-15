@@ -1484,7 +1484,7 @@ static void load_debug_privilege(void)
 #ifndef OBS_UNIX_STRUCTURE
 #define OBS_UNIX_STRUCTURE 0
 #endif
-
+//获取config目录路径
 int GetConfigPath(char *path, size_t size, const char *name)
 {
 	if (!OBS_UNIX_STRUCTURE && portable_mode) {
@@ -1790,11 +1790,11 @@ static void upgrade_settings(void)
 			int ret;
 
 			ret = config.Open(path, CONFIG_OPEN_EXISTING);
-			if (ret == CONFIG_SUCCESS) {
+            if (ret == CONFIG_SUCCESS) {//更新设置，保存设置到内存
 				if (update_ffmpeg_output(config) ||
 				    update_reconnect(config)) {
 					config_save_safe(config, "tmp",
-							nullptr);
+                            nullptr);//保存设置到内存
 				}
 			}
 
@@ -1924,7 +1924,7 @@ int main(int argc, char *argv[])
 	}
 #endif
 
-	upgrade_settings();
+    upgrade_settings();//更新设置
 
 	fstream logFile;
 

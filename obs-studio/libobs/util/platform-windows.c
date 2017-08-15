@@ -225,13 +225,19 @@ uint64_t os_gettime_ns(void)
 }
 
 /* returns [folder]\[name] on windows */
+/***************************
+ * brief:获取win特殊路径下的name目录路径到dst
+ * input:name目录路径
+ * output:dst
+ * return:
+ **************************/
 static int os_get_path_internal(char *dst, size_t size, const char *name,
 		int folder)
 {
 	wchar_t path_utf16[MAX_PATH];
 
 	SHGetFolderPathW(NULL, folder, NULL, SHGFP_TYPE_CURRENT,
-			path_utf16);
+            path_utf16);//获取win系统特殊路径（folder区分哪个路径），到path_utf16
 
 	if (os_wcs_to_utf8(path_utf16, 0, dst, size) != 0) {
 		if (!name || !*name) {
@@ -263,7 +269,12 @@ static char *os_get_path_ptr_internal(const char *name, int folder)
 	dstr_cat(&path, name);
 	return path.array;
 }
-
+/***************************
+ * brief: 获取config目录路径
+ * input:name   size
+ * output:dst
+ * return:
+ **************************/
 int os_get_config_path(char *dst, size_t size, const char *name)
 {
 	return os_get_path_internal(dst, size, name, CSIDL_APPDATA);
@@ -283,7 +294,12 @@ char *os_get_program_data_path_ptr(const char *name)
 {
 	return os_get_path_ptr_internal(name, CSIDL_COMMON_APPDATA);
 }
-
+/***************************
+ * brief:目录路径或文件路径path是否存在
+ * input:
+ * output:
+ * return:
+ **************************/
 bool os_file_exists(const char *path)
 {
 	WIN32_FIND_DATAW wfd;
@@ -293,7 +309,7 @@ bool os_file_exists(const char *path)
 	if (!os_utf8_to_wcs_ptr(path, 0, &path_utf16))
 		return false;
 
-	hFind = FindFirstFileW(path_utf16, &wfd);
+    hFind = FindFirstFileW(path_utf16, &wfd);//该函数到一个文件夹(包括子文件夹)去搜索指定文件
 	if (hFind != INVALID_HANDLE_VALUE)
 		FindClose(hFind);
 
@@ -351,7 +367,7 @@ os_dir_t *os_opendir(const char *path)
 	dstr_cat(&path_str, "/*.*");
 
 	if (os_utf8_to_wcs_ptr(path_str.array, path_str.len, &w_path) > 0) {
-		handle = FindFirstFileW(w_path, &wfd);
+        handle = FindFirstFileW(w_path, &wfd);//如执行成功，返回一个搜索句柄。如果出错，返回一个INVALID_HANDLE_VALUE常数，一旦不再需要，应该用FindClose函数关闭这个句柄
 		if (handle != INVALID_HANDLE_VALUE) {
 			dir         = bzalloc(sizeof(struct os_dir));
 			dir->handle = handle;
