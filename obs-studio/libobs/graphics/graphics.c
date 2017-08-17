@@ -185,17 +185,17 @@ int gs_create(graphics_t **pgraphics, const char *module, uint32_t adapter)
 	pthread_mutex_init_value(&graphics->mutex);
 	pthread_mutex_init_value(&graphics->effect_mutex);
 
-	graphics->module = os_dlopen(module);
+    graphics->module = os_dlopen(module);//加载dll(opengl或者d3d11）
 	if (!graphics->module) {
 		errcode = GS_ERROR_MODULE_NOT_FOUND;
 		goto error;
 	}
 
 	if (!load_graphics_imports(&graphics->exports, graphics->module,
-	                           module))
+                               module))//dll相关函数导入
 		goto error;
 
-	errcode = graphics->exports.device_create(&graphics->device, adapter);
+    errcode = graphics->exports.device_create(&graphics->device, adapter);//设备创建：opengl或d3d11
 	if (errcode != GS_SUCCESS)
 		goto error;
 

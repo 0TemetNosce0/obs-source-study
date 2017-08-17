@@ -177,7 +177,7 @@ void gs_device::InitCompiler()
 	while (ver > 30) {
 		sprintf(d3dcompiler, "D3DCompiler_%02d.dll", ver);
 
-		HMODULE module = LoadLibraryA(d3dcompiler);
+        HMODULE module = LoadLibraryA(d3dcompiler); //动态加载
 		if (module) {
 			d3dCompile = (pD3DCompile)GetProcAddress(module,
 					"D3DCompile");
@@ -464,7 +464,7 @@ gs_device::gs_device(uint32_t adapterIdx)
 		curSamplers[i] = NULL;
 	}
 
-	InitCompiler();
+    InitCompiler();//编译shader
 	InitFactory(adapterIdx);
 	InitDevice(adapterIdx);
 	device_set_render_target(this, NULL, NULL);
@@ -600,7 +600,7 @@ static inline void LogD3DAdapters()
 		LogAdapterMonitors(adapter);
 	}
 }
-
+//设备创建
 int device_create(gs_device_t **p_device, uint32_t adapter)
 {
 	gs_device *device = NULL;
@@ -611,7 +611,7 @@ int device_create(gs_device_t **p_device, uint32_t adapter)
 		blog(LOG_INFO, "Initializing D3D11...");
 		LogD3DAdapters();
 
-		device = new gs_device(adapter);
+        device = new gs_device(adapter);//图形设备结构体
 
 	} catch (UnsupportedHWError error) {
 		blog(LOG_ERROR, "device_create (D3D11): %s (%08lX)", error.str,

@@ -2669,7 +2669,7 @@ static inline int AttemptToResetVideo(struct obs_video_info *ovi)
 {
 	return obs_reset_video(ovi);
 }
-
+//获取缩放比例类型： 缩放比例在滤镜-缩放比例中
 static inline enum obs_scale_type GetScaleType(ConfigFile &basicConfig)
 {
 	const char *scaleTypeStr = config_get_string(basicConfig,
@@ -2772,7 +2772,7 @@ int OBSBasic::ResetVideo()
 					  ret, ovi.graphics_module,
 					  DL_OPENGL);
 			ovi.graphics_module = DL_OPENGL;
-			ret = AttemptToResetVideo(&ovi);
+            ret = AttemptToResetVideo(&ovi);//opengl
 		}
     } else if (ret == OBS_VIDEO_SUCCESS) {//成功
         ResizePreview(ovi.base_width, ovi.base_height);
