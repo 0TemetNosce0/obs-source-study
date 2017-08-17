@@ -1,6 +1,6 @@
 project(libobs-opengl)
-
-
+#opengl显示
+#查找OpenGL。cmake默认提供了，
 find_package(OpenGL REQUIRED)
 include_directories(${OPENGL_INCLUDE_DIR})
 

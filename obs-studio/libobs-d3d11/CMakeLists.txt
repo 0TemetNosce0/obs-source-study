@@ -1,5 +1,5 @@
 project(libobs-d3d11)
-
+#DirectX显示
 include_directories(SYSTEM "${CMAKE_SOURCE_DIR}/libobs")
 
 add_definitions(-DLIBOBS_EXPORTS)

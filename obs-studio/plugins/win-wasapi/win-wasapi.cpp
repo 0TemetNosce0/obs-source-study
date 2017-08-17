@@ -497,7 +497,7 @@ static void GetWASAPIDefaultsOutput(obs_data_t *settings)
 	obs_data_set_default_string(settings, OPT_DEVICE_ID, "default");
 	obs_data_set_default_bool(settings, OPT_USE_DEVICE_TIMING, true);
 }
-
+//WASAPISource创建
 static void *CreateWASAPISource(obs_data_t *settings, obs_source_t *source,
 		bool input)
 {
@@ -509,12 +509,12 @@ static void *CreateWASAPISource(obs_data_t *settings, obs_source_t *source,
 
 	return nullptr;
 }
-
+//音频输入
 static void *CreateWASAPIInput(obs_data_t *settings, obs_source_t *source)
 {
 	return CreateWASAPISource(settings, source, true);
 }
-
+//音频输出
 static void *CreateWASAPIOutput(obs_data_t *settings, obs_source_t *source)
 {
 	return CreateWASAPISource(settings, source, false);
@@ -570,7 +570,7 @@ static obs_properties_t *GetWASAPIPropertiesOutput(void *)
 void RegisterWASAPIInput()
 {
 	obs_source_info info = {};
-	info.id              = "wasapi_input_capture";
+    info.id              = "wasapi_input_capture";//
 	info.type            = OBS_SOURCE_TYPE_INPUT;
 	info.output_flags    = OBS_SOURCE_AUDIO |
 	                       OBS_SOURCE_DO_NOT_DUPLICATE;
