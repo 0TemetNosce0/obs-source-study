@@ -195,7 +195,7 @@ int gs_create(graphics_t **pgraphics, const char *module, uint32_t adapter)
                                module))//dll相关函数导入
 		goto error;
 
-    errcode = graphics->exports.device_create(&graphics->device, adapter);//设备创建：opengl或d3d11
+    errcode = graphics->exports.device_create(&graphics->device, adapter);//设备创建：opengl或d3d11，device_create对应dll里的device_create函数地址
 	if (errcode != GS_SUCCESS)
 		goto error;
 

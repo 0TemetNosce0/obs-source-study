@@ -269,9 +269,9 @@ struct blend_state {
 };
 
 struct graphics_subsystem {
-	void                   *module;
-	gs_device_t            *device;
-	struct gs_exports      exports;
+	void                   *module;//模块dll，d3d11
+	gs_device_t            *device;//图形设备
+	struct gs_exports      exports;//dll的函数地址结构体。该结构体存放了dll相关函数的地址
 
 	DARRAY(struct gs_rect) viewport_stack;
 

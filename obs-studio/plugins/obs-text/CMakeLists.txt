@@ -9,7 +9,7 @@ if(WIN32)
 	set(obs-text_PLATFORM_SOURCES
 		gdiplus/obs-text.cpp)
 	set(obs-text_PLATFORM_DEPS
-		gdiplus)
+                gdiplus)#系统文件Gdiplus.dll是存放在Windows系统文件夹中的重要文件
 endif()
 
 add_library(obs-text MODULE
@@ -18,5 +18,4 @@ add_library(obs-text MODULE
 target_link_libraries(obs-text
 	libobs
 	${obs-text_PLATFORM_DEPS})
-
 install_obs_plugin_with_data(obs-text data)
