@@ -1374,15 +1374,15 @@ void device_draw(gs_device_t *device, enum gs_draw_mode draw_mode,
 		device->curToplogy = newTopology;
 	}
 
-	if (device->curIndexBuffer) {
-		if (num_verts == 0)
-			num_verts = (uint32_t)device->curIndexBuffer->num;
-		device->context->DrawIndexed(num_verts, start_vert, 0);
-	} else {
-		if (num_verts == 0)
-			num_verts = (uint32_t)device->curVertexBuffer->numVerts;
-		device->context->Draw(num_verts, start_vert);
-	}
+    if (device->curIndexBuffer) {
+        if (num_verts == 0)
+            num_verts = (uint32_t)device->curIndexBuffer->num;
+        device->context->DrawIndexed(num_verts, start_vert, 0);
+    } else {
+        if (num_verts == 0)
+            num_verts = (uint32_t)device->curVertexBuffer->numVerts;
+        device->context->Draw(num_verts, start_vert);
+    }
 }
 
 void device_end_scene(gs_device_t *device)

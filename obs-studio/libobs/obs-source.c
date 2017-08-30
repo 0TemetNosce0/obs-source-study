@@ -3411,7 +3411,7 @@ void obs_source_draw_set_color_matrix(const struct matrix4 *color_matrix,
 }
 /***************************
  * brief:
- * input:
+ * input:xy-绘制左上角的zuobiao. cx,cy-会放大
  * output:
  * return:
  **************************/

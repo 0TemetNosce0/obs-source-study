@@ -220,7 +220,7 @@ void cursor_draw(struct cursor_data *data, long x_offset, long y_offset,
 {
     long x = data->cursor_pos.x + x_offset;
     long y = data->cursor_pos.y + y_offset;
-    long x_draw = x - data->x_hotspot;
+    long x_draw = x - data->x_hotspot;// 鼠标位置
     long y_draw = y - data->y_hotspot;
 
     if (x < 0 || x > width || y < 0 || y > height)
@@ -234,6 +234,7 @@ void cursor_draw(struct cursor_data *data, long x_offset, long y_offset,
         gs_matrix_push();
         gs_matrix_scale3f(x_scale, y_scale, 1.0f);
         obs_source_draw(data->texture, x_draw, y_draw, 0, 0, false);
+        obs_source_draw(data->texture, 0, 0, 100, 500, false);
         gs_matrix_pop();
 
         gs_enable_color(true, true, true, true);
