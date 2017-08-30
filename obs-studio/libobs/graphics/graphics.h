@@ -46,11 +46,11 @@ struct matrix3;
 struct matrix4;
 
 enum gs_draw_mode {
-	GS_POINTS,
-	GS_LINES,
-	GS_LINESTRIP,
-	GS_TRIS,
-	GS_TRISTRIP
+    GS_POINTS,//点
+    GS_LINES,//线列表
+    GS_LINESTRIP,//线带
+    GS_TRIS,//三角形列表
+    GS_TRISTRIP//三角形带
 };
 
 enum gs_color_format {
