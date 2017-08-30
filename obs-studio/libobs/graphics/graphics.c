@@ -1134,7 +1134,12 @@ void gs_viewport_pop(void)
 	gs_set_viewport(rect->x, rect->y, rect->cx, rect->cy);
 	da_pop_back(thread_graphics->viewport_stack);
 }
-
+/***************************
+ * brief:
+ * input:flip-是否翻转
+ * output:
+ * return:
+ **************************/
 void gs_texture_set_image(gs_texture_t *tex, const uint8_t *data,
 		uint32_t linesize, bool flip)
 {
@@ -1201,7 +1206,7 @@ void gs_perspective(float angle, float aspect, float near, float far)
 	graphics->exports.device_frustum(graphics->device, xmin, xmax,
 			ymin, ymax, near, far);
 }
-
+//blend 混合
 void gs_blend_state_push(void)
 {
 	graphics_t *graphics = thread_graphics;
