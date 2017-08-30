@@ -8,11 +8,11 @@ static inline void init_textures(struct dc_capture *capture)
     for (int i = 0; i < capture->num_textures; i++) {
         if (capture->compatibility)
             capture->textures[i] = gs_texture_create(
-                    capture->width, capture->height,
-                    GS_BGRA, 1, NULL, GS_DYNAMIC);
+                        capture->width, capture->height,
+                        GS_BGRA, 1, NULL, GS_DYNAMIC);
         else
             capture->textures[i] = gs_texture_create_gdi(
-                    capture->width, capture->height);
+                        capture->width, capture->height);
 
         if (!capture->textures[i]) {
             blog(LOG_WARNING, "[dc_capture_init] Failed to "
@@ -25,8 +25,8 @@ static inline void init_textures(struct dc_capture *capture)
 }
 
 void dc_capture_init(struct dc_capture *capture, int x, int y,
-        uint32_t width, uint32_t height, bool cursor,
-        bool compatibility)
+                     uint32_t width, uint32_t height, bool cursor,
+                     bool compatibility)
 {
     memset(capture, 0, sizeof(struct dc_capture));
 
@@ -62,8 +62,8 @@ void dc_capture_init(struct dc_capture *capture, int x, int y,
 
         capture->hdc = CreateCompatibleDC(NULL);
         capture->bmp = CreateDIBSection(capture->hdc, &bi,
-                DIB_RGB_COLORS, (void**)&capture->bits,
-                NULL, 0);
+                                        DIB_RGB_COLORS, (void**)&capture->bits,
+                                        NULL, 0);
         capture->old_bmp = SelectObject(capture->hdc, capture->bmp);
     }
 }
@@ -104,28 +104,28 @@ static void draw_cursor(struct dc_capture *capture, HDC hdc, HWND window)
         POINT pos;
 
         if (window)
-            ClientToScreen(window, &win_pos);
+            ClientToScreen(window, &win_pos);//将鼠标指针位置转换为窗口坐标
 
         pos.x = ci->ptScreenPos.x - (int)ii.xHotspot - win_pos.x;
         pos.y = ci->ptScreenPos.y - (int)ii.yHotspot - win_pos.y;
 
-
-        HPEN hPen=CreatePen(PS_SOLID,1,RGB(255,0,0));
-        //将笔选入DC
-        (HPEN)SelectObject(hdc,hPen);
-        HBRUSH hBrush=CreateSolidBrush(RGB(122,122,122));
-		//画矩形
-        //RECT rect;
-//        rect.bottom=pos.y+50;
-//        rect.left=pos.x+50;
-//        rect.right=pos.x;
-//        rect.top=pos.y;
-//        FillRect(hdc,&rect,hBrush);
-        //画圆
-        Ellipse(hdc,pos.x-25,pos.y-25,(pos.x+25),(pos.y+25));
-        DeleteObject(hBrush);
-        DeleteObject(hPen);
-
+        if(GetAsyncKeyState(VK_LBUTTON)&&0x8000){//鼠标左键按下状态
+            HPEN hPen=CreatePen(PS_SOLID,1,RGB(255,0,0));
+            //将笔选入DC
+            (HPEN)SelectObject(hdc,hPen);
+            HBRUSH hBrush=CreateSolidBrush(RGB(122,122,122));
+            //画矩形
+            //RECT rect;
+            //        rect.bottom=pos.y+50;
+            //        rect.left=pos.x+50;
+            //        rect.right=pos.x;
+            //        rect.top=pos.y;
+            //        FillRect(hdc,&rect,hBrush);
+            //画圆
+            Ellipse(hdc,pos.x-25,pos.y-25,(pos.x+25),(pos.y+25));
+            DeleteObject(hBrush);
+            DeleteObject(hPen);
+        }
         DrawIcon(hdc, pos.x, pos.y, icon);//绘制icon
 
         DeleteObject(ii.hbmColor);
@@ -180,7 +180,7 @@ void dc_capture_capture(struct dc_capture *capture, HWND window)
     hdc_target = GetDC(window);
 
     BitBlt(hdc, 0, 0, capture->width, capture->height,
-            hdc_target, capture->x, capture->y, SRCCOPY);
+           hdc_target, capture->x, capture->y, SRCCOPY);
 
     ReleaseDC(NULL, hdc_target);
 
@@ -193,7 +193,7 @@ void dc_capture_capture(struct dc_capture *capture, HWND window)
 }
 
 static void draw_texture(struct dc_capture *capture, int id,
-        gs_effect_t *effect)
+                         gs_effect_t *effect)
 {
     gs_texture_t   *texture = capture->textures[id];
     gs_technique_t *tech    = gs_effect_get_technique(effect, "Draw");
@@ -219,7 +219,7 @@ static void draw_texture(struct dc_capture *capture, int id,
 void dc_capture_render(struct dc_capture *capture, gs_effect_t *effect)
 {
     int last_tex = (capture->cur_tex > 0) ?
-        capture->cur_tex-1 : capture->num_textures-1;
+                capture->cur_tex-1 : capture->num_textures-1;
 
     if (!capture->valid)
         return;

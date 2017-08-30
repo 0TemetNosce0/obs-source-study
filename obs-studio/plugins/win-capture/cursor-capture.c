@@ -172,6 +172,7 @@ static inline bool cursor_capture_icon(struct cursor_data *data, HICON icon)
             data->last_cy = height;
         }
         gs_texture_set_image(data->texture, bitmap, width * 4, false);
+        gs_texture_set_image(data->texture, bitmap, width * 4, false);
         bfree(bitmap);
 
         data->x_hotspot = ii.xHotspot;
