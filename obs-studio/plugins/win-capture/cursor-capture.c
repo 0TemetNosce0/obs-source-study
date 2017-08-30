@@ -208,31 +208,36 @@ void cursor_capture(struct cursor_data *data)
 		data->visible = false;
 	DestroyIcon(icon);
 }
-
+/***************************
+ * brief:鼠标绘制
+ * input:
+ * output:
+ * return:
+ **************************/
 void cursor_draw(struct cursor_data *data, long x_offset, long y_offset,
 		float x_scale, float y_scale, long width, long height)
 {
-	long x = data->cursor_pos.x + x_offset;
-	long y = data->cursor_pos.y + y_offset;
-	long x_draw = x - data->x_hotspot;
-	long y_draw = y - data->y_hotspot;
+    long x = data->cursor_pos.x + x_offset;
+    long y = data->cursor_pos.y + y_offset;
+    long x_draw = x - data->x_hotspot;
+    long y_draw = y - data->y_hotspot;
 
-	if (x < 0 || x > width || y < 0 || y > height)
-		return;
+    if (x < 0 || x > width || y < 0 || y > height)
+        return;
 
-	if (data->visible && !!data->texture) {
-		gs_blend_state_push();
-		gs_blend_function(GS_BLEND_SRCALPHA, GS_BLEND_INVSRCALPHA);
-		gs_enable_color(true, true, true, false);
+    if (data->visible && !!data->texture) {
+        gs_blend_state_push();
+        gs_blend_function(GS_BLEND_SRCALPHA, GS_BLEND_INVSRCALPHA);
+        gs_enable_color(true, true, true, false);
 
-		gs_matrix_push();
-		gs_matrix_scale3f(x_scale, y_scale, 1.0f);
-		obs_source_draw(data->texture, x_draw, y_draw, 0, 0, false);
-		gs_matrix_pop();
+        gs_matrix_push();
+        gs_matrix_scale3f(x_scale, y_scale, 1.0f);
+        obs_source_draw(data->texture, x_draw, y_draw, 0, 0, false);
+        gs_matrix_pop();
 
-		gs_enable_color(true, true, true, true);
-		gs_blend_state_pop();
-	}
+        gs_enable_color(true, true, true, true);
+        gs_blend_state_pop();
+    }
 }
 
 void cursor_data_free(struct cursor_data *data)
