@@ -388,8 +388,8 @@ function(install_obs_core target)
         export_obs_core("${target}" "${ARGV2}")
     else()
         install(TARGETS ${target}
-            LIBRARY DESTINATION "${OBS_LIBRARY_DESTINATION}"
-            RUNTIME DESTINATION "${OBS_EXECUTABLE_DESTINATION}")
+            LIBRARY DESTINATION "${OBS_LIBRARY_DESTINATION}" #bin/${_lib_suffix}bit
+            RUNTIME DESTINATION "${OBS_EXECUTABLE_DESTINATION}") #bin/${_lib_suffix}bit
     endif()
 
     add_custom_command(TARGET ${target} POST_BUILD

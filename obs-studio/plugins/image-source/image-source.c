@@ -42,7 +42,12 @@ static const char *image_source_get_name(void *unused)
 	UNUSED_PARAMETER(unused);
 	return obs_module_text("ImageInput");
 }
-
+/***************************
+ * brief:image 加载
+ * input:
+ * output:
+ * return:
+ **************************/
 static void image_source_load(struct image_source *context)
 {
 	char *file = context->file;
@@ -272,6 +277,7 @@ OBS_MODULE_USE_DEFAULT_LOCALE("image-source", "en-US")
 extern struct obs_source_info slideshow_info;
 extern struct obs_source_info color_source_info;
 
+//obs_module_load，dll加载obs代码里就调用obs_module_load来注册模块的源
 bool obs_module_load(void)
 {
     obs_register_source(&image_source_info);//源注册

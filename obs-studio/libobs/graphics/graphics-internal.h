@@ -22,7 +22,7 @@
 #include "graphics.h"
 #include "matrix3.h"
 #include "matrix4.h"
-
+//gs 导入结构体，gs_exports结构体存入了函数指正，指针指向导入的图形渲染dll对应地址
 struct gs_exports {
 	const char *(*device_get_name)(void);
 	int (*device_get_type)(void);
@@ -259,7 +259,7 @@ struct gs_exports {
 				uint32_t handle);
 #endif
 };
-
+//混合状态
 struct blend_state {
 	bool               enabled;
 	enum gs_blend_type src_c;
@@ -269,9 +269,9 @@ struct blend_state {
 };
 
 struct graphics_subsystem {
-	void                   *module;
-	gs_device_t            *device;
-	struct gs_exports      exports;
+	void                   *module;//模块dll，d3d11
+	gs_device_t            *device;//图形设备
+	struct gs_exports      exports;//dll的函数地址结构体。该结构体存放了dll相关函数的地址
 
 	DARRAY(struct gs_rect) viewport_stack;
 

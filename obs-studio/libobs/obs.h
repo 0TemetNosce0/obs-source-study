@@ -1,4 +1,4 @@
-/******************************************************************************
+﻿/******************************************************************************
     Copyright (C) 2013-2014 by Hugh Bailey <jim@obsproject.com>
 
     This program is free software: you can redistribute it and/or modify
@@ -44,10 +44,10 @@ struct obs_view;
 struct obs_source;
 struct obs_scene;
 struct obs_scene_item;
-struct obs_output;//输出
-struct obs_encoder;//编码�?
-struct obs_service;//服务
-struct obs_module;//插件
+struct obs_output;//杈撳嚭
+struct obs_encoder;//缂栫爜鍣?
+struct obs_service;//鏈嶅姟
+struct obs_module;//鎻掍欢
 struct obs_fader;
 struct obs_volmeter;
 
@@ -124,6 +124,7 @@ enum obs_scale_type {
  * Mostly determines how the image will be scaled within those bounds, or
  * whether to use bounds at all.
  */
+//边框类型
 enum obs_bounds_type {
 	OBS_BOUNDS_NONE,            /**< no bounds */
 	OBS_BOUNDS_STRETCH,         /**< stretch (ignores base scale) */
@@ -141,7 +142,7 @@ struct obs_transform_info {
 	uint32_t             alignment;
 
 	enum obs_bounds_type bounds_type;
-	uint32_t             bounds_alignment;
+    uint32_t             bounds_alignment;//边框对齐方式
 	struct vec2          bounds;
 };
 
@@ -157,8 +158,8 @@ struct obs_video_info {
 	uint32_t            fps_num;       /**< Output FPS numerator */
 	uint32_t            fps_den;       /**< Output FPS denominator */
 
-	uint32_t            base_width;    /**< Base compositing width */
-	uint32_t            base_height;   /**< Base compositing height */
+	uint32_t            base_width;    /**< Base compositing width 影响合成  显示区域宽*/
+	uint32_t            base_height;   /**< Base compositing height          显示区域高*/
 
 	uint32_t            output_width;  /**< Output width */
 	uint32_t            output_height; /**< Output height */

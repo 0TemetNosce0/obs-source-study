@@ -24,17 +24,17 @@
 struct duplicator_capture {
 	obs_source_t                   *source;
 	int                            monitor;
-	bool                           capture_cursor;
-	bool                           showing;
+    bool                           capture_cursor;//鼠标是否捕获
+	bool                           showing;//显示
 
 	long                           x;
 	long                           y;
-	int                            rot;
+	int                            rot;//旋转角度
 	uint32_t                       width;
 	uint32_t                       height;
 	gs_duplicator_t                *duplicator;
 	float                          reset_timeout;
-	struct cursor_data             cursor_data;
+	struct cursor_data             cursor_data;//鼠标data
 };
 
 /* ------------------------------------------------------------------------- */
@@ -168,15 +168,15 @@ static void duplicator_capture_tick(void *data, float seconds)
 	}
 
 	if (!!capture->duplicator) {
-		if (capture->capture_cursor)
-			cursor_capture(&capture->cursor_data);
+        if (capture->capture_cursor)
+            cursor_capture(&capture->cursor_data);//捕获鼠标
 
-		if (!gs_duplicator_update_frame(capture->duplicator)) {
-			free_capture_data(capture);
+        if (!gs_duplicator_update_frame(capture->duplicator)) {//更新帧frame
+            free_capture_data(capture);
 
-		} else if (capture->width == 0) {
-			reset_capture_data(capture);
-		}
+        } else if (capture->width == 0) {
+            reset_capture_data(capture);
+        }
 	}
 
 	obs_leave_graphics();
@@ -198,7 +198,7 @@ static uint32_t duplicator_capture_height(void *data)
 	struct duplicator_capture *capture = data;
 	return capture->rot % 180 == 0 ? capture->height : capture->width;
 }
-
+//绘制鼠标
 static void draw_cursor(struct duplicator_capture *capture)
 {
 	cursor_draw(&capture->cursor_data, -capture->x, -capture->y,
@@ -206,7 +206,7 @@ static void draw_cursor(struct duplicator_capture *capture)
 		capture->rot % 180 == 0 ? capture->width : capture->height,
 		capture->rot % 180 == 0 ? capture->height : capture->width);
 }
-
+//duplicator复制
 static void duplicator_capture_render(void *data, gs_effect_t *effect)
 {
 	struct duplicator_capture *capture = data;
@@ -225,11 +225,12 @@ static void duplicator_capture_render(void *data, gs_effect_t *effect)
 	rot = capture->rot;
 
 	while (gs_effect_loop(effect, "Draw")) {
-		if (rot != 0) {
+
+		if (rot != 0) {//旋转
 			float x = 0.0f;
 			float y = 0.0f;
 
-			switch (rot) {
+            switch (rot) {
 			case 90:
 				x = (float)capture->height;
 				break;
@@ -257,7 +258,7 @@ static void duplicator_capture_render(void *data, gs_effect_t *effect)
 		effect = obs_get_base_effect(OBS_EFFECT_DEFAULT);
 
 		while (gs_effect_loop(effect, "Draw")) {
-			draw_cursor(capture);
+            draw_cursor(capture);//绘制鼠标
 		}
 	}
 }

@@ -1,4 +1,4 @@
-/******************************************************************************
+﻿/******************************************************************************
     Copyright (C) 2016 by Hugh Bailey <obs.jim@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
@@ -152,7 +152,12 @@ not_animated:
 
 	return is_animated_gif;
 }
-
+/***************************
+ * brief: image file init，添加图片来源调�?
+ * input:
+ * output:
+ * return:
+ **************************/
 void gs_image_file_init(gs_image_file_t *image, const char *file)
 {
 	size_t len;

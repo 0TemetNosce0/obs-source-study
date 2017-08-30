@@ -1,4 +1,4 @@
-/******************************************************************************
+﻿/******************************************************************************
     Copyright (C) 2013 by Hugh Bailey <obs.jim@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
@@ -47,7 +47,7 @@ static inline void axisang_copy(struct axisang *dst, struct axisang *aa)
 	dst->z = aa->z;
 	dst->w = aa->w;
 }
-
+//裁切 如果裁切了会循环调用的，移动源的时候也会调用
 static inline void axisang_set(struct axisang *dst, float x, float y, float z,
 		float w)
 {

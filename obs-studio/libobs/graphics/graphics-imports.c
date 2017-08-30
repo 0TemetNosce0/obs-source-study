@@ -19,7 +19,7 @@
 #include "../util/dstr.h"
 #include "../util/platform.h"
 #include "graphics-internal.h"
-
+//gs 导入对应dll函数地址
 #define GRAPHICS_IMPORT(func) \
 	do { \
 		exports->func = os_dlsym(module, #func); \

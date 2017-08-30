@@ -21,7 +21,7 @@
 #include "vec3.h"
 
 /*
- * Axis Aligned Bounding Box
+ * Axis Aligned Bounding Box 轴基准边界盒 ; 轴对齐包围盒
  */
 
 #ifdef __cplusplus

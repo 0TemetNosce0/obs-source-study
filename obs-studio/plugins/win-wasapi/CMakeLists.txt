@@ -1,5 +1,5 @@
 project(win-wasapi)
-
+#Windows音频会话API
 set(win-wasapi_HEADERS
 	enum-wasapi.hpp)
 

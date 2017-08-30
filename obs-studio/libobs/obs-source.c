@@ -3409,7 +3409,12 @@ void obs_source_draw_set_color_matrix(const struct matrix4 *color_matrix,
 	gs_effect_set_val(range_min, color_range_min, sizeof(float)*3);
 	gs_effect_set_val(range_max, color_range_max, sizeof(float)*3);
 }
-
+/***************************
+ * brief:
+ * input:xy-绘制左上角的zuobiao. cx,cy-会放大
+ * output:
+ * return:
+ **************************/
 void obs_source_draw(gs_texture_t *texture, int x, int y, uint32_t cx,
 		uint32_t cy, bool flip)
 {
@@ -3425,8 +3430,8 @@ void obs_source_draw(gs_texture_t *texture, int x, int y, uint32_t cx,
 	if (!obs_ptr_valid(texture, "obs_source_draw"))
 		return;
 
-	image = gs_effect_get_param_by_name(effect, "image");
-	gs_effect_set_texture(image, texture);
+    image = gs_effect_get_param_by_name(effect, "image");
+    gs_effect_set_texture(image, texture);
 
 	if (change_pos) {
 		gs_matrix_push();

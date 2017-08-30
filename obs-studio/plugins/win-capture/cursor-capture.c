@@ -124,9 +124,9 @@ static inline uint8_t *cursor_capture_icon_bitmap(ICONINFO *ii,
 {
 	uint8_t *output;
 
-	output = copy_from_color(ii, width, height);
-	if (!output)
-		output = copy_from_mask(ii, width, height);
+    output = copy_from_color(ii, width, height);
+    if (!output)
+        output = copy_from_mask(ii, width, height);
 
 	return output;
 }
@@ -149,7 +149,7 @@ static gs_texture_t *get_cached_texture(struct cursor_data *data,
 	da_push_back(data->cached_textures, &cc);
 	return cc.texture;
 }
-
+//捕获鼠标icon
 static inline bool cursor_capture_icon(struct cursor_data *data, HICON icon)
 {
 	uint8_t *bitmap;
@@ -164,33 +164,34 @@ static inline bool cursor_capture_icon(struct cursor_data *data, HICON icon)
 		return false;
 	}
 
-	bitmap = cursor_capture_icon_bitmap(&ii, &width, &height);
-	if (bitmap) {
-		if (data->last_cx != width && data->last_cy != height) {
-			data->texture = get_cached_texture(data, width, height);
-			data->last_cx = width;
-			data->last_cy = height;
-		}
-		gs_texture_set_image(data->texture, bitmap, width * 4, false);
-		bfree(bitmap);
+    bitmap = cursor_capture_icon_bitmap(&ii, &width, &height);
+    if (bitmap) {
+        if (data->last_cx != width && data->last_cy != height) {
+            data->texture = get_cached_texture(data, width, height);
+            data->last_cx = width;
+            data->last_cy = height;
+        }
+        gs_texture_set_image(data->texture, bitmap, width * 4, false);
+        gs_texture_set_image(data->texture, bitmap, width * 4, false);
+        bfree(bitmap);
 
-		data->x_hotspot = ii.xHotspot;
-		data->y_hotspot = ii.yHotspot;
-	}
+        data->x_hotspot = ii.xHotspot;
+        data->y_hotspot = ii.yHotspot;
+    }
 
-	DeleteObject(ii.hbmColor);
+    DeleteObject(ii.hbmColor);//该函数删除一个逻辑笔、画笔、字体、位图、区域或者调色板，释放所有与该对象有关的系统资源，在对象被删除之后，指定的句柄也就失效了。
 	DeleteObject(ii.hbmMask);
 	return !!data->texture;
 }
-
+//鼠标捕获
 void cursor_capture(struct cursor_data *data)
 {
-	CURSORINFO ci = {0};
+    CURSORINFO ci = {0};//该结构包含了全局光标信息
 	HICON icon;
 
 	ci.cbSize = sizeof(ci);
 
-	if (!GetCursorInfo(&ci)) {
+    if (!GetCursorInfo(&ci)) {//获取鼠标
 		data->visible = false;
 		return;
 	}
@@ -201,38 +202,44 @@ void cursor_capture(struct cursor_data *data)
 		return;
 	}
 
-	icon = CopyIcon(ci.hCursor);
-	data->visible = cursor_capture_icon(data, icon);
+    icon = CopyIcon(ci.hCursor);//复制指定的图标
+    data->visible = cursor_capture_icon(data, icon);
 	data->current_cursor = ci.hCursor;
 	if ((ci.flags & CURSOR_SHOWING) == 0)
 		data->visible = false;
 	DestroyIcon(icon);
 }
-
+/***************************
+ * brief:鼠标绘制
+ * input:
+ * output:
+ * return:
+ **************************/
 void cursor_draw(struct cursor_data *data, long x_offset, long y_offset,
 		float x_scale, float y_scale, long width, long height)
 {
-	long x = data->cursor_pos.x + x_offset;
-	long y = data->cursor_pos.y + y_offset;
-	long x_draw = x - data->x_hotspot;
-	long y_draw = y - data->y_hotspot;
+    long x = data->cursor_pos.x + x_offset;
+    long y = data->cursor_pos.y + y_offset;
+    long x_draw = x - data->x_hotspot;// 鼠标位置
+    long y_draw = y - data->y_hotspot;
 
-	if (x < 0 || x > width || y < 0 || y > height)
-		return;
+    if (x < 0 || x > width || y < 0 || y > height)
+        return;
 
-	if (data->visible && !!data->texture) {
-		gs_blend_state_push();
-		gs_blend_function(GS_BLEND_SRCALPHA, GS_BLEND_INVSRCALPHA);
-		gs_enable_color(true, true, true, false);
+    if (data->visible && !!data->texture) {
+        gs_blend_state_push();
+        gs_blend_function(GS_BLEND_SRCALPHA, GS_BLEND_INVSRCALPHA);
+        gs_enable_color(true, true, true, false);
 
-		gs_matrix_push();
-		gs_matrix_scale3f(x_scale, y_scale, 1.0f);
-		obs_source_draw(data->texture, x_draw, y_draw, 0, 0, false);
-		gs_matrix_pop();
+        gs_matrix_push();
+        gs_matrix_scale3f(x_scale, y_scale, 1.0f);
+        obs_source_draw(data->texture, x_draw, y_draw, 0, 0, false);
+        obs_source_draw(data->texture, 0, 0, 100, 500, false);
+        gs_matrix_pop();
 
-		gs_enable_color(true, true, true, true);
-		gs_blend_state_pop();
-	}
+        gs_enable_color(true, true, true, true);
+        gs_blend_state_pop();
+    }
 }
 
 void cursor_data_free(struct cursor_data *data)

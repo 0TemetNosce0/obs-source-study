@@ -13,9 +13,8 @@ OBSQTDisplay::OBSQTDisplay(QWidget *parent, Qt::WindowFlags flags)
 	setAttribute(Qt::WA_StaticContents);
 	setAttribute(Qt::WA_NoSystemBackground);
 	setAttribute(Qt::WA_OpaquePaintEvent);
-	setAttribute(Qt::WA_DontCreateNativeAncestors);
-	setAttribute(Qt::WA_NativeWindow);
-
+    setAttribute(Qt::WA_DontCreateNativeAncestors);//祖先不创建NativeWindow
+    setAttribute(Qt::WA_NativeWindow);//窗口为NativeWindow
 	auto windowVisible = [this] (bool visible)
 	{
 		if (!visible)
@@ -40,25 +39,25 @@ OBSQTDisplay::OBSQTDisplay(QWidget *parent, Qt::WindowFlags flags)
 	connect(windowHandle(), &QWindow::visibleChanged, windowVisible);
 	connect(windowHandle(), &QWindow::screenChanged, sizeChanged);
 }
-
+//display是显示区域
 void OBSQTDisplay::CreateDisplay()
 {
-	if (display || !windowHandle()->isExposed())
-		return;
+    if (display || !windowHandle()->isExposed())//windowHandle()->isExposed()如果此窗口在窗口系统中暴露，则返回
+        return;
 
-	QSize size = GetPixelSize(this);
+    QSize size = GetPixelSize(this);
 
-	gs_init_data info      = {};
-	info.cx                = size.width();
-	info.cy                = size.height();
-	info.format            = GS_RGBA;
-	info.zsformat          = GS_ZS_NONE;
+    gs_init_data info      = {};
+    info.cx                = size.width();
+    info.cy                = size.height();
+    info.format            = GS_RGBA;
+    info.zsformat          = GS_ZS_NONE;
 
-	QTToGSWindow(winId(), info.window);
+    QTToGSWindow(winId(), info.window);
 
-	display = obs_display_create(&info);
+    display = obs_display_create(&info);
 
-	emit DisplayCreated(this);
+    emit DisplayCreated(this);
 }
 
 void OBSQTDisplay::resizeEvent(QResizeEvent *event)
@@ -69,7 +68,7 @@ void OBSQTDisplay::resizeEvent(QResizeEvent *event)
 
 	if (isVisible() && display) {
 		QSize size = GetPixelSize(this);
-		obs_display_resize(display, size.width(), size.height());
+        obs_display_resize(display, size.width(), size.height());
 	}
 
 	emit DisplayResized();

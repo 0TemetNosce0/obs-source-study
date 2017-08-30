@@ -50,7 +50,7 @@ using namespace std;
  * via encapsulated C bindings, not C++ bindings, so the whole concept of
  * "public" and "private" does not matter at all for this subproject.
  */
-
+//获取win版本
 static inline uint32_t GetWinVer()
 {
 	struct win_version_info ver;

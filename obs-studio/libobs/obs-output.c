@@ -1042,7 +1042,7 @@ static inline void send_interleaved(struct obs_output *output)
 #endif
 	}
 
-    output->info.encoded_packet(output->context.data, &out);//编码  保存
+    output->info.encoded_packet(output->context.data, &out);//编码  保存，调用ffmpeg_mux_data
 	obs_encoder_packet_release(&out);
 }
 

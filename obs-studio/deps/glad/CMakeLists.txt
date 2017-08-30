@@ -1,5 +1,5 @@
 project(glad)
-
+#libobs-opengl需要
 find_package(OpenGL)
 
 if(NOT WIN32 AND NOT APPLE)

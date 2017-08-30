@@ -50,7 +50,12 @@ size_t utf8_to_wchar(const char *in, size_t insize, wchar_t *out,
 	UNUSED_PARAMETER(flags);
 	return (ret > 0) ? (size_t)ret : 0;
 }
-
+/***************************
+ * brief:wchar_t转换为char
+ * input:in
+ * output:out
+ * return:
+ **************************/
 size_t wchar_to_utf8(const wchar_t *in, size_t insize, char *out,
 		size_t outsize, int flags)
 {

@@ -7,14 +7,14 @@ struct cached_cursor {
 	uint32_t cx;
 	uint32_t cy;
 };
-
+//鼠标
 struct cursor_data {
 	gs_texture_t                   *texture;
 	HCURSOR                        current_cursor;
-	POINT                          cursor_pos;
+    POINT                          cursor_pos;//鼠标位置
 	long                           x_hotspot;
 	long                           y_hotspot;
-	bool                           visible;
+    bool                           visible;//鼠标是否可见，没有获取到桌面鼠标为false
 
 	uint32_t                       last_cx;
 	uint32_t                       last_cy;

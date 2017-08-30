@@ -23,7 +23,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
+//它既可以表示一个二维坐标点，又可以表示一个二维向量
 struct vec2 {
 	union {
 		struct {

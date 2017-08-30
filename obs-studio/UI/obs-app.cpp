@@ -311,7 +311,7 @@ static inline bool too_many_repeated_entries(fstream &logFile, const char *msg,
 
 	return false;
 }
-
+//log 处理，
 static void do_log(int log_level, const char *msg, va_list args, void *param)
 {
 	fstream &logFile = *static_cast<fstream*>(param);
@@ -433,7 +433,7 @@ static bool do_mkdir(const char *path)
 
 	return true;
 }
-
+//创建目录
 static bool MakeUserDirs()
 {
 	char path[512];
@@ -1097,7 +1097,7 @@ static uint64_t convert_log_name(const char *name)
 	timestring << year << month << day << hour << minute << second;
 	return std::stoull(timestring.str());
 }
-
+//删除old file
 static void delete_oldest_file(const char *location)
 {
 	BPtr<char>       logDir(GetConfigPathPtr(location));
@@ -1213,7 +1213,7 @@ vector<pair<string, string>> GetLocaleNames()
 
 	return names;
 }
-
+//创建日志文件
 static void create_log_file(fstream &logFile)
 {
 	stringstream dst;
@@ -1237,7 +1237,7 @@ static void create_log_file(fstream &logFile)
 
 	if (logFile.is_open()) {
 		delete_oldest_file("obs-studio/logs");
-		base_set_log_handler(do_log, &logFile);
+        base_set_log_handler(do_log, &logFile);//设置log 到do_log
 	} else {
 		blog(LOG_ERROR, "Failed to open log file");
 	}
@@ -1331,7 +1331,7 @@ static int run_program(fstream &logFile, int argc, char *argv[])
 
 		OBSTranslator translator;
 
-		create_log_file(logFile);
+        create_log_file(logFile);//创建日志文件
 		delete_oldest_file("obs-studio/profiler_data");
 
 		program.installTranslator(&translator);
@@ -1484,7 +1484,7 @@ static void load_debug_privilege(void)
 #ifndef OBS_UNIX_STRUCTURE
 #define OBS_UNIX_STRUCTURE 0
 #endif
-
+//获取config目录路径
 int GetConfigPath(char *path, size_t size, const char *name)
 {
 	if (!OBS_UNIX_STRUCTURE && portable_mode) {
@@ -1790,11 +1790,11 @@ static void upgrade_settings(void)
 			int ret;
 
 			ret = config.Open(path, CONFIG_OPEN_EXISTING);
-			if (ret == CONFIG_SUCCESS) {
+            if (ret == CONFIG_SUCCESS) {//更新设置，保存设置到内存
 				if (update_ffmpeg_output(config) ||
 				    update_reconnect(config)) {
 					config_save_safe(config, "tmp",
-							nullptr);
+                            nullptr);//保存设置到内存
 				}
 			}
 
@@ -1854,7 +1854,7 @@ int main(int argc, char *argv[])
 			log_verbose = true;
 
 		} else if (arg_is(argv[i], "--always-on-top", nullptr)) {
-			opt_always_on_top = true;
+            opt_always_on_top = true;//是否在桌面顶部
 
 		} else if (arg_is(argv[i], "--unfiltered_log", nullptr)) {
 			unfiltered_log = true;
@@ -1863,7 +1863,7 @@ int main(int argc, char *argv[])
 			opt_start_streaming = true;
 
 		} else if (arg_is(argv[i], "--startrecording", nullptr)) {
-			opt_start_recording = true;
+            opt_start_recording = true;//启动的时候是否就开始录制
 
 		} else if (arg_is(argv[i], "--startreplaybuffer", nullptr)) {
 			opt_start_replaybuffer = true;
@@ -1878,14 +1878,13 @@ int main(int argc, char *argv[])
 			if (++i < argc) opt_starting_scene = argv[i];
 
 		} else if (arg_is(argv[i], "--minimize-to-tray", nullptr)) {
-			opt_minimize_tray = true;
+            opt_minimize_tray = true;//启动的时候最小化到托盘
 
 		} else if (arg_is(argv[i], "--studio-mode", nullptr)) {
-            opt_studio_mode = true;//工作模式
+            opt_studio_mode = true;//工作模式,编辑完成才会显示出来，比如添加一个源，把大小调整好了，之后才显示到录制画面中去
 
 		} else if (arg_is(argv[i], "--allow-opengl", nullptr)) {
-			opt_allow_opengl = true;
-
+            opt_allow_opengl = true;//渲染器是否使用opengl，默认是d3d11
 		} else if (arg_is(argv[i], "--help", "-h")) {
 			std::cout <<
 			"--help, -h: Get list of available commands.\n\n" << 
@@ -1924,7 +1923,7 @@ int main(int argc, char *argv[])
 	}
 #endif
 
-	upgrade_settings();
+    upgrade_settings();//更新设置
 
 	fstream logFile;
 

@@ -776,7 +776,7 @@ static inline void send_packet(struct obs_encoder *encoder,
 	if (encoder->info.type == OBS_ENCODER_VIDEO && !cb->sent_first_packet)
 		send_first_video_packet(encoder, cb, packet);
 	else
-		cb->new_packet(cb->param, packet);
+        cb->new_packet(cb->param, packet);//回调interleave_packets
 }
 
 static void full_stop(struct obs_encoder *encoder)
@@ -790,7 +790,7 @@ static void full_stop(struct obs_encoder *encoder)
 }
 
 static const char *do_encode_name = "do_encode";
-//编码，推流
+//编码推流
 static inline void do_encode(struct obs_encoder *encoder,
 		struct encoder_frame *frame)
 {

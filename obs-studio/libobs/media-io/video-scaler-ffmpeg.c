@@ -14,7 +14,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
-
+//缩放
 #include "../util/bmem.h"
 #include "video-scaler.h"
 
@@ -44,20 +44,20 @@ static inline enum AVPixelFormat get_ffmpeg_video_format(
 
 	return AV_PIX_FMT_NONE;
 }
-
+//缩放类型
 static inline int get_ffmpeg_scale_type(enum video_scale_type type)
 {
 	switch (type) {
-	case VIDEO_SCALE_DEFAULT:       return SWS_FAST_BILINEAR;
-	case VIDEO_SCALE_POINT:         return SWS_POINT;
+    case VIDEO_SCALE_DEFAULT:       return SWS_FAST_BILINEAR;//双线性插值
+    case VIDEO_SCALE_POINT:         return SWS_POINT;//点
 	case VIDEO_SCALE_FAST_BILINEAR: return SWS_FAST_BILINEAR;
 	case VIDEO_SCALE_BILINEAR:      return SWS_BILINEAR | SWS_AREA;
-	case VIDEO_SCALE_BICUBIC:       return SWS_BICUBIC;
+    case VIDEO_SCALE_BICUBIC:       return SWS_BICUBIC;//双三次插值
 	}
 
 	return SWS_POINT;
 }
-
+//颜色空间
 static inline const int *get_ffmpeg_coeffs(enum video_colorspace cs)
 {
 	switch (cs) {
@@ -81,7 +81,7 @@ static inline int get_ffmpeg_range_type(enum video_range_type type)
 }
 
 #define FIXED_1_0 (1<<16)
-
+//缩放创建
 int video_scaler_create(video_scaler_t **scaler_out,
 		const struct video_scale_info *dst,
 		const struct video_scale_info *src,

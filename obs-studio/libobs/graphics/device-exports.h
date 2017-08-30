@@ -22,7 +22,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
+//这些函数都是在d3d11或opengl定义的。
 EXPORT const char *device_get_name(void);
 EXPORT int device_get_type(void);
 EXPORT bool device_enum_adapters(

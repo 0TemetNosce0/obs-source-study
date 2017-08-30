@@ -241,7 +241,7 @@ static void build_command_line(struct ffmpeg_muxer *stream, struct dstr *cmd,
 	dstr_insert_ch(cmd, 0, '\"');
 	dstr_cat(cmd, "\" \"");
 
-	dstr_copy(&stream->path, path);
+    dstr_copy(&stream->path, path);
 	dstr_replace(&stream->path, "\"", "\"\"");
 	dstr_cat_dstr(cmd, &stream->path);
 

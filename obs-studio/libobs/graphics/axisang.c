@@ -17,7 +17,7 @@
 
 #include "axisang.h"
 #include "quat.h"
-
+//axisang 裁减
 void axisang_from_quat(struct axisang *dst, const struct quat *q)
 {
 	float len, leni;

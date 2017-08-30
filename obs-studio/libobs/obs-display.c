@@ -46,7 +46,7 @@ bool obs_display_init(struct obs_display *display,
 		return false;
 	}
 
-    display->background_color = 0x333333;
+    display->background_color = 0xcfe2f3;
 	display->enabled = true;
 	return true;
 }
@@ -114,8 +114,8 @@ void obs_display_resize(obs_display_t *display, uint32_t cx, uint32_t cy)
 
 	pthread_mutex_lock(&display->draw_info_mutex);
 
-	display->cx = cx;
-	display->cy = cy;
+    display->cx = cx;
+    display->cy = cy;
 	display->size_changed = true;
 
 	pthread_mutex_unlock(&display->draw_info_mutex);
@@ -230,6 +230,6 @@ bool obs_display_enabled(obs_display_t *display)
 //设置diplay显示区域背景颜色
 void obs_display_set_background_color(obs_display_t *display, uint32_t color)
 {
-	if (display)
-		display->background_color = color;
+    if (display)
+        display->background_color = color;
 }

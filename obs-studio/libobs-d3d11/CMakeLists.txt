@@ -1,5 +1,5 @@
 project(libobs-d3d11)
-
+#DirectX显示
 include_directories(SYSTEM "${CMAKE_SOURCE_DIR}/libobs")
 
 add_definitions(-DLIBOBS_EXPORTS)
@@ -26,7 +26,7 @@ add_library(libobs-d3d11 MODULE
 	${libobs-d3d11_HEADERS})
 set_target_properties(libobs-d3d11
 	PROPERTIES
-		OUTPUT_NAME libobs-d3d11
+                OUTPUT_NAME libobs-d3d11
 		PREFIX "")
 #找的是libobs也就是obs？？？？不知道 libobs怎么处理的
 target_link_libraries(libobs-d3d11

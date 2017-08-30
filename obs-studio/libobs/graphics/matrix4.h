@@ -28,7 +28,7 @@ extern "C" {
 #endif
 
 struct matrix3;
-
+//4x4矩阵
 struct matrix4 {
 	struct vec4 x, y, z, t;
 };

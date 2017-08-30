@@ -20,7 +20,8 @@
 
 #define MAKE_FOURCC(a, b, c, d) \
 	((uint32_t)(((d) << 24) | ((c) << 16) | ((b) << 8) | (a)))
-
+//FourCC全称Four-Character Codes，代表四字符代码 (four character code), 它是一个32位的标示符，其实就是typedef unsigned int FOURCC;是一种独立标示视频数据流格式的四字符代码。
+//video_format
 enum video_format video_format_from_fourcc(uint32_t fourcc)
 {
 	switch (fourcc) {
