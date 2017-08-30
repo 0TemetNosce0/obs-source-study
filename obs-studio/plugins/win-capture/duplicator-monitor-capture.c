@@ -24,7 +24,7 @@
 struct duplicator_capture {
 	obs_source_t                   *source;
 	int                            monitor;
-	bool                           capture_cursor;//鼠标捕获
+    bool                           capture_cursor;//鼠标是否捕获
 	bool                           showing;//显示
 
 	long                           x;
@@ -168,15 +168,15 @@ static void duplicator_capture_tick(void *data, float seconds)
 	}
 
 	if (!!capture->duplicator) {
-		if (capture->capture_cursor)
-			cursor_capture(&capture->cursor_data);
+        if (capture->capture_cursor)
+            cursor_capture(&capture->cursor_data);//捕获鼠标
 
-		if (!gs_duplicator_update_frame(capture->duplicator)) {
-			free_capture_data(capture);
+        if (!gs_duplicator_update_frame(capture->duplicator)) {//更新帧frame
+            free_capture_data(capture);
 
-		} else if (capture->width == 0) {
-			reset_capture_data(capture);
-		}
+        } else if (capture->width == 0) {
+            reset_capture_data(capture);
+        }
 	}
 
 	obs_leave_graphics();

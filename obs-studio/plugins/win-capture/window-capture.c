@@ -218,7 +218,7 @@ static void wc_render(void *data, gs_effect_t *effect)
 
 	UNUSED_PARAMETER(effect);
 }
-
+//窗口捕获 使用GetDC  BitBlt
 struct obs_source_info window_capture_info = {
 	.id             = "window_capture",
 	.type           = OBS_SOURCE_TYPE_INPUT,
