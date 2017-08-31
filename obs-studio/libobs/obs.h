@@ -524,10 +524,10 @@ enum obs_base_effect {
 	OBS_EFFECT_DEFAULT_RECT,       /**< RGB/YUV (using texture_rect) */
 	OBS_EFFECT_OPAQUE,             /**< RGB/YUV (alpha set to 1.0) */
 	OBS_EFFECT_SOLID,              /**< RGB/YUV (solid color only) */
-	OBS_EFFECT_BICUBIC,            /**< Bicubic downscale */
-	OBS_EFFECT_LANCZOS,            /**< Lanczos downscale */
+    OBS_EFFECT_BICUBIC,            /**< Bicubic downscale 两次立方插值*/
+    OBS_EFFECT_LANCZOS,            /**< Lanczos downscale Lanczos算法*/
 	OBS_EFFECT_BILINEAR_LOWRES,    /**< Bilinear low resolution downscale */
-	OBS_EFFECT_PREMULTIPLIED_ALPHA,/**< Premultiplied alpha */
+    OBS_EFFECT_PREMULTIPLIED_ALPHA,/**< Premultiplied alpha 预设alpha*/
 };
 
 /** Returns a commonly used base effect */

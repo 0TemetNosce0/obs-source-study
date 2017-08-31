@@ -163,16 +163,16 @@ enum gs_address_mode {
 };
 
 enum gs_texture_type {
-	GS_TEXTURE_2D,
-	GS_TEXTURE_3D,
-	GS_TEXTURE_CUBE
+    GS_TEXTURE_2D,//2d纹理
+    GS_TEXTURE_3D,//3d纹理
+    GS_TEXTURE_CUBE//立方体纹理
 };
-
+//显示屏
 struct gs_monitor_info {
-	int rotation_degrees;
-	long x;
+    int rotation_degrees;//旋转度
+    long x;//xy坐标
 	long y;
-	long cx;
+    long cx;//缩放
 	long cy;
 };
 

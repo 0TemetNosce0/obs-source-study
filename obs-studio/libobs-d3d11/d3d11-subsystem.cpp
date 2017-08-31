@@ -88,12 +88,12 @@ void gs_swap_chain::InitTarget(uint32_t cx, uint32_t cy)
 	target.height = cy;
 
 	hr = swap->GetBuffer(0, __uuidof(ID3D11Texture2D),
-			(void**)target.texture.Assign());
+            (void**)target.texture.Assign());//访问交换链接的一个后台缓存
 	if (FAILED(hr))
 		throw HRError("Failed to get swap buffer texture", hr);
 
 	hr = device->device->CreateRenderTargetView(target.texture, NULL,
-			target.renderTarget[0].Assign());
+            target.renderTarget[0].Assign());//CreateRenderTargetView创建后一个绘制缓冲区
 	if (FAILED(hr))
 		throw HRError("Failed to create swap render target view", hr);
 }
@@ -201,15 +201,15 @@ void gs_device::InitCompiler()
 
 void gs_device::InitFactory(uint32_t adapterIdx)
 {
-	HRESULT hr;
+    HRESULT hr;//一种类型，判断函数执行结果。COM要求所有的方法都会返回一个HRESULT类型的错误号
 	IID factoryIID = (GetWinVer() >= 0x602) ? dxgiFactory2 :
-		__uuidof(IDXGIFactory1);
+        __uuidof(IDXGIFactory1);//IID ：代表COM组件中的接口
 
-	hr = CreateDXGIFactory1(factoryIID, (void**)factory.Assign());
+    hr = CreateDXGIFactory1(factoryIID, (void**)factory.Assign());//dxgi工厂
 	if (FAILED(hr))
 		throw UnsupportedHWError("Failed to create DXGIFactory", hr);
 
-	hr = factory->EnumAdapters1(adapterIdx, &adapter);
+    hr = factory->EnumAdapters1(adapterIdx, &adapter);//枚举出适配器(视频卡)
 	if (FAILED(hr))
 		throw UnsupportedHWError("Failed to enumerate DXGIAdapter", hr);
 }
@@ -1776,13 +1776,13 @@ bool gs_texture_map(gs_texture_t *tex, uint8_t **ptr, uint32_t *linesize)
 
 	gs_texture_2d *tex2d = static_cast<gs_texture_2d*>(tex);
 
-	D3D11_MAPPED_SUBRESOURCE map;
+    D3D11_MAPPED_SUBRESOURCE map;//D3D11 map  CPU和GPU沟通桥梁
 	hr = tex2d->device->context->Map(tex2d->texture, 0,
 			D3D11_MAP_WRITE_DISCARD, 0, &map);
 	if (FAILED(hr))
 		return false;
 
-	*ptr = (uint8_t*)map.pData;
+    *ptr = (uint8_t*)map.pData;//
 	*linesize = map.RowPitch;
 	return true;
 }

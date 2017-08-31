@@ -1086,6 +1086,7 @@ static inline bool crop_enabled(const obs_sceneitem_crop *crop)
 	       crop->bottom > 0;
 }
 
+//红色边框绘制
 bool OBSBasicPreview::DrawSelectedItem(obs_scene_t *scene,
 		obs_sceneitem_t *item, void *param)
 {
@@ -1123,14 +1124,14 @@ bool OBSBasicPreview::DrawSelectedItem(obs_scene_t *scene,
 
 	gs_load_vertexbuffer(main->circle);
 
-	DrawCircleAtPos(0.0f, 0.0f, boxTransform, main->previewScale);
-	DrawCircleAtPos(0.0f, 1.0f, boxTransform, main->previewScale);
-	DrawCircleAtPos(1.0f, 0.0f, boxTransform, main->previewScale);
-	DrawCircleAtPos(1.0f, 1.0f, boxTransform, main->previewScale);
-	DrawCircleAtPos(0.5f, 0.0f, boxTransform, main->previewScale);
-	DrawCircleAtPos(0.0f, 0.5f, boxTransform, main->previewScale);
-	DrawCircleAtPos(0.5f, 1.0f, boxTransform, main->previewScale);
-	DrawCircleAtPos(1.0f, 0.5f, boxTransform, main->previewScale);
+    DrawCircleAtPos(0.0f, 0.0f, boxTransform, main->previewScale);//画圈
+    DrawCircleAtPos(0.0f, 1.0f, boxTransform, main->previewScale);
+    DrawCircleAtPos(1.0f, 0.0f, boxTransform, main->previewScale);
+    DrawCircleAtPos(1.0f, 1.0f, boxTransform, main->previewScale);
+    DrawCircleAtPos(0.5f, 0.0f, boxTransform, main->previewScale);
+    DrawCircleAtPos(0.0f, 0.5f, boxTransform, main->previewScale);
+    DrawCircleAtPos(0.5f, 1.0f, boxTransform, main->previewScale);
+    DrawCircleAtPos(1.0f, 0.5f, boxTransform, main->previewScale);
 
 	gs_matrix_push();
 	gs_matrix_scale3f(main->previewScale, main->previewScale, 1.0f);
@@ -1169,7 +1170,7 @@ bool OBSBasicPreview::DrawSelectedItem(obs_scene_t *scene,
 	UNUSED_PARAMETER(param);
 	return true;
 }
-
+//红色的那个可以缩放的边框
 void OBSBasicPreview::DrawSceneEditing()
 {
 	if (locked)
@@ -1181,7 +1182,7 @@ void OBSBasicPreview::DrawSceneEditing()
 	gs_technique_t *tech  = gs_effect_get_technique(solid, "Solid");
 
 	vec4 color;
-	vec4_set(&color, 1.0f, 0.0f, 0.0f, 1.0f);
+    vec4_set(&color, 0.0f, 0.3f, 0.3f, 1.0f);
 	gs_effect_set_vec4(gs_effect_get_param_by_name(solid, "color"), &color);
 
 	gs_technique_begin(tech);

@@ -34,7 +34,12 @@ void gs_effect_destroy(gs_effect_t *effect)
 			gs_effect_actually_destroy(effect);
 	}
 }
-
+/***************************
+ * brief:    从gs_effect_t中获取为name的gs_technique_t
+ * input:
+ * output:
+ * return:
+ **************************/
 gs_technique_t *gs_effect_get_technique(const gs_effect_t *effect,
 		const char *name)
 {
@@ -268,7 +273,12 @@ gs_eparam_t *gs_effect_get_param_by_idx(const gs_effect_t *effect, size_t param)
 
 	return params+param;
 }
-
+/***************************
+ * brief: 从  gs_effect_t中获取为name的gs_eparam_t
+ * input:
+ * output:
+ * return:
+ **************************/
 gs_eparam_t *gs_effect_get_param_by_name(const gs_effect_t *effect,
 		const char *name)
 {
