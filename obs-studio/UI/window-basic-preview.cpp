@@ -1068,7 +1068,7 @@ static void DrawCircleAtPos(float x, float y, matrix4 &matrix,
 {
 	struct vec3 pos;
 	vec3_set(&pos, x, y, 0.0f);
-	vec3_transform(&pos, &pos, &matrix);
+    vec3_transform(&pos, &pos, &matrix);
 	vec3_mulf(&pos, &pos, previewScale);
 
 	gs_matrix_push();
