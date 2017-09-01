@@ -153,7 +153,7 @@ not_animated:
 	return is_animated_gif;
 }
 /***************************
- * brief: image file init，添加图片来源调�?
+ * brief: image file init，添加图片来源到image
  * input:
  * output:
  * return:

@@ -1000,7 +1000,12 @@ static inline void build_sprite_rect(struct gs_vb_data *data, gs_texture_t *tex,
 	assign_sprite_rect(&start_v, &end_v, height, (flip & GS_FLIP_V) != 0);
 	build_sprite(data, fcx, fcy, start_u, end_u, start_v, end_v);
 }
-
+/***************************
+ * brief:
+ * input:flip-翻转，width height：绘制的宽高
+ * output:
+ * return:
+ **************************/
 void gs_draw_sprite(gs_texture_t *tex, uint32_t flip, uint32_t width,
 		uint32_t height)
 {
@@ -1034,7 +1039,7 @@ void gs_draw_sprite(gs_texture_t *tex, uint32_t flip, uint32_t width,
 	gs_load_vertexbuffer(graphics->sprite_buffer);
 	gs_load_indexbuffer(NULL);
 
-    gs_draw(GS_TRISTRIP, 0, 0);
+    gs_draw(GS_TRISTRIP, 0, 0);//绘制
 }
 
 void gs_draw_sprite_subregion(gs_texture_t *tex, uint32_t flip,
@@ -1166,13 +1171,13 @@ void gs_texture_set_image(gs_texture_t *tex, const uint8_t *data,
 			       row_copy);
 
 	} else if (linesize == linesize_out) {
-		memcpy(ptr, data, row_copy * height);
+        memcpy(ptr, data, row_copy * height);//位图数据拷贝到ptr
 
 	} else {
 		for (y = 0; y < height; y++)
 			memcpy(ptr  + (uint32_t)y * linesize_out,
 			       data + (uint32_t)y * linesize,
-			       row_copy);
+                   row_copy);//拷贝到ptr
 	}
 
 	gs_texture_unmap(tex);
@@ -1681,7 +1686,7 @@ void gs_begin_scene(void)
 
 	graphics->exports.device_begin_scene(graphics->device);
 }
-
+//vert顶点
 void gs_draw(enum gs_draw_mode draw_mode, uint32_t start_vert,
 		uint32_t num_verts)
 {

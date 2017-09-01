@@ -29,12 +29,12 @@ struct image_source {
 };
 
 
-static time_t get_modified_timestamp(const char *filename)
+static time_t get_modified_timestamp(const char *filename)//获取文件上次修改的时间
 {
-	struct stat stats;
+    struct stat stats;//文件信息
 	if (os_stat(filename, &stats) != 0)
 		return -1;
-	return stats.st_mtime;
+    return stats.st_mtime;//上次修改时间
 }
 
 static const char *image_source_get_name(void *unused)
@@ -52,9 +52,9 @@ static void image_source_load(struct image_source *context)
 {
 	char *file = context->file;
 
-	obs_enter_graphics();
-	gs_image_file_free(&context->image);
-	obs_leave_graphics();
+    obs_enter_graphics();
+    gs_image_file_free(&context->image);
+    obs_leave_graphics();
 
 	if (file && *file) {
 		debug("loading texture '%s'", file);
@@ -62,13 +62,14 @@ static void image_source_load(struct image_source *context)
 		gs_image_file_init(&context->image, file);
 		context->update_time_elapsed = 0;
 
-		obs_enter_graphics();
+        obs_enter_graphics();
 		gs_image_file_init_texture(&context->image);
-		obs_leave_graphics();
+        obs_leave_graphics();
 
 		if (!context->image.loaded)
 			warn("failed to load texture '%s'", file);
 	}
+
 }
 
 static void image_source_unload(struct image_source *context)

@@ -84,13 +84,13 @@ static inline DXGI_FORMAT ConvertGSTextureFormat(gs_color_format format)
 
 	return DXGI_FORMAT_UNKNOWN;
 }
-
+//纹理格式
 static inline gs_color_format ConvertDXGITextureFormat(DXGI_FORMAT format)
 {
 	switch ((unsigned long)format) {
-	case DXGI_FORMAT_A8_UNORM:           return GS_A8;
+    case DXGI_FORMAT_A8_UNORM:           return GS_A8;//仅Alpha纹理格式
 	case DXGI_FORMAT_R8_UNORM:           return GS_R8;
-	case DXGI_FORMAT_R8G8B8A8_UNORM:     return GS_RGBA;
+    case DXGI_FORMAT_R8G8B8A8_UNORM:     return GS_RGBA;//颜色纹理格式，并带有alpha通道。
 	case DXGI_FORMAT_B8G8R8X8_UNORM:     return GS_BGRX;
 	case DXGI_FORMAT_B8G8R8A8_UNORM:     return GS_BGRA;
 	case DXGI_FORMAT_R10G10B10A2_UNORM:  return GS_R10G10B10A2;
@@ -102,7 +102,7 @@ static inline gs_color_format ConvertDXGITextureFormat(DXGI_FORMAT format)
 	case DXGI_FORMAT_R32G32_FLOAT:       return GS_RG32F;
 	case DXGI_FORMAT_R16_FLOAT:          return GS_R16F;
 	case DXGI_FORMAT_R32_FLOAT:          return GS_R32F;
-	case DXGI_FORMAT_BC1_UNORM:          return GS_DXT1;
+    case DXGI_FORMAT_BC1_UNORM:          return GS_DXT1;//压缩的颜色纹理格式。
 	case DXGI_FORMAT_BC2_UNORM:          return GS_DXT3;
 	case DXGI_FORMAT_BC3_UNORM:          return GS_DXT5;
 	}
@@ -339,9 +339,9 @@ struct gs_texture : gs_obj {
 };
 
 struct gs_texture_2d : gs_texture {
-	ComPtr<ID3D11Texture2D>          texture;
-	ComPtr<ID3D11RenderTargetView>   renderTarget[6];
-	ComPtr<IDXGISurface1>            gdiSurface;
+    ComPtr<ID3D11Texture2D>          texture;//用于2D数据，这也是最常用的纹理资源类型,2d纹理
+    ComPtr<ID3D11RenderTargetView>   renderTarget[6];//CreateRenderTargetView来创建一个渲染目标视图,渲染目标视图含有ID3D11RenderTargetView类型
+    ComPtr<IDXGISurface1>            gdiSurface;//IDXGISurface1接口通过添加对使用Windows图形设备接口(GDI)的支持
 
 	uint32_t        width = 0, height = 0;
 	DXGI_FORMAT     dxgiFormat = DXGI_FORMAT_UNKNOWN;
@@ -606,7 +606,7 @@ struct gs_swap_chain : gs_obj {
 
 	gs_texture_2d                  target;
 	gs_zstencil_buffer             zs;
-	ComPtr<IDXGISwapChain>         swap;
+    ComPtr<IDXGISwapChain>         swap;//一个IDXGISwapChain接口实现一个或多个Surface来存储呈现输出前的渲染数据
 
 	void InitTarget(uint32_t cx, uint32_t cy);
 	void InitZStencilBuffer(uint32_t cx, uint32_t cy);
@@ -772,10 +772,13 @@ struct mat4float {
 };
 
 struct gs_device {
-	ComPtr<IDXGIFactory1>       factory;
-	ComPtr<IDXGIAdapter1>       adapter;
-	ComPtr<ID3D11Device>        device;
-	ComPtr<ID3D11DeviceContext> context;
+    // ComPtr智能指针
+    ComPtr<IDXGIFactory1>       factory;//dxgi工厂
+    ComPtr<IDXGIAdapter1>       adapter;//dxgi设配器
+    ComPtr<ID3D11Device>        device;//Device用来创建资源和枚举一个显示适配器性能。在Direct3D 11中，Device可以通过调用D3D11CreateDevice 和 D3D11CreateDeviceAndSwapChain来创建一个device。
+
+    //设备上下文(device context)包含了环境和设置.更能为具体的说一个设备上下文使用设备对象所创建的资源类设置管道状态以及建立渲染指令.Direct3D11的设备上下文有两种类型,一个是实时渲染,另外一个则是延时渲染,两种设备上下文都可以ID3D11DeviceContext来表示.
+    ComPtr<ID3D11DeviceContext> context;
 	uint32_t                    adpIdx = 0;
 
 	gs_texture_2d               *curRenderTarget = nullptr;

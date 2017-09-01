@@ -77,9 +77,9 @@ bool obs_module_load(void)
 	obs_enter_graphics();
 
     //显示器 ：win8以上使用等d3d11的copyresource().win8以下使用DC拷贝
-	if (win8_or_above && gs_get_device_type() == GS_DEVICE_DIRECT3D_11)
+    if (win8_or_above && gs_get_device_type() == GS_DEVICE_DIRECT3D_11)
         obs_register_source(&duplicator_capture_info);//
-	else
+    else//TODO  direct捕获时不知道怎么去绘制。暂时全部都用dc
 		obs_register_source(&monitor_capture_info);
 
 	obs_leave_graphics();

@@ -4,7 +4,7 @@
 #include <util/dstr.h>
 
 #include "cursor-capture.h"
-
+//显示器捕获，win8以上使用direct的copyresource
 #define do_log(level, format, ...) \
 	blog(level, "[duplicator-monitor-capture: '%s'] " format, \
 			obs_source_get_name(capture->source), ##__VA_ARGS__)
@@ -207,7 +207,7 @@ static void draw_cursor(struct duplicator_capture *capture)
 		capture->rot % 180 == 0 ? capture->width : capture->height,
 		capture->rot % 180 == 0 ? capture->height : capture->width);
 }
-//duplicator复制
+//duplicator复制，  绘制
 static void duplicator_capture_render(void *data, gs_effect_t *effect)
 {
 	struct duplicator_capture *capture = data;

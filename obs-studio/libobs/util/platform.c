@@ -87,7 +87,7 @@ int64_t os_fgetsize(FILE *file)
 }
 
 #ifdef _WIN32
-int os_stat(const char *file, struct stat *st)
+int os_stat(const char *file, struct stat *st)//获取文件信息
 {
 	if (file) {
 		wchar_t w_file[512];
