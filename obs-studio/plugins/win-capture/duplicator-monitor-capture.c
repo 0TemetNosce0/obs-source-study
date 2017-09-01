@@ -137,7 +137,8 @@ static void duplicator_capture_tick(void *data, float seconds)
 	struct duplicator_capture *capture = data;
 
 	/* completely shut down monitor capture if not in use, otherwise it can
-	 * sometimes generate system lag when a game is in fullscreen mode */
+     * sometimes generate system lag when a game is in fullscreen mode
+     * 完全关闭监视器捕捉，如果不使用，否则它有时会产生系统延迟，当游戏处于全屏模式时 */
 	if (!obs_source_showing(capture->source)) {
 		if (capture->showing) {
 			obs_enter_graphics();
@@ -154,7 +155,7 @@ static void duplicator_capture_tick(void *data, float seconds)
 		capture->reset_timeout = RESET_INTERVAL_SEC;
 	}
 
-	obs_enter_graphics();
+    obs_enter_graphics();//obs_enter_graphics
 
 	if (!capture->duplicator) {
 		capture->reset_timeout += seconds;
@@ -179,7 +180,7 @@ static void duplicator_capture_tick(void *data, float seconds)
         }
 	}
 
-	obs_leave_graphics();
+    obs_leave_graphics();//obs_leave_graphics
 
 	if (!capture->showing)
 		capture->showing = true;

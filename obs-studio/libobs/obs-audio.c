@@ -364,7 +364,7 @@ static inline void release_audio_sources(struct obs_core_audio *audio)
 	for (size_t i = 0; i < audio->render_order.num; i++)
 		obs_source_release(audio->render_order.array[i]);
 }
-
+//音频回调
 bool audio_callback(void *param,
 		uint64_t start_ts_in, uint64_t end_ts_in, uint64_t *out_ts,
 		uint32_t mixers, struct audio_output_data *mixes)

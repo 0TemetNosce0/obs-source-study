@@ -1001,7 +1001,7 @@ bool obs_reset_audio(const struct obs_audio_info *oai)
 	ai.samples_per_sec = oai->samples_per_sec;
 	ai.format = AUDIO_FORMAT_FLOAT_PLANAR;
 	ai.speakers = oai->speakers;
-	ai.input_callback = audio_callback;
+    ai.input_callback = audio_callback;//回调初始化
 
 	blog(LOG_INFO, "---------------------------------");
 	blog(LOG_INFO, "audio settings reset:\n"

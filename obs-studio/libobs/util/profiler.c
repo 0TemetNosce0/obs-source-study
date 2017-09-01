@@ -11,7 +11,7 @@
 #include <zlib.h>
 
 //#define TRACK_OVERHEAD
-
+//性能监控
 struct profiler_snapshot {
 	DARRAY(profiler_snapshot_entry_t) roots;
 };

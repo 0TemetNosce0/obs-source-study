@@ -50,13 +50,13 @@ enum audio_format {//音频格式,主要是音频raw data的解释方法
 	AUDIO_FORMAT_32BIT_PLANAR,
 	AUDIO_FORMAT_FLOAT_PLANAR,
 };
-
+//
 enum speaker_layout {
 	SPEAKERS_UNKNOWN,
-	SPEAKERS_MONO,
-	SPEAKERS_STEREO,
+    SPEAKERS_MONO,//单声道
+    SPEAKERS_STEREO,//立体声
 	SPEAKERS_2POINT1,
-	SPEAKERS_QUAD,
+    SPEAKERS_QUAD,//四声道
 	SPEAKERS_4POINT1,
 	SPEAKERS_5POINT1,
 	SPEAKERS_5POINT1_SURROUND,
@@ -68,7 +68,7 @@ enum speaker_layout {
 struct audio_data {
 	uint8_t             *data[MAX_AV_PLANES];
 	uint32_t            frames;
-	uint64_t            timestamp;
+    uint64_t            timestamp;//时间戳
 };
 //
 struct audio_output_data {
@@ -83,19 +83,19 @@ struct audio_output_info {
 	const char          *name;
 
     uint32_t            samples_per_sec;//采样率
-	enum audio_format   format;
-	enum speaker_layout speakers;
+    enum audio_format   format;//音频格式
+    enum speaker_layout speakers;//声道
 
-	audio_input_callback_t input_callback;
-	void                   *input_param;
+    audio_input_callback_t input_callback;//回调
+    void                   *input_param;//回调参数
 };
 
 struct audio_convert_info {
-	uint32_t            samples_per_sec;
-	enum audio_format   format;
-	enum speaker_layout speakers;
+    uint32_t            samples_per_sec;//采样率
+    enum audio_format   format;//格式
+    enum speaker_layout speakers;//声道
 };
-//声道数
+//获取声道(通道数).单声道是1个通道.
 static inline uint32_t get_audio_channels(enum speaker_layout speakers)
 {
 	switch (speakers) {
@@ -162,13 +162,13 @@ static inline bool is_audio_planar(enum audio_format format)
 
 	return false;
 }
-
+//获取声道
 static inline size_t get_audio_planes(enum audio_format format,
 		enum speaker_layout speakers)
 {
 	return (is_audio_planar(format) ? get_audio_channels(speakers) : 1);
 }
-
+//获取1帧的(如果frames=1)音频大小:format音频格式,speakers通道数,frames:1
 static inline size_t get_audio_size(enum audio_format format,
 		enum speaker_layout speakers, uint32_t frames)
 {
