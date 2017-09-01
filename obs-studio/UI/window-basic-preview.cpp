@@ -1097,6 +1097,7 @@ bool OBSBasicPreview::DrawSelectedItem(obs_scene_t *scene,
 
 	matrix4 boxTransform;
 	matrix4 invBoxTransform;
+	//复制item的4x4矩阵
 	obs_sceneitem_get_box_transform(item, &boxTransform);
 	matrix4_inv(&invBoxTransform, &boxTransform);
 
@@ -1122,7 +1123,7 @@ bool OBSBasicPreview::DrawSelectedItem(obs_scene_t *scene,
 	obs_transform_info info;
 	obs_sceneitem_get_info(item, &info);
 
-	gs_load_vertexbuffer(main->circle);
+    gs_load_vertexbuffer(main->circle);//顶点buff
 
     DrawCircleAtPos(0.0f, 0.0f, boxTransform, main->previewScale);//画圈
     DrawCircleAtPos(0.0f, 1.0f, boxTransform, main->previewScale);
@@ -1178,24 +1179,24 @@ void OBSBasicPreview::DrawSceneEditing()
 
 	OBSBasic *main = reinterpret_cast<OBSBasic*>(App()->GetMainWindow());
 
-	gs_effect_t    *solid = obs_get_base_effect(OBS_EFFECT_SOLID);
-	gs_technique_t *tech  = gs_effect_get_technique(solid, "Solid");
+	gs_effect_t    *solid = obs_get_base_effect(OBS_EFFECT_SOLID);//1 effect
+	gs_technique_t *tech  = gs_effect_get_technique(solid, "Solid");//2 technique
 
 	vec4 color;
-    vec4_set(&color, 0.0f, 0.3f, 0.3f, 1.0f);
-	gs_effect_set_vec4(gs_effect_get_param_by_name(solid, "color"), &color);
+    vec4_set(&color, 0.0f, 0.3f, 0.3f, 1.0f); //3 color
+	gs_effect_set_vec4(gs_effect_get_param_by_name(solid, "color"), &color);//4 effect set color
 
-	gs_technique_begin(tech);
-	gs_technique_begin_pass(tech, 0);
+	gs_technique_begin(tech); //5 begin echnique
+	gs_technique_begin_pass(tech, 0);//6  echnique begin pass
 
 	OBSScene scene = main->GetCurrentScene();
 	if (scene)
-		obs_scene_enum_items(scene, DrawSelectedItem, this);
+		obs_scene_enum_items(scene, DrawSelectedItem, this);//7 绘制
 
 	gs_load_vertexbuffer(nullptr);
 
-	gs_technique_end_pass(tech);
-	gs_technique_end(tech);
+	gs_technique_end_pass(tech);//8 echnique end pass
+	gs_technique_end(tech);//9 technique end
 }
 
 void OBSBasicPreview::ResetScrollingOffset()

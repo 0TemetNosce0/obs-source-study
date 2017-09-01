@@ -35,6 +35,8 @@
 		exports->func = os_dlsym(module, #func); \
 	} while (false)
 
+
+//导入对应dll函数地址
 bool load_graphics_imports(struct gs_exports *exports, void *module,
 		const char *module_name)
 {

@@ -267,7 +267,7 @@ struct blend_state {
 	enum gs_blend_type src_a;
 	enum gs_blend_type dest_a;
 };
-
+//图形系统，（图像系统对应的dll，dll的函数，图形设备等）
 struct graphics_subsystem {
 	void                   *module;//模块dll，d3d11
 	gs_device_t            *device;//图形设备

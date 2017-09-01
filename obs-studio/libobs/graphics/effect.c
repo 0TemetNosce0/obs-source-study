@@ -37,6 +37,11 @@ void gs_effect_destroy(gs_effect_t *effect)
 /***************************
  * brief:    从gs_effect_t中获取为name的gs_technique_t
  * input:
+ *      name： "Draw"
+ *            "DrawMatrix"
+ *            "Planar420"
+ *            "Planar444"
+ *              "Solid"
  * output:
  * return:
  **************************/
@@ -275,7 +280,7 @@ gs_eparam_t *gs_effect_get_param_by_idx(const gs_effect_t *effect, size_t param)
 }
 /***************************
  * brief: 从  gs_effect_t中获取为name的gs_eparam_t
- * input:
+ * input:   name-"clor_matrix" "color_range_min" "color_range_max" "image" "color"
  * output:
  * return:
  **************************/

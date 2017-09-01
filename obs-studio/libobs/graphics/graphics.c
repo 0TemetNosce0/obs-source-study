@@ -1010,11 +1010,11 @@ void gs_draw_sprite(gs_texture_t *tex, uint32_t flip, uint32_t width,
 		uint32_t height)
 {
 	graphics_t *graphics = thread_graphics;
-	float fcx, fcy;
-	struct gs_vb_data *data;
+    float fcx, fcy;
+    struct gs_vb_data *data;
 
 	if (tex) {
-		if (gs_get_texture_type(tex) != GS_TEXTURE_2D) {
+        if (gs_get_texture_type(tex) != GS_TEXTURE_2D) {//2d纹理
 			blog(LOG_ERROR, "A sprite must be a 2D texture");
 			return;
 		}
@@ -1026,14 +1026,14 @@ void gs_draw_sprite(gs_texture_t *tex, uint32_t flip, uint32_t width,
 		}
 	}
 
-	fcx = width  ? (float)width  : (float)gs_texture_get_width(tex);
-	fcy = height ? (float)height : (float)gs_texture_get_height(tex);
+    fcx = width  ? (float)width  : (float)gs_texture_get_width(tex);
+    fcy = height ? (float)height : (float)gs_texture_get_height(tex);
 
-	data = gs_vertexbuffer_get_data(graphics->sprite_buffer);
-	if (tex && gs_texture_is_rect(tex))
-		build_sprite_rect(data, tex, fcx, fcy, flip);
-	else
-		build_sprite_norm(data, fcx, fcy, flip);
+    data = gs_vertexbuffer_get_data(graphics->sprite_buffer);
+    if (tex && gs_texture_is_rect(tex))
+        build_sprite_rect(data, tex, fcx, fcy, flip);
+    else
+        build_sprite_norm(data, fcx, fcy, flip);
 
 	gs_vertexbuffer_flush(graphics->sprite_buffer);
 	gs_load_vertexbuffer(graphics->sprite_buffer);
@@ -1211,7 +1211,7 @@ void gs_perspective(float angle, float aspect, float near, float far)
 	graphics->exports.device_frustum(graphics->device, xmin, xmax,
 			ymin, ymax, near, far);
 }
-//blend 混合
+//blend 混合，push上传，存入
 void gs_blend_state_push(void)
 {
 	graphics_t *graphics = thread_graphics;
@@ -1221,7 +1221,7 @@ void gs_blend_state_push(void)
 
 	da_push_back(graphics->blend_state_stack, &graphics->cur_blend_state);
 }
-
+//pop取出，删除。
 void gs_blend_state_pop(void)
 {
 	graphics_t *graphics = thread_graphics;

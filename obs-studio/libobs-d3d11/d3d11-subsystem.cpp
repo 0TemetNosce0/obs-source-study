@@ -956,7 +956,7 @@ void gs_device::LoadVertexBufferData()
 	lastVertexBuffer = curVertexBuffer;
 	lastVertexShader = curVertexShader;
 }
-
+//加载顶点数据
 void device_load_vertexbuffer(gs_device_t *device, gs_vertbuffer_t *vertbuffer)
 {
 	if (device->curVertexBuffer == vertbuffer)

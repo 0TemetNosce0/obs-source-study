@@ -234,7 +234,7 @@ struct gs_obj {
 };
 
 struct gs_vertex_buffer : gs_obj {
-	ComPtr<ID3D11Buffer>         vertexBuffer;
+	ComPtr<ID3D11Buffer>         vertexBuffer;//缓冲区通常存储顶点或索引数据
 	ComPtr<ID3D11Buffer>         normalBuffer;
 	ComPtr<ID3D11Buffer>         colorBuffer;
 	ComPtr<ID3D11Buffer>         tangentBuffer;
@@ -520,12 +520,12 @@ struct ShaderSampler {
 };
 
 struct gs_vertex_shader : gs_shader {
-	ComPtr<ID3D11VertexShader> shader;
-	ComPtr<ID3D11InputLayout>  layout;
+    ComPtr<ID3D11VertexShader> shader;//顶点着色器
+    ComPtr<ID3D11InputLayout>  layout;//顶点布局
 
 	gs_shader_param *world, *viewProj;
 
-	vector<D3D11_INPUT_ELEMENT_DESC> layoutData;
+    vector<D3D11_INPUT_ELEMENT_DESC> layoutData;//D3D11_INPUT_ELEMENT_DESC来描述顶点的布局信息
 
 	bool     hasNormals;
 	bool     hasColors;
@@ -558,7 +558,7 @@ struct gs_vertex_shader : gs_shader {
 };
 
 struct gs_duplicator : gs_obj {
-	ComPtr<IDXGIOutputDuplication> duplicator;
+    ComPtr<IDXGIOutputDuplication> duplicator; //桌面拷贝
 	gs_texture_2d *texture;
 	int idx;
 
@@ -574,7 +574,7 @@ struct gs_duplicator : gs_obj {
 };
 
 struct gs_pixel_shader : gs_shader {
-	ComPtr<ID3D11PixelShader> shader;
+    ComPtr<ID3D11PixelShader> shader;//像素着色器
 	vector<unique_ptr<ShaderSampler>> samplers;
 
 	inline void Rebuild(ID3D11Device *dev);
@@ -786,8 +786,8 @@ struct gs_device {
 	int                         curRenderSide = 0;
 	gs_texture                  *curTextures[GS_MAX_TEXTURES];
 	gs_sampler_state            *curSamplers[GS_MAX_TEXTURES];
-	gs_vertex_buffer            *curVertexBuffer = nullptr;
-	gs_index_buffer             *curIndexBuffer = nullptr;
+    gs_vertex_buffer            *curVertexBuffer = nullptr;//当前顶点缓存
+    gs_index_buffer             *curIndexBuffer = nullptr;//索引缓存
 	gs_vertex_shader            *curVertexShader = nullptr;
 	gs_pixel_shader             *curPixelShader = nullptr;
 	gs_swap_chain               *curSwapChain = nullptr;

@@ -109,7 +109,7 @@ static inline float get_3x3_determinant(const float *m)
 	       (m[1] * ((m[3]*m[8]) - (m[6]*m[5]))) +
 	       (m[2] * ((m[3]*m[7]) - (m[6]*m[4])));
 }
-
+//矩阵行列式
 float matrix4_determinant(const struct matrix4 *m)
 {
 	const float *mf = (const float *)m;

@@ -229,41 +229,42 @@ void cursor_draw(struct cursor_data *data, long x_offset, long y_offset,
     if (data->visible && !!data->texture) {
 
 
-        gs_blend_state_push();
-        gs_blend_function(GS_BLEND_SRCALPHA, GS_BLEND_INVSRCALPHA);
-        gs_enable_color(true, true, true, false);
+                gs_blend_state_push();
+                gs_blend_function(GS_BLEND_SRCALPHA, GS_BLEND_INVSRCALPHA);
+                gs_enable_color(true, true, true, false);
 
-        gs_matrix_push();
-        gs_matrix_scale3f(x_scale, y_scale, 1.0f);
-        obs_source_draw(data->texture, x_draw, y_draw, 0, 0, false);
-        //obs_source_draw(data->texture, 0, 0, 100, 500, false);
-        gs_matrix_pop();
+                gs_matrix_push();
+                gs_matrix_scale3f(x_scale, y_scale, 1.0f);
+                obs_source_draw(data->texture, x_draw, y_draw, 0, 0, false);
+                //obs_source_draw(data->texture, 0, 0, 100, 500, false);
+                gs_matrix_pop();
 
 
-
-        ///////////
-
-        ///////
+        //////////////////
 //        if(GetAsyncKeyState(VK_LBUTTON)&&0x8000){//鼠标左键按下状态
-        //画圆该怎么画，画的位置怎么确定
-//            gs_enable_color(true, true, true, true);
-//            gs_blend_state_pop();
-
-//            gs_effect_t    *solid = obs_get_base_effect(OBS_EFFECT_SOLID);//获取gs_effect，图像效果
-//            gs_eparam_t    *color = gs_effect_get_param_by_name(solid, "color");
-//            gs_technique_t *tech = gs_effect_get_technique(solid, "Solid");
-
+//        //画圆该怎么画，画的位置怎么确定
+////            gs_enable_color(true, true, true, true);
+////            gs_blend_state_pop();
+//
+//
+//            gs_effect_t    *solid = obs_get_base_effect(OBS_EFFECT_SOLID);//XXX.effect文件，获取gs_effect，图像效果//1
+//            gs_eparam_t    *color = gs_effect_get_param_by_name(solid, "color"); //获取gs_effect_t的color
+//            gs_technique_t *tech = gs_effect_get_technique(solid, "Solid");//3gs_technique_t
+//
+//            //4设置颜色
 //            struct vec4 colorVal;
 //            vec4_from_rgba(&colorVal, 0x222222ff);
 //            gs_effect_set_vec4(color, &colorVal);//设置颜色
-
-//            gs_technique_begin(tech);
-//            gs_technique_begin_pass(tech, 0);
-
+//
+//            gs_technique_begin(tech);//5echnique_begin
+//            gs_technique_begin_pass(tech, 0);//6echnique_begin_pass
 //            gs_draw_sprite(0, 0, 1000, 1000);//绘制
-
-//            gs_technique_end_pass(tech);
-//            gs_technique_end(tech);
+//
+////            gs_load_vertexbuffer(graphics->sprite_buffer);//7 获取顶点
+////            gs_draw(GS_TRISTRIP, 0, 0);//8 绘制
+//
+//            gs_technique_end_pass(tech);//9technique_end_pass
+//            gs_technique_end(tech);//10technique_end
 //        }
     }
 }

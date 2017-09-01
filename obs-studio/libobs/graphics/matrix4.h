@@ -28,7 +28,7 @@ extern "C" {
 #endif
 
 struct matrix3;
-//4x4矩阵
+//4x4矩阵,Matrix4x4矩阵来变换场景中对象的位置、旋转和缩放
 struct matrix4 {
 	struct vec4 x, y, z, t;
 };
