@@ -278,7 +278,7 @@ void OBSBasicTransform::OnControlChanged()
 	obs_sceneitem_set_info(item, &oti);
 	ignoreTransformSignal = false;
 }
-
+//裁切
 void OBSBasicTransform::OnCropChanged()
 {
 	if (ignoreItemChange)

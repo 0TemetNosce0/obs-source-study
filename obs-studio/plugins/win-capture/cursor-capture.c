@@ -209,6 +209,7 @@ void cursor_capture(struct cursor_data *data)
         data->visible = false;
     DestroyIcon(icon);
 }
+
 /***************************
  * brief:鼠标绘制
  * input:
@@ -240,7 +241,9 @@ void cursor_draw(struct cursor_data *data, long x_offset, long y_offset,
                 gs_matrix_pop();
 
 
-        //////////////////
+        ///////////
+
+        ///////
 //        if(GetAsyncKeyState(VK_LBUTTON)&&0x8000){//鼠标左键按下状态
 //        //画圆该怎么画，画的位置怎么确定
 ////            gs_enable_color(true, true, true, true);

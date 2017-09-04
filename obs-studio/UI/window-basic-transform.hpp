@@ -6,7 +6,7 @@
 #include "ui_OBSBasicTransform.h"
 
 class OBSBasic;
-
+//变换
 class OBSBasicTransform : public QDialog {
 	Q_OBJECT
 
