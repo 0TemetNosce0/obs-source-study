@@ -128,25 +128,25 @@ static void draw_cursor(struct dc_capture *capture, HDC hdc, HWND window)
         //}
 
 
-		//HWND my = GetForegroundWindow();
-		//RECT rect1;
-		//GetWindowRect(my, &rect1);
+        //HWND my = GetForegroundWindow();
+        //RECT rect1;
+        //GetWindowRect(my, &rect1);
 
-		//HPEN hPen = CreatePen(PS_SOLID, 1, RGB(255, 0, 0));
-		////将笔选入DC
-		//(HPEN)SelectObject(hdc, hPen);
-		//HBRUSH hBrush = CreateSolidBrush(RGB(122, 122, 122));
-		////画矩形
-		//RECT rect;
-		//rect.bottom = rect1.bottom-250;
-		//rect.left = rect1.left+180;
-		//rect.right = rect1.right-180;
-		//rect.top = rect1.top+70;
-		//FillRect(hdc, &rect, hBrush);
-		////画圆
-		////Ellipse(hdc,pos.x-25,pos.y-25,(pos.x+25),(pos.y+25));
-		//DeleteObject(hBrush);
-		//DeleteObject(hPen);
+        //HPEN hPen = CreatePen(PS_SOLID, 1, RGB(255, 0, 0));
+        ////将笔选入DC
+        //(HPEN)SelectObject(hdc, hPen);
+        //HBRUSH hBrush = CreateSolidBrush(RGB(122, 122, 122));
+        ////画矩形
+        //RECT rect;
+        //rect.bottom = rect1.bottom-250;
+        //rect.left = rect1.left+180;
+        //rect.right = rect1.right-180;
+        //rect.top = rect1.top+70;
+        //FillRect(hdc, &rect, hBrush);
+        ////画圆
+        ////Ellipse(hdc,pos.x-25,pos.y-25,(pos.x+25),(pos.y+25));
+        //DeleteObject(hBrush);
+        //DeleteObject(hPen);
 
         DrawIcon(hdc, pos.x, pos.y, icon);//绘制icon
 

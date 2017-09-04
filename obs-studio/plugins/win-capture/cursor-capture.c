@@ -209,6 +209,7 @@ void cursor_capture(struct cursor_data *data)
         data->visible = false;
     DestroyIcon(icon);
 }
+
 /***************************
  * brief:鼠标绘制
  * input:
@@ -238,7 +239,6 @@ void cursor_draw(struct cursor_data *data, long x_offset, long y_offset,
         obs_source_draw(data->texture, x_draw, y_draw, 0, 0, false);
         //obs_source_draw(data->texture, 0, 0, 100, 500, false);
         gs_matrix_pop();
-
 
 
         ///////////
