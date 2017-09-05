@@ -110,7 +110,7 @@ enum obs_allow_direct_render {
 	OBS_NO_DIRECT_RENDERING,
 	OBS_ALLOW_DIRECT_RENDERING,
 };
-//缩放类型
+//缩放类型，在滤镜中的缩放比例
 enum obs_scale_type {
 	OBS_SCALE_DISABLE,//默认
 	OBS_SCALE_POINT,//点

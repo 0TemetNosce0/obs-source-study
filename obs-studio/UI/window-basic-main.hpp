@@ -444,7 +444,7 @@ private:
 	static void SourceActivated(void *data, calldata_t *params);
 	static void SourceDeactivated(void *data, calldata_t *params);
 	static void SourceRenamed(void *data, calldata_t *params);
-	static void RenderMain(void *data, uint32_t cx, uint32_t cy);
+    static void RenderMain(void *data, uint32_t cx, uint32_t cy);
 
 	void ResizePreview(uint32_t cx, uint32_t cy);
 
@@ -457,7 +457,8 @@ private:
 
 public:
 	OBSScene      GetCurrentScene();
-
+		void SourceCrop(int x, int y);//裁切
+        void CropTest();
 	void SysTrayNotify(const QString &text, QSystemTrayIcon::MessageIcon n);
 
 	inline OBSSource GetCurrentSceneSource()
@@ -674,6 +675,8 @@ public:
 
 	virtual int GetProfilePath(char *path, size_t size, const char *file)
 		const override;
+signals:
+    void test(int x, int y);
 
 private:
 	std::unique_ptr<Ui::OBSBasic> ui;

@@ -42,6 +42,7 @@ static const char *obs_scene_signals[] = {
 	NULL
 };
 
+//obs_scene_item移除
 static inline void signal_item_remove(struct obs_scene_item *item)
 {
 	struct calldata params;
@@ -52,7 +53,7 @@ static inline void signal_item_remove(struct obs_scene_item *item)
 	calldata_set_ptr(&params, "item", item);
 
 	signal_handler_signal(item->parent->source->context.signals,
-			"item_remove", &params);
+            "item_remove", &params);//item移除信号，通过信号连接signal_handler_connect(signal, "remove", OBSSceneRemove, this);
 }
 
 static const char *scene_getname(void *unused)
@@ -128,6 +129,7 @@ static inline void remove_without_release(struct obs_scene_item *item)
 	detach_sceneitem(item);
 }
 
+//移除场景的所有item
 static void remove_all_items(struct obs_scene *scene)
 {
 	struct obs_scene_item *item;
@@ -203,10 +205,11 @@ static void scene_enum_all_sources(void *data,
 {
 	scene_enum_sources(data, enum_callback, param, false);
 }
-//场景item
+//分离场景item，
 static inline void detach_sceneitem(struct obs_scene_item *item)
 {
-	if (item->prev)
+    //链表的操作
+    if (item->prev)
 		item->prev->next = item->next;
 	else
 		item->parent->first_item = item->next;
@@ -214,7 +217,7 @@ static inline void detach_sceneitem(struct obs_scene_item *item)
 	if (item->next)
 		item->next->prev = item->prev;
 
-	item->parent = NULL;
+    item->parent = NULL;//
 }
 
 static inline void attach_sceneitem(struct obs_scene *parent,
@@ -977,6 +980,7 @@ static bool scene_audio_render(void *data, uint64_t *ts_out,
 	return true;
 }
 
+//场景信息。
 const struct obs_source_info scene_info =
 {
 	.id            = "scene",
@@ -985,7 +989,7 @@ const struct obs_source_info scene_info =
 	                 OBS_SOURCE_CUSTOM_DRAW |
 	                 OBS_SOURCE_COMPOSITE,
 	.get_name      = scene_getname,
-	.create        = scene_create,
+    .create        = scene_create,//创建场景
 	.destroy       = scene_destroy,
 	.video_tick    = scene_video_tick,
 	.video_render  = scene_video_render,
@@ -995,7 +999,7 @@ const struct obs_source_info scene_info =
 	.load          = scene_load,
 	.save          = scene_save,
 	.enum_active_sources = scene_enum_active_sources,
-	.enum_all_sources = scene_enum_all_sources
+    .enum_all_sources = scene_enum_all_sources//枚举出场景所有的输入源
 };
 //创建场景
 obs_scene_t *obs_scene_create(const char *name)
@@ -1431,7 +1435,7 @@ void obs_sceneitem_release(obs_sceneitem_t *item)
 	if (os_atomic_dec_long(&item->ref) == 0)
 		obs_sceneitem_destroy(item);
 }
-
+//移除场景item
 void obs_sceneitem_remove(obs_sceneitem_t *item)
 {
 	obs_scene_t *scene;
@@ -1439,7 +1443,7 @@ void obs_sceneitem_remove(obs_sceneitem_t *item)
 	if (!item)
 		return;
 
-	scene = item->parent;
+    scene = item->parent;//场景item指向的场景
 
 	full_lock(scene);
 
@@ -1456,12 +1460,12 @@ void obs_sceneitem_remove(obs_sceneitem_t *item)
 
 	set_visibility(item, false);
 
-	signal_item_remove(item);
-	detach_sceneitem(item);
+    signal_item_remove(item);//移除场景item
+    detach_sceneitem(item);//分离，链表的操作
 
 	full_unlock(scene);
 
-	obs_sceneitem_release(item);
+    obs_sceneitem_release(item);//释放
 }
 
 obs_scene_t *obs_sceneitem_get_scene(const obs_sceneitem_t *item)
