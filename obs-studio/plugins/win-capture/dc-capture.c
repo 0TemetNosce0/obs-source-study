@@ -178,6 +178,71 @@ static inline void dc_capture_release_dc(struct dc_capture *capture)
     }
 }
 
+//桌面鼠标跟随
+void desktop_capture_capture(struct dc_capture *capture)
+{
+    HDC hdc_target;
+    HDC hdc;
+
+    if (capture->capture_cursor) {
+        memset(&capture->ci, 0, sizeof(CURSORINFO));
+        capture->ci.cbSize = sizeof(CURSORINFO);
+        capture->cursor_captured = GetCursorInfo(&capture->ci);
+    }
+
+    if (++capture->cur_tex == capture->num_textures)
+        capture->cur_tex = 0;
+
+    hdc = dc_capture_get_dc(capture);
+    if (!hdc) {
+        blog(LOG_WARNING, "[capture_screen] Failed to get "
+             "texture DC");
+        return;
+    }
+
+    TCHAR strWndName[128] = { 0 };
+    BOOL  bQQWnd = FALSE;
+    BOOL  bDrawCursor = TRUE;
+    {
+        hdc_target = GetDC(NULL);
+
+        int xpos = capture->ci.ptScreenPos.x - capture->width / 2;
+        int ypos = capture->ci.ptScreenPos.y - capture->height / 2;
+
+        int nscreenwidth = GetDeviceCaps(hdc_target, HORZRES);
+        int nscreenheight = GetDeviceCaps(hdc_target, VERTRES);
+
+        if (xpos <= 0)
+            xpos = 0;
+        else if (nscreenwidth - capture->ci.ptScreenPos.x < capture->width / 2)
+            xpos = nscreenwidth - capture->width;
+
+        if (ypos <= 0)
+            ypos = 0;
+        else if (nscreenheight - capture->ci.ptScreenPos.y < capture->height / 2)
+            ypos = nscreenheight - capture->height;
+
+        if (hdc_target)
+        {
+            if (!BitBlt(hdc, 0, 0, capture->width, capture->height, hdc_target, xpos, ypos, SRCCOPY))
+            {
+                blog(LOG_WARNING, "[dc_capture_capture] Failed to get BitBlt");
+            }
+            if (capture->cursor_captured&&bDrawCursor)
+                DrawIcon(hdc, capture->ci.ptScreenPos.x - xpos, capture->ci.ptScreenPos.y - ypos, capture->ci.hCursor);
+        }
+        else
+        {
+            blog(LOG_WARNING, "[dc_capture_capture] Failed to get GetDC");
+        }
+    }
+
+    ReleaseDC(NULL, hdc_target);
+
+    dc_capture_release_dc(capture);
+
+    capture->textures_written[capture->cur_tex] = true;
+}
 void dc_capture_capture(struct dc_capture *capture, HWND window)
 {
     HDC hdc_target;

@@ -10,7 +10,7 @@ extern struct obs_source_info duplicator_capture_info;
 extern struct obs_source_info monitor_capture_info;
 extern struct obs_source_info window_capture_info;
 extern struct obs_source_info game_capture_info;
-
+extern struct obs_source_info desttop_section_info;//鼠标跟谁桌面
 static HANDLE init_hooks_thread = NULL;
 
 extern bool cached_versions_match(void);
@@ -88,7 +88,7 @@ bool obs_module_load(void)
 
 	init_hooks_thread = CreateThread(NULL, 0, init_hooks, NULL, 0, NULL);
 	obs_register_source(&game_capture_info);
-
+	obs_register_source(&desttop_section_info);//鼠标跟随桌面注册
 	return true;
 }
 
