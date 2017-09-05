@@ -147,7 +147,7 @@ struct obs_source_info {
 	/* Required implementation*/
 
 	/** Unique string identifier for the source */
-	const char *id;
+    const char *id;//id标识，添加一个源的时候需要这个id来区分
 
 	/**
 	 * Type of source.
@@ -156,10 +156,10 @@ struct obs_source_info {
 	 * OBS_SOURCE_TYPE_FILTER for filter sources, and
 	 * OBS_SOURCE_TYPE_TRANSITION for transition sources.
 	 */
-    enum obs_source_type type;//源类型，输入过滤过渡场景
+    enum obs_source_type type;//源类型，输入滤镜过渡场景
 
 	/** Source output flags */
-    uint32_t output_flags;//输出标志:
+    uint32_t output_flags;//输出标志(位标志):egOBS_SOURCE_AUDIO源是否有音频，OBS_SOURCE_VIDEO源是否有视频
 
 	/**
 	 * Get the translated name of the source type
@@ -167,16 +167,16 @@ struct obs_source_info {
 	 * @param  type_data  The type_data variable of this structure
 	 * @return               The translated name of the source type
 	 */
-	const char *(*get_name)(void *type_data);
+    const char *(*get_name)(void *type_data);//get_name获取源的名字，比如，添加一个输入源时右键菜单现实的输入源名字
 
 	/**
 	 * Creates the source data for the source
 	 *
-	 * @param  settings  Settings to initialize the source with
-	 * @param  source    Source that this data is associated with
-	 * @return           The data associated with this source
+     * @param  settings  Settings to initialize the source with 设置
+     * @param  source    Source that this data is associated with 与此数据相关的源
+     * @return           The data associated with this source 与此源相关的数据
 	 */
-	void *(*create)(obs_data_t *settings, obs_source_t *source);
+    void *(*create)(obs_data_t *settings, obs_source_t *source);//更具obs_source创建源data，返回与此源相关的源data
 
 	/**
 	 * Destroys the private data for the source
@@ -236,9 +236,9 @@ struct obs_source_info {
 
 	/**
 	 * Called each video frame with the time elapsed
-	 *
-	 * @param  data     Source data
-	 * @param  seconds  Seconds elapsed since the last frame
+     * 每一个视频帧随时间流逝
+     * @param  data     Source data //源data
+     * @param  seconds  Seconds elapsed since the last frame 最后一帧几秒钟消失
 	 */
 	void (*video_tick)(void *data, float seconds);
 
@@ -269,7 +269,8 @@ struct obs_source_info {
 	 *                be NULL, and the source is expected to process with
 	 *                an effect manually.
 	 */
-	void (*video_render)(void *data, gs_effect_t *effect);
+//渲染源
+    void (*video_render)(void *data, gs_effect_t *effect);
 
 	/**
 	 * Called to filter raw async video data.

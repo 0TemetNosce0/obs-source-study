@@ -541,7 +541,8 @@ cleanup:
 	blog(LOG_WARNING, "obs_register_encoder: " format, ##__VA_ARGS__)
 #define service_warn(format, ...) \
 	blog(LOG_WARNING, "obs_register_service: " format, ##__VA_ARGS__)
-//注册源
+//注册obs_source_info，size：obs_source_info大小
+//注册到obs_core
 void obs_register_source_s(const struct obs_source_info *info, size_t size)
 {
 	struct obs_source_info data = {0};
@@ -559,7 +560,7 @@ void obs_register_source_s(const struct obs_source_info *info, size_t size)
 		goto error;
 	}
 
-    if (get_source_info(info->id)) {//源是否存在，存在就不注册了
+    if (get_source_info(info->id)) {//源是否存在，存在就不注册了，id来区别的
 		source_warn("Source '%s' already exists!  "
 		                  "Duplicate library?", info->id);
 		goto error;
