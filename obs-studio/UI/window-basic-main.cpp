@@ -1852,46 +1852,6 @@ OBSScene GetCurrentScene1()
     return OBSScene();
 }
 
-void SourceCrop1()//裁切
-{
-    vector<OBSSceneItem> items;
-
-    auto func = [] (obs_scene_t *, obs_sceneitem_t *item, void *param)
-    {
-        vector<OBSSceneItem> &items =
-                *reinterpret_cast<vector<OBSSceneItem>*>(param);
-        if (obs_sceneitem_selected(item))
-            items.emplace_back(item);
-        return true;
-    };
-
-    obs_scene_enum_items(GetCurrentScene1(), func, &items);
-
-    if (!items.size())
-        return;
-
-
-
-
-    OBSSceneItem &item = items[0];
-    obs_source_t *source = obs_sceneitem_get_source(item);
-
-    if (source ){
-
-
-
-
-
-        ////////////////
-        obs_sceneitem_crop crop;
-        crop.left   = uint32_t(100);
-        crop.right  = uint32_t(100);
-        crop.top    = uint32_t(100);
-        crop.bottom = uint32_t(100);
-
-        obs_sceneitem_set_crop(item, &crop);
-    }
-}
 OBSScene OBSBasic::GetCurrentScene()
 {
     QListWidgetItem *item = ui->scenes->currentItem();
@@ -1914,7 +1874,7 @@ OBSScene OBSBasic::GetCurrentScene()
 //    return OBSScene();
 //}
 
-void OBSBasic::SourceCrop(int x,int y)//裁切
+void OBSBasic::giga_SourceCrop()//裁切
 {
     vector<OBSSceneItem> items;
 
@@ -1946,7 +1906,7 @@ void OBSBasic::SourceCrop(int x,int y)//裁切
         POINT point=pci.ptScreenPos;//光标当前所在坐标位置
         int ytop , ybottom, xleft,xright;
 
-        qDebug()<<"point"<<point.y;
+//        qDebug()<<"point"<<point.y;
         //500;
         if(point.y <250){
             ytop = 0;
@@ -1979,11 +1939,6 @@ void OBSBasic::SourceCrop(int x,int y)//裁切
 
         obs_sceneitem_set_crop(item, &crop);
     }
-}
-
-void OBSBasic::CropTest()
-{
-
 }
 
 OBSSceneItem OBSBasic::GetSceneItem(QListWidgetItem *item)
@@ -2718,7 +2673,6 @@ void OBSBasic::DrawBackdrop(float cx, float cy)
     gs_technique_end(tech);
 
     gs_load_vertexbuffer(nullptr);
-    CropTest();
 }
 
 void OBSBasic::RenderMain(void *data, uint32_t cx, uint32_t cy)
@@ -2749,14 +2703,7 @@ void OBSBasic::RenderMain(void *data, uint32_t cx, uint32_t cy)
         if (source)
             obs_source_video_render(source);
     } else {
-        CURSORINFO pci;//定义光标结构体信息
-        //获取结构体大小，这一步必须要。否则后面就无法获取句柄
-        pci.cbSize=sizeof(CURSORINFO);
-        GetCursorInfo(&pci);//获取光标信息
-        POINT point=pci.ptScreenPos;//光标当前所在坐标位置
-        //        qDebug()<<"111111"<<point.x;
-        window->SourceCrop(point.x, point.y);
-        //emit test(point.x,point.y);
+//        window->giga_SourceCrop();
         obs_render_main_view();
     }
     gs_load_vertexbuffer(nullptr);
