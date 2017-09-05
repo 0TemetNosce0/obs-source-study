@@ -138,7 +138,7 @@ static void monitor_capture_tick(void *data, float seconds)
 		return;
 
 	obs_enter_graphics();
-	dc_capture_capture(&capture->data, NULL);
+    dc_capture_capture(&capture->data, NULL);//dc
 	obs_leave_graphics();
 
 	UNUSED_PARAMETER(seconds);
@@ -228,6 +228,14 @@ static obs_properties_t *monitor_capture_properties(void *unused)
 
 	return props;
 }
+//static int monitor_capture_properties(void *unused)
+//{
+//    UNUSED_PARAMETER(unused);
+//
+//
+//
+//    return testX;
+//}
 
 struct obs_source_info monitor_capture_info = {
 	.id             = "monitor_capture",
@@ -243,5 +251,5 @@ struct obs_source_info monitor_capture_info = {
 	.get_width      = monitor_capture_width,
 	.get_height     = monitor_capture_height,
 	.get_defaults   = monitor_capture_defaults,
-	.get_properties = monitor_capture_properties
+    .get_properties = monitor_capture_properties
 };

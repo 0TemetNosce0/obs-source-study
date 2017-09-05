@@ -1794,7 +1794,7 @@ static uint32_t get_base_width(const obs_source_t *source)
 		return get_base_width(source->filter_target);
 	}
 
-	return source->async_active ? source->async_width : 0;
+	return source->async_active ? source->async_width : 0;//源激活的就返回宽
 }
 
 static uint32_t get_base_height(const obs_source_t *source)
@@ -1844,6 +1844,7 @@ static uint32_t get_recurse_height(obs_source_t *source)
 	return height;
 }
 
+//获取obs_source宽
 uint32_t obs_source_get_width(obs_source_t *source)
 {
 	if (!data_valid(source, "obs_source_get_width"))
@@ -1851,7 +1852,7 @@ uint32_t obs_source_get_width(obs_source_t *source)
 
 	return (source->info.type != OBS_SOURCE_TYPE_FILTER) ?
 		get_recurse_width(source) :
-	        get_base_width(source);
+	        get_base_width(source);//
 }
 
 uint32_t obs_source_get_height(obs_source_t *source)

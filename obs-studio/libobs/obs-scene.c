@@ -299,7 +299,7 @@ static void calculate_bounds_data(struct obs_scene_item *item,
 	add_alignment(origin, item->bounds_align,
 			(int)-width_diff, (int)-height_diff);
 }
-
+//计算裁切的x坐标
 static inline uint32_t calc_cx(const struct obs_scene_item *item,
 		uint32_t width)
 {
@@ -318,7 +318,7 @@ static void update_item_transform(struct obs_scene_item *item)
 {
 	uint32_t        width         = obs_source_get_width(item->source);
 	uint32_t        height        = obs_source_get_height(item->source);
-	uint32_t        cx            = calc_cx(item, width);
+	uint32_t        cx            = calc_cx(item, width);//裁切的x坐标
 	uint32_t        cy            = calc_cy(item, height);
 	struct vec2     base_origin;
 	struct vec2     origin;
@@ -340,7 +340,7 @@ static void update_item_transform(struct obs_scene_item *item)
 	if (item->bounds_type != OBS_BOUNDS_NONE) {
 		calculate_bounds_data(item, &origin, &scale, &cx, &cy);
 	} else {
-		cx = (uint32_t)((float)cx * scale.x);
+		cx = (uint32_t)((float)cx * scale.x);//
 		cy = (uint32_t)((float)cy * scale.y);
 	}
 
@@ -398,7 +398,7 @@ static inline bool source_size_changed(struct obs_scene_item *item)
 
 	return item->last_width != width || item->last_height != height;
 }
-//裁切
+//是否裁切，obs_sceneitem_crop的四个有一个大于0就裁切。
 static inline bool crop_enabled(const struct obs_sceneitem_crop *crop)
 {
 	return crop->left || crop->right || crop->top || crop->bottom;
@@ -417,7 +417,7 @@ static inline bool item_is_scene(const struct obs_scene_item *item)
 static inline bool item_texture_enabled(const struct obs_scene_item *item)
 {
 	return crop_enabled(&item->crop) || scale_filter_enabled(item) ||
-		item_is_scene(item);
+		item_is_scene(item);//裁切，
 }
 
 static void render_item_texture(struct obs_scene_item *item)

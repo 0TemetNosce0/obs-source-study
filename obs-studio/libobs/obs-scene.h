@@ -28,6 +28,7 @@ struct item_action {
 	uint64_t timestamp;
 };
 //场景item，场景item有两个指针一个指向所属场景，一个指向obs_source输入源
+//场景item,描述的是一个场景下的一个输入源。
 struct obs_scene_item {
 	volatile long         ref;
 	volatile bool         removed;
@@ -71,8 +72,8 @@ struct obs_scene_item {
 	DARRAY(struct item_action) audio_actions;
 
 	/* would do **prev_next, but not really great for reordering */
-    struct obs_scene_item *prev;//上一个item
-    struct obs_scene_item *next;//下一个item
+    struct obs_scene_item *prev;//上一个场景item
+    struct obs_scene_item *next;//下一个场景item
 };
 //场景
 struct obs_scene {

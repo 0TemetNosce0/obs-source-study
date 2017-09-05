@@ -607,14 +607,14 @@ struct obs_source {
 	float                           async_color_range_max[3];
 	int                             async_plane_offset[2];
 	bool                            async_flip;
-	bool                            async_active;
+	bool                            async_active;//源是否激活
 	bool                            async_update_texture;
 	bool                            async_unbuffered;
 	struct obs_source_frame         *async_preload_frame;
 	DARRAY(struct async_frame)      async_cache;
 	DARRAY(struct obs_source_frame*)async_frames;
 	pthread_mutex_t                 async_mutex;
-	uint32_t                        async_width;
+	uint32_t                        async_width;//源的宽
 	uint32_t                        async_height;
 	uint32_t                        async_cache_width;
 	uint32_t                        async_cache_height;

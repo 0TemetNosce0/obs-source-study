@@ -33,7 +33,7 @@ extern "C" {
 //obssource源类型
 enum obs_source_type {
     OBS_SOURCE_TYPE_INPUT,//输入源
-    OBS_SOURCE_TYPE_FILTER,//过滤源
+    OBS_SOURCE_TYPE_FILTER,//滤镜源
     OBS_SOURCE_TYPE_TRANSITION,//过渡源
     OBS_SOURCE_TYPE_SCENE,//场景源
 };

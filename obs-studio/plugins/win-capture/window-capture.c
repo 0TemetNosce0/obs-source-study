@@ -2,7 +2,7 @@
 #include <util/dstr.h>
 #include "dc-capture.h"
 #include "window-helpers.h"
-
+//窗口捕获
 #define TEXT_WINDOW_CAPTURE obs_module_text("WindowCapture")
 #define TEXT_WINDOW         obs_module_text("WindowCapture.Window")
 #define TEXT_MATCH_PRIORITY obs_module_text("WindowCapture.Priority")
@@ -207,7 +207,7 @@ static void wc_tick(void *data, float seconds)
 				wc->cursor, wc->compatibility);
 	}
 
-	dc_capture_capture(&wc->capture, wc->window);
+    dc_capture_capture(&wc->capture, wc->window);//捕获
 	obs_leave_graphics();
 }
 
