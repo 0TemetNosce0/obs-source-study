@@ -43,7 +43,7 @@ struct obs_scene_item {
     bool                  selected;//是否选中了
 
 	gs_texrender_t        *item_render;
-	struct obs_sceneitem_crop crop;
+	struct obs_sceneitem_crop crop;//裁切
 
     struct vec2           pos;//item位置
     struct vec2           scale;//

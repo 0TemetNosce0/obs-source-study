@@ -110,13 +110,13 @@ enum obs_allow_direct_render {
 	OBS_NO_DIRECT_RENDERING,
 	OBS_ALLOW_DIRECT_RENDERING,
 };
-
+//缩放类型
 enum obs_scale_type {
-	OBS_SCALE_DISABLE,
-	OBS_SCALE_POINT,
-	OBS_SCALE_BICUBIC,
-	OBS_SCALE_BILINEAR,
-	OBS_SCALE_LANCZOS
+	OBS_SCALE_DISABLE,//默认
+	OBS_SCALE_POINT,//点
+	OBS_SCALE_BICUBIC,//双三次插值
+	OBS_SCALE_BILINEAR,//双线性插值
+	OBS_SCALE_LANCZOS//Lanczos算法
 };
 
 /**
@@ -1301,6 +1301,7 @@ EXPORT void obs_sceneitem_get_box_transform(const obs_sceneitem_t *item,
 EXPORT bool obs_sceneitem_visible(const obs_sceneitem_t *item);
 EXPORT bool obs_sceneitem_set_visible(obs_sceneitem_t *item, bool visible);
 
+//裁切结构体
 struct obs_sceneitem_crop {
 	int left;
 	int top;

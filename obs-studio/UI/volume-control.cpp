@@ -17,7 +17,7 @@
 #include <math.h>
 
 using namespace std;
-
+//音量控制
 QWeakPointer<VolumeMeterTimer> VolumeMeter::updateTimer;
 
 void VolControl::OBSVolumeChanged(void *data, float db)

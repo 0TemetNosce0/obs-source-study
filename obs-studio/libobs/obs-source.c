@@ -1664,6 +1664,7 @@ static void obs_source_draw_async_texture(struct obs_source *source)
 static void obs_source_update_async_video(obs_source_t *source)
 {
 	if (!source->async_rendered) {
+
         struct obs_source_frame *frame = obs_source_get_frame(source);//获取帧
 
 		if (frame)
