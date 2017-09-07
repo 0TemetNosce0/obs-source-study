@@ -3,6 +3,7 @@
 //桌面鼠标跟随
 #define TEXT_DESKTOP_NAME obs_module_text("DesktopCapture")
 #define TEXT_CAPTURE_CURSOR  obs_module_text("CaptureCursor")
+#define TEXT_MOVEMODE  obs_module_text("moveMode__")
 #define TEXT_COMPATIBILITY   obs_module_text("Compatibility")
 #define TEXT_DESKTOP         obs_module_text("Desktop")
 #define TEXT_PRIMARY_MONITOR obs_module_text("PrimaryMonitor")
@@ -13,6 +14,7 @@ struct desktop_capture {
 	int               desttop;
 	bool              capture_cursor;
     bool              compatibility;//多设配器的兼�?
+    bool              moveMode;//模式
 
     struct dc_capture data;//dc捕获结构�?
 };
@@ -57,21 +59,22 @@ static BOOL CALLBACK enum_monitor(HMONITOR handle, HDC hdc, LPRECT rect,
 
 static void update_monitor(struct desktop_capture *capture,	obs_data_t *settings)
 {
-	struct desktop_info monitor = {0};
-	uint32_t width, height;
+    struct desktop_info monitor = {0};
+    uint32_t width, height;
 
-	monitor.desired_id = (int)obs_data_get_int(settings, "desktop");
-	EnumDisplayMonitors(NULL, NULL, enum_monitor, (LPARAM)&monitor);
+    monitor.desired_id = (int)obs_data_get_int(settings, "desktop");
+    EnumDisplayMonitors(NULL, NULL, enum_monitor, (LPARAM)&monitor);
 
-	capture->desttop = monitor.id;
-	int xPos = (int)obs_data_get_int(obs_source_get_settings(capture->source), "xPos");
-	int yPos = (int)obs_data_get_int(obs_source_get_settings(capture->source), "yPos");
-	width = (int)obs_data_get_int(settings, "Width");
-	height = (int)obs_data_get_int(settings, "Height");
+    capture->desttop = monitor.id;
+    int xPos = (int)obs_data_get_int(obs_source_get_settings(capture->source), "xPos");
+    int yPos = (int)obs_data_get_int(obs_source_get_settings(capture->source), "yPos");
+    width = (int)obs_data_get_int(settings, "Width");
+    height = (int)obs_data_get_int(settings, "Height");
 
-	dc_capture_init(&capture->data,xPos, yPos,
-			width, height, capture->capture_cursor,
-			capture->compatibility);
+
+    dc_capture_init(&capture->data,xPos, yPos,
+            width, height, capture->capture_cursor,
+            capture->compatibility);
 }
 
 static inline void update_settings(struct desktop_capture *capture,	obs_data_t *settings)
@@ -79,6 +82,7 @@ static inline void update_settings(struct desktop_capture *capture,	obs_data_t *
 	capture->desttop        = (int)obs_data_get_int(settings, "desktop");
 	capture->capture_cursor = obs_data_get_bool(settings, "capture_cursor");
 	capture->compatibility  = obs_data_get_bool(settings, "compatibility");
+    capture->moveMode  = obs_data_get_bool(settings, "moveMode");//
 	dc_capture_free(&capture->data);
 	update_monitor(capture, settings);
 }
@@ -111,6 +115,7 @@ static void desktop_capture_defaults(obs_data_t *settings)
 	obs_data_set_default_int(settings, "yPos", GetSystemMetrics(SM_CYSCREEN) / 2 - 300);
 	obs_data_set_default_bool(settings, "capture_cursor", true);
 	obs_data_set_default_bool(settings, "compatibility", false);
+    obs_data_set_default_bool(settings, "moveMode",true);//设置默认值
 }
 
 static void desktop_capture_update(void *data, obs_data_t *settings)
@@ -129,7 +134,7 @@ static void *desktop_capture_create(obs_data_t *settings, obs_source_t *source)
 	return capture;
 }
 
-extern void desktop_capture_capture(struct dc_capture *capture);
+extern void desktop_capture_capture(struct dc_capture *capture,bool b);
 
 static void desktop_capture_tick(void *data, float seconds)
 {
@@ -139,7 +144,7 @@ static void desktop_capture_tick(void *data, float seconds)
 		return;
 
 	obs_enter_graphics();
-	desktop_capture_capture(&capture->data);
+    desktop_capture_capture(&capture->data,capture->moveMode);
 	obs_leave_graphics();
 
 	UNUSED_PARAMETER(seconds);
@@ -225,6 +230,7 @@ static obs_properties_t *desktop_capture_properties(void *unused)
 
 	obs_properties_add_bool(props, "compatibility", TEXT_COMPATIBILITY);
 	obs_properties_add_bool(props, "capture_cursor", TEXT_CAPTURE_CURSOR);
+    obs_properties_add_bool(props, "moveMode", TEXT_MOVEMODE);//添加窗口显示出来的属性
 	EnumDisplayMonitors(NULL, NULL, enum_monitor_props, (LPARAM)monitors);
 
 	return props;

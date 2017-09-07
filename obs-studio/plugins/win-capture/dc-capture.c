@@ -179,7 +179,7 @@ static inline void dc_capture_release_dc(struct dc_capture *capture)
 }
 
 //桌面鼠标跟随
-void desktop_capture_capture(struct dc_capture *capture)
+void desktop_capture_capture(struct dc_capture *capture,bool b)
 {
     HDC hdc_target;
     HDC hdc;
@@ -203,7 +203,7 @@ void desktop_capture_capture(struct dc_capture *capture)
     TCHAR strWndName[128] = { 0 };
     BOOL  bQQWnd = FALSE;
     BOOL  bDrawCursor = TRUE;
-    if(0){//鼠标中间捕获
+    if(b){//鼠标中间捕获
         hdc_target = GetDC(NULL);
 
         int xpos = capture->ci.ptScreenPos.x - capture->width / 2;
