@@ -196,14 +196,14 @@ void desktop_capture_capture(struct dc_capture *capture)
     hdc = dc_capture_get_dc(capture);
     if (!hdc) {
         blog(LOG_WARNING, "[capture_screen] Failed to get "
-             "texture DC");
+                          "texture DC");
         return;
     }
 
     TCHAR strWndName[128] = { 0 };
     BOOL  bQQWnd = FALSE;
     BOOL  bDrawCursor = TRUE;
-    {
+    if(0){//鼠标中间捕获
         hdc_target = GetDC(NULL);
 
         int xpos = capture->ci.ptScreenPos.x - capture->width / 2;
@@ -230,6 +230,38 @@ void desktop_capture_capture(struct dc_capture *capture)
             }
             if (capture->cursor_captured&&bDrawCursor)
                 DrawIcon(hdc, capture->ci.ptScreenPos.x - xpos, capture->ci.ptScreenPos.y - ypos, capture->ci.hCursor);
+        }
+        else
+        {
+            blog(LOG_WARNING, "[dc_capture_capture] Failed to get GetDC");
+        }
+    }else{//鼠标边缘
+        hdc_target = GetDC(NULL);
+
+        int xpos = capture->ci.ptScreenPos.x;//当前鼠标屏幕位置
+        int ypos = capture->ci.ptScreenPos.y;
+
+        if (xpos <= capture->x){
+            capture->x = xpos;
+        }else if(xpos >= (capture->x+capture->width) ){
+            capture->x = xpos-capture->width;
+        }
+        if (ypos <= capture->y){
+            capture->y = ypos;
+        }else if(ypos >= (capture->y+capture->height) ){
+            capture->y = ypos-capture->height;
+        }
+
+
+        if (hdc_target)
+        {
+            if (!BitBlt(hdc, 0, 0, capture->width, capture->height, hdc_target, capture->x, capture->y, SRCCOPY))//7，8-屏幕左上角坐标。
+            {
+                blog(LOG_WARNING, "[dc_capture_capture] Failed to get BitBlt");
+            }
+            if (capture->cursor_captured&&bDrawCursor)
+                //                DrawIcon(hdc, capture->ci.ptScreenPos.x - capture->x, capture->ci.ptScreenPos.y - capture->y, capture->ci.hCursor);
+                draw_cursor(capture, hdc, GetDesktopWindow());
         }
         else
         {

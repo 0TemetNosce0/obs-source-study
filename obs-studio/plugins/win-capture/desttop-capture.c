@@ -1,4 +1,4 @@
-#include <util/dstr.h>
+﻿#include <util/dstr.h>
 #include "dc-capture.h"
 //桌面鼠标跟随
 #define TEXT_DESKTOP_NAME obs_module_text("DesktopCapture")
@@ -12,9 +12,9 @@ struct desktop_capture {
 
 	int               desttop;
 	bool              capture_cursor;
-    bool              compatibility;//多设配器的兼�?
+    bool              compatibility;//多设配器的兼�?
 
-    struct dc_capture data;//dc捕获结构�?
+    struct dc_capture data;//dc捕获结构�?
 };
 
 struct desktop_info {
