@@ -77,6 +77,8 @@ static bool FindItemAtPos(obs_scene_t *scene, obs_sceneitem_t *item,
 
 	if (!SceneItemHasVideo(item))
 		return true;
+    if (obs_sceneitem_locked(item))//新增
+        return true;
 
 	vec3_set(&pos3, data->pos.x, data->pos.y, 0.0f);
 
@@ -1090,7 +1092,10 @@ static inline bool crop_enabled(const obs_sceneitem_crop *crop)
 bool OBSBasicPreview::DrawSelectedItem(obs_scene_t *scene,
 		obs_sceneitem_t *item, void *param)
 {
-	if (!obs_sceneitem_selected(item))
+     if(obs_sceneitem_locked(item))//新增
+             return true;
+
+    if (!obs_sceneitem_selected(item))
 		return true;
 
 	OBSBasic *main = reinterpret_cast<OBSBasic*>(App()->GetMainWindow());
