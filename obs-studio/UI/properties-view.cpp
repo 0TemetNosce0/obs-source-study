@@ -124,7 +124,9 @@ void OBSPropertiesView::RefreshProperties()
 
 	layout->setLabelAlignment(Qt::AlignRight);
 
-	obs_property_t *property = obs_properties_first(properties.get());
+    //properties.get() 智能指针包含的裸指针则可以用 get()函数获取
+    obs_property_t *property = obs_properties_first(properties.get());//第一个属性
+//    qDebug(property->name);//obs_property_name(property);才可以获取，直接不知道为啥要报错
 	bool hasNoProperties = !property;
 
 	while (property) {
@@ -223,8 +225,8 @@ QWidget *OBSPropertiesView::NewWidget(obs_property_t *prop, QWidget *widget,
 QWidget *OBSPropertiesView::AddCheckbox(obs_property_t *prop)
 {
 	const char *name = obs_property_name(prop);
-	const char *desc = obs_property_description(prop);
-	bool       val   = obs_data_get_bool(settings, name);
+    const char *desc = obs_property_description(prop);//属性描述，就是属性界面显示出来的属性描述比如“鼠标捕获”
+    bool       val   = obs_data_get_bool(settings, name);//从设置里获取值
 
 	QCheckBox *checkbox = new QCheckBox(QT_UTF8(desc));
 	checkbox->setCheckState(val ? Qt::Checked : Qt::Unchecked);

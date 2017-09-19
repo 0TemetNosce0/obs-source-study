@@ -143,18 +143,18 @@ static inline void frame_rate_data_free(struct frame_rate_data *data)
 struct obs_properties;
 
 struct obs_property {
-	const char              *name;
-	const char              *desc;
+    const char              *name;//属性名称 设置属性时通过属性名字来设置的
+    const char              *desc;//属性描述 属性界面显示出来的
 	const char              *long_desc;
-	enum obs_property_type  type;
-	bool                    visible;
-	bool                    enabled;
+    enum obs_property_type  type;//属性类型  bool int等
+    bool                    visible;//属性是否显示
+    bool                    enabled;//属性使能
 
-	struct obs_properties   *parent;
+    struct obs_properties   *parent;//所属的属性集
 
-	obs_property_modified_t modified;
+    obs_property_modified_t modified;//属性修改回调函数
 
-	struct obs_property     *next;
+    struct obs_property     *next;//下一个属性
 };
 
 struct obs_properties {
@@ -162,8 +162,8 @@ struct obs_properties {
 	void                    (*destroy)(void *param);
 	uint32_t                flags;
 
-	struct obs_property     *first_property;
-	struct obs_property     **last;
+    struct obs_property     *first_property;//第一个属性
+    struct obs_property     **last;//
 };
 
 obs_properties_t *obs_properties_create(void)
@@ -611,7 +611,12 @@ void obs_property_set_long_description(obs_property_t *p, const char *long_desc)
 {
 	if (p) p->long_desc = long_desc;
 }
-
+/***************************
+ * brief: 获取属性obs_property的name
+ * input:
+ * output:
+ * return:
+ **************************/
 const char *obs_property_name(obs_property_t *p)
 {
 	return p ? p->name : NULL;
@@ -626,7 +631,12 @@ const char *obs_property_long_description(obs_property_t *p)
 {
 	return p ? p->long_desc : NULL;
 }
-
+/***************************
+ * brief:  获取属性的类型，bool，int等
+ * input:
+ * output:
+ * return:
+ **************************/
 enum obs_property_type obs_property_get_type(obs_property_t *p)
 {
 	return p ? p->type : OBS_PROPERTY_INVALID;

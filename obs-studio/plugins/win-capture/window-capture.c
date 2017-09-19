@@ -232,5 +232,5 @@ struct obs_source_info window_capture_info = {
 	.get_width      = wc_width,
 	.get_height     = wc_height,
 	.get_defaults   = wc_defaults,
-	.get_properties = wc_properties
+    .get_properties = wc_properties//获取属性集
 };

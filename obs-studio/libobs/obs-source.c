@@ -742,12 +742,12 @@ obs_properties_t *obs_source_properties(const obs_source_t *source)
 	if (!data_valid(source, "obs_source_properties"))
 		return NULL;
 
-	if (source->info.get_properties) {
-		obs_properties_t *props;
-		props = source->info.get_properties(source->context.data);
-		obs_properties_apply_settings(props, source->context.settings);
-		return props;
-	}
+    if (source->info.get_properties) {
+        obs_properties_t *props;
+        props = source->info.get_properties(source->context.data);//获取源的属性集（.get_properties）
+        obs_properties_apply_settings(props, source->context.settings);//???
+        return props;
+    }
 
 	return NULL;
 }
