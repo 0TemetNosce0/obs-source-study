@@ -1700,7 +1700,12 @@ void obs_sceneitem_get_info(const obs_sceneitem_t *item,
 		info->bounds           = item->bounds;
 	}
 }
-
+/***************************
+ * brief:设置
+ * input:
+ * output:
+ * return:
+ **************************/
 void obs_sceneitem_set_info(obs_sceneitem_t *item,
 		const struct obs_transform_info *info)
 {

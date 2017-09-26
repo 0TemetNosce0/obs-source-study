@@ -1770,7 +1770,7 @@ static inline bool obs_context_data_init_wrap(
 		return false;
 
 	context->name        = dup_name(name, private);
-	context->settings    = obs_data_newref(settings);
+    context->settings    = obs_data_newref(settings);//源的settings
 	context->hotkey_data = obs_data_newref(hotkey_data);
 	return true;
 }

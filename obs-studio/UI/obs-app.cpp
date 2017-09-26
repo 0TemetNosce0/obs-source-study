@@ -473,6 +473,12 @@ static bool MakeUserDirs()
 	return true;
 }
 
+/***************************
+ * brief:创建
+ * input:
+ * output:
+ * return:
+ **************************/
 static bool MakeUserProfileDirs()
 {
 	char path[512];

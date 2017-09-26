@@ -631,7 +631,12 @@ void OBSBasic::LogScenes()
 
     blog(LOG_INFO, "------------------------------------------------");
 }
-
+/***************************
+ * brief:    加载配置
+ * input:
+ * output:
+ * return:
+ **************************/
 void OBSBasic::Load(const char *file)
 {
     disableSaving++;
@@ -4841,8 +4846,8 @@ void OBSBasic::on_actionPasteTransform_triggered()
             return true;
 
         obs_sceneitem_defer_update_begin(item);
-        obs_sceneitem_set_info(item, &copiedTransformInfo);
-        obs_sceneitem_set_crop(item, &copiedCropInfo);
+        obs_sceneitem_set_info(item, &copiedTransformInfo);//设置场景item变换
+        obs_sceneitem_set_crop(item, &copiedCropInfo);//设置场景item裁切
         obs_sceneitem_defer_update_end(item);
 
         UNUSED_PARAMETER(scene);
