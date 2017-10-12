@@ -9,8 +9,8 @@ Q_DECLARE_METATYPE(OBSSceneItem);
 
 void SourceListWidget::mouseDoubleClickEvent(QMouseEvent *event)
 {
-	if (event->button() == Qt::LeftButton)
-		QListWidget::mouseDoubleClickEvent(event);
+    if (event->button() == Qt::LeftButton)
+        QListWidget::mouseDoubleClickEvent(event);
 }
 
 void SourceListWidget::dropEvent(QDropEvent *event)

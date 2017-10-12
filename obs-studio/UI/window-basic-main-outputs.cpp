@@ -5,7 +5,7 @@
 #include "audio-encoders.hpp"
 #include "window-basic-main.hpp"
 #include "window-basic-main-outputs.hpp"
-
+#include <QDebug>
 using namespace std;
 
 static void OBSStreamStarting(void *data, calldata_t *params)
@@ -383,7 +383,7 @@ SimpleOutput::SimpleOutput(OBSBasic *main_) : BasicOutputHandler(main_)
 			      "(simple output)";
 		obs_output_release(fileOutput);
 	}
-
+//信号连接
 	startRecording.Connect(obs_output_get_signal_handler(fileOutput),
 			"start", OBSStartRecording, this);
 	stopRecording.Connect(obs_output_get_signal_handler(fileOutput),
@@ -804,9 +804,12 @@ bool SimpleOutput::ConfigureRecording(bool updateReplayBuffer)
 		strPath += "/";
 
 	strPath += GenerateSpecifiedFilename(ffmpegOutput ? "avi" : format,
-			noSpace, filenameFormat);
+            noSpace, filenameFormat);//录制文件名
 	ensure_directory_exists(strPath);
-	if (!overwriteIfExists)
+//    qDebug()<<"strPath  "<<QString::fromStdString(strPath);
+
+
+    if (!overwriteIfExists)//文件名没有空格
 		FindBestFilename(strPath, noSpace);
 
 	obs_data_t *settings = obs_data_create();

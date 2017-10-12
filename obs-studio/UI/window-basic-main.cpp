@@ -1199,6 +1199,7 @@ void OBSBasic::InitPrimitives()
     obs_leave_graphics();
 }
 
+//开始回放缓存
 void OBSBasic::ReplayBufferClicked()
 {
     if (outputHandler->ReplayBufferActive())
@@ -1347,7 +1348,7 @@ void OBSBasic::OBSInit()
         SetPreviewProgramMode(true);
         opt_studio_mode = false;
     }
-
+//_asm int 3;
 #define SET_VISIBILITY(name, control) \
     do { \
     if (config_has_user_value(App()->GlobalConfig(), \
@@ -3374,6 +3375,7 @@ void OBSBasic::MoveSceneToBottom()
 
 void OBSBasic::on_sources_itemSelectionChanged()
 {
+//    qDebug("22222222222222");
     SignalBlocker sourcesSignalBlocker(ui->sources);
 
     auto updateItemSelection = [&]()
@@ -3397,6 +3399,7 @@ void OBSBasic::on_sources_itemSelectionChanged()
     }, static_cast<void*>(&updateItemSelection));
 }
 
+//场景item重命名
 void OBSBasic::EditSceneItemName()
 {
     QListWidgetItem *item = GetTopSelectedSourceItem();
@@ -3626,6 +3629,7 @@ void OBSBasic::on_sources_customContextMenuRequested(const QPoint &pos)//来源�
         CreateSourcePopupMenu(ui->sources->itemAt(pos), false);//右键菜单
 }
 
+//双击。
 void OBSBasic::on_sources_itemDoubleClicked(QListWidgetItem *witem)
 {
     if (!witem)
@@ -4006,6 +4010,7 @@ static void RenameListItem(OBSBasic *parent, QListWidget *listWidget,
     }
 }
 
+//场景重命名
 void OBSBasic::SceneNameEdited(QWidget *editor,
                                QAbstractItemDelegate::EndEditHint endHint)
 {

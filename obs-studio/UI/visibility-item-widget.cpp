@@ -181,17 +181,17 @@ void VisibilityItemWidget::SetColor(const QColor &color,
 		bool active_, bool selected_)
 {
 	/* Do not update unless the state has actually changed */
-	if (active_ == active && selected_ == selected)
-		return;
+    if (active_ == active && selected_ == selected)
+        return;
 
-	QPalette pal = vis->palette();
-	pal.setColor(QPalette::WindowText, color);
-	vis->setPalette(pal);
+    QPalette pal = vis->palette();
+    pal.setColor(QPalette::WindowText, color);
+    vis->setPalette(pal);
 
-	label->setStyleSheet(QString("color: %1;").arg(color.name()));
+    label->setStyleSheet(QString("color: %1;").arg(color.name()));
 
-	active = active_;
-	selected = selected_;
+    active = active_;
+    selected = selected_;
 }
 
 VisibilityItemDelegate::VisibilityItemDelegate(QObject *parent)
@@ -203,44 +203,44 @@ void VisibilityItemDelegate::paint(QPainter *painter,
 		const QStyleOptionViewItem &option,
 		const QModelIndex &index) const
 {
-	QStyledItemDelegate::paint(painter, option, index);
+    QStyledItemDelegate::paint(painter, option, index);
 
-	QObject *parentObj = parent();
-	QListWidget *list = qobject_cast<QListWidget*>(parentObj);
-	if (!list)
-		return;
+    QObject *parentObj = parent();
+    QListWidget *list = qobject_cast<QListWidget*>(parentObj);
+    if (!list)
+        return;
 
-	QListWidgetItem *item = list->item(index.row());
-	VisibilityItemWidget *widget =
-		qobject_cast<VisibilityItemWidget*>(list->itemWidget(item));
-	if (!widget)
-		return;
+    QListWidgetItem *item = list->item(index.row());
+    VisibilityItemWidget *widget =
+        qobject_cast<VisibilityItemWidget*>(list->itemWidget(item));
+    if (!widget)
+        return;
 
-	bool selected = option.state.testFlag(QStyle::State_Selected);
-	bool active = option.state.testFlag(QStyle::State_Active);
+    bool selected = option.state.testFlag(QStyle::State_Selected);
+    bool active = option.state.testFlag(QStyle::State_Active);
 
-	QPalette palette = list->palette();
+    QPalette palette = list->palette();
 #if defined(_WIN32) || defined(__APPLE__)
-	QPalette::ColorGroup group = active ?
-		QPalette::Active : QPalette::Inactive;
+    QPalette::ColorGroup group = active ?
+        QPalette::Active : QPalette::Inactive;
 #else
-	QPalette::ColorGroup group = QPalette::Active;
+    QPalette::ColorGroup group = QPalette::Active;
 #endif
 
 #ifdef _WIN32
-	QPalette::ColorRole highlightRole = QPalette::WindowText;
+    QPalette::ColorRole highlightRole = QPalette::WindowText;
 #else
-	QPalette::ColorRole highlightRole = QPalette::HighlightedText;
+    QPalette::ColorRole highlightRole = QPalette::HighlightedText;
 #endif
 
-	QPalette::ColorRole role;
+    QPalette::ColorRole role;
 
-	if (selected && active)
-		role = highlightRole;
-	else
-		role = QPalette::WindowText;
+    if (selected && active)
+        role = highlightRole;
+    else
+        role = QPalette::WindowText;
 
-	widget->SetColor(palette.color(group, role), active, selected);
+    widget->SetColor(palette.color(group, role), active, selected);
 }
 
 void SetupVisibilityItem(QListWidget *list, QListWidgetItem *item,

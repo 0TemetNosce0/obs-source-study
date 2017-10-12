@@ -177,7 +177,7 @@ static void *video_thread(void *param)
 		profile_store_name(obs_get_profiler_name_store(),
 				"video_thread(%s)", video->info.name);
 
-    while (os_sem_wait(video->update_semaphore) == 0) {//video_output_unlock_frame 发出的
+	    while (os_sem_wait(video->update_semaphore) == 0) {//video_output_unlock_frame 发出的
 		if (video->stop)
 			break;
 
@@ -482,7 +482,7 @@ void video_output_stop(video_t *video)
 	if (video->initialized) {
 		video->initialized = false;
 		video->stop = true;
-		os_sem_post(video->update_semaphore);
+        os_sem_post(video->update_semaphore);
 		pthread_join(video->thread, &thread_ret);
 	}
 }
