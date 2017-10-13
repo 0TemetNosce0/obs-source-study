@@ -141,7 +141,7 @@ OBSBasic::OBSBasic(QWidget *parent)
     projectorArray.resize(10, "");
     previewProjectorArray.resize(10, 0);
 
-    setAcceptDrops(true);
+    setAcceptDrops(true);//拖放
 
     ui->setupUi(this);
     ui->previewDisabledLabel->setVisible(false);
@@ -1408,7 +1408,7 @@ void OBSBasic::OBSInit()
     connect(ui->preview, &OBSQTDisplay::DisplayCreated, addDisplay);
 
 #ifdef _WIN32
-    SetWin32DropStyle(this);
+    SetWin32DropStyle(this);//设置拖放
     show();
 #endif
 
@@ -1429,7 +1429,7 @@ void OBSBasic::OBSInit()
                              "splitterTop");
     int bottom = config_get_int(App()->GlobalConfig(), "BasicWindow",
                                 "splitterBottom");
-
+	//preview和下面的分隔
     if (!top || !bottom) {
         defSizes = ui->mainSplitter->sizes();
         int total = defSizes[0] + defSizes[1];
@@ -1450,14 +1450,14 @@ void OBSBasic::OBSInit()
                                                   "General", "LastVersion");
     bool first_run = config_get_bool(App()->GlobalConfig(), "General",
                                      "FirstRun");
-
+	//第一次启动
     if (!first_run) {
         config_set_bool(App()->GlobalConfig(), "General", "FirstRun",
                         true);
         config_save_safe(App()->GlobalConfig(), "tmp", nullptr);
     }
 
-    if (!first_run && !has_last_version && !Active()) {
+    if (!first_run && !has_last_version && !Active()) {//自动配置向导
         QString msg;
         msg = QTStr("Basic.FirstStartup.RunWizard");
         msg += "\n\n";
@@ -4151,7 +4151,7 @@ inline void OBSBasic::OnActivate()
     if (ui->profileMenu->isEnabled()) {
         ui->profileMenu->setEnabled(false);
         ui->autoConfigure->setEnabled(false);
-        App()->IncrementSleepInhibition();
+        App()->IncrementSleepInhibition();//禁止睡眠
         UpdateProcessPriority();
 
         if (trayIcon)
@@ -4162,9 +4162,9 @@ inline void OBSBasic::OnActivate()
 inline void OBSBasic::OnDeactivate()
 {
     if (!outputHandler->Active() && !ui->profileMenu->isEnabled()) {
-        ui->profileMenu->setEnabled(true);
-        ui->autoConfigure->setEnabled(true);
-        App()->DecrementSleepInhibition();
+        ui->profileMenu->setEnabled(true);//配置文件菜单
+        ui->autoConfigure->setEnabled(true);//自动配置向导菜单
+        App()->DecrementSleepInhibition();//不禁止睡眠
         ClearProcessPriority();
 
         if (trayIcon)
