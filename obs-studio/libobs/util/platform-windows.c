@@ -871,7 +871,7 @@ bool os_inhibit_sleep_set_active(os_inhibit_t *info, bool active)
 		return false;
 
 	if (active) {
-		SetThreadExecutionState(
+		SetThreadExecutionState(//取消电源管理，避免睡眠、待机
 				ES_CONTINUOUS |
 				ES_SYSTEM_REQUIRED |
 				ES_AWAYMODE_REQUIRED |

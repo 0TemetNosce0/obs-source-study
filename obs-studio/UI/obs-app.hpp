@@ -124,7 +124,7 @@ public:
 
 	const char *GetRenderModule() const;
 
-	inline void IncrementSleepInhibition()
+	inline void IncrementSleepInhibition()//½ûÖ¹Ë¯Ãß
 	{
 		if (!sleepInhibitor) return;
 		if (sleepInhibitRefs++ == 0)

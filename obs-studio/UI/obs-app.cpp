@@ -65,7 +65,7 @@ bool portable_mode = false;
 static bool log_verbose = false;
 static bool unfiltered_log = false;
 bool opt_start_streaming = false;
-bool opt_start_recording = false;
+bool opt_start_recording = false;//启动就开始录制
 bool opt_studio_mode = false;
 bool opt_start_replaybuffer = false;
 bool opt_minimize_tray = false;
@@ -1144,7 +1144,7 @@ static void delete_oldest_file(const char *location)
 		}
 	}
 }
-
+//获取最后的日志文件
 static void get_last_log(void)
 {
 	BPtr<char>       logDir(GetConfigPathPtr("obs-studio/logs"));
