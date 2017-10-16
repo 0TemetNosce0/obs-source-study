@@ -193,7 +193,7 @@ bool IsAlwaysOnTop(QWidget *window)
 	DWORD exStyle = GetWindowLong((HWND)window->winId(), GWL_EXSTYLE);
 	return (exStyle & WS_EX_TOPMOST) != 0;
 }
-
+//窗口置顶
 void SetAlwaysOnTop(QWidget *window, bool enable)
 {
 	HWND hwnd = (HWND)window->winId();
@@ -223,7 +223,7 @@ void SetWin32DropStyle(QWidget *window)
 	ex_style |= WS_EX_ACCEPTFILES;
 	SetWindowLongPtr(hwnd, GWL_EXSTYLE, ex_style);
 }
-
+//禁用 Windows 音频闪避
 bool DisableAudioDucking(bool disable)
 {
 	ComPtr<IMMDeviceEnumerator>   devEmum;

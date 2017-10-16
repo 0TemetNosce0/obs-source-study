@@ -38,7 +38,7 @@ struct obs_encoder_info *find_encoder(const char *id)
 const char *obs_encoder_get_display_name(const char *id)
 {
 	struct obs_encoder_info *ei = find_encoder(id);
-    printf("111111111%s",ei->get_name(ei->type_data));
+    printf("%s",ei->get_name(ei->type_data));
 	return ei ? ei->get_name(ei->type_data) : NULL;
 }
 //初始化 编码器

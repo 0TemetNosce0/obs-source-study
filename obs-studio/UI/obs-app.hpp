@@ -1,4 +1,4 @@
-/******************************************************************************
+Ôªø/******************************************************************************
     Copyright (C) 2013 by Hugh Bailey <obs.jim@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
@@ -124,7 +124,7 @@ public:
 
 	const char *GetRenderModule() const;
 
-	inline void IncrementSleepInhibition()//Ω˚÷πÀØ√ﬂ
+	inline void IncrementSleepInhibition()//Á¶ÅÊ≠¢Áù°Áú†
 	{
 		if (!sleepInhibitor) return;
 		if (sleepInhibitRefs++ == 0)

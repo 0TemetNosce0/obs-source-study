@@ -92,7 +92,7 @@ void base_get_log_handler(log_handler_t *handler, void **param)
 //设置log处理函数
 void base_set_log_handler(log_handler_t handler, void *param)
 {
-	if (!handler)
+    if (!handler)//
 		handler = def_log_handler;
 
 	log_param   = param;

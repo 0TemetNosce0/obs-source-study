@@ -2484,10 +2484,10 @@ void OBSBasicSettings::SaveGeneralSettings()
 
 	config_set_bool(GetGlobalConfig(), "BasicWindow",
 			"HideProjectorCursor",
-			ui->hideProjectorCursor->isChecked());
+            ui->hideProjectorCursor->isChecked());//投影仪鼠标隐藏
 	config_set_bool(GetGlobalConfig(), "BasicWindow",
 			"ProjectorAlwaysOnTop",
-			ui->projectorAlwaysOnTop->isChecked());
+            ui->projectorAlwaysOnTop->isChecked());//投影仪置顶
 
 	if (WidgetChanged(ui->recordWhenStreaming))
 		config_set_bool(GetGlobalConfig(), "BasicWindow",

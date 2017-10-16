@@ -359,6 +359,8 @@ static void do_log(int log_level, const char *msg, va_list args, void *param)
 
 #define DEFAULT_LANG "en-US"
 
+
+//初始化 global默认值
 bool OBSApp::InitGlobalConfigDefaults()
 {
 	config_set_default_string(globalConfig, "General", "Language",
@@ -371,15 +373,15 @@ bool OBSApp::InitGlobalConfigDefaults()
 
 #if _WIN32
 	config_set_default_string(globalConfig, "Video", "Renderer",
-			"Direct3D 11");
+            "Direct3D 11");//渲染模式，d3d,opengl
 #else
 	config_set_default_string(globalConfig, "Video", "Renderer", "OpenGL");
 #endif
 
 	config_set_default_bool(globalConfig, "BasicWindow", "PreviewEnabled",
-			true);
+            true);//预览使能，true打开预览，false挂壁预览
 	config_set_default_bool(globalConfig, "BasicWindow",
-			"PreviewProgramMode", false);
+            "PreviewProgramMode", false);//false 预览模式，true工作室模式
 	config_set_default_bool(globalConfig, "BasicWindow",
 			"SceneDuplicationMode", true);
 	config_set_default_bool(globalConfig, "BasicWindow",
@@ -413,7 +415,7 @@ bool OBSApp::InitGlobalConfigDefaults()
 
 #ifdef _WIN32
 	config_set_default_bool(globalConfig, "Audio", "DisableAudioDucking",
-			true);
+            true);//音频闪避
 #endif
 
 #ifdef __APPLE__
@@ -765,8 +767,9 @@ OBSApp::~OBSApp()
 #ifdef _WIN32
 	bool disableAudioDucking = config_get_bool(globalConfig, "Audio",
 			"DisableAudioDucking");
-	if (disableAudioDucking)
+    if (disableAudioDucking){
 		DisableAudioDucking(false);
+    }
 #endif
 
 #ifdef __APPLE__
@@ -922,12 +925,12 @@ static bool StartupOBS(const char *locale, profiler_name_store_t *store)
 	if (GetConfigPath(path, sizeof(path), "obs-studio/plugin_config") <= 0)
 		return false;
 
-	return obs_startup(locale, path, store);
+    return obs_startup(locale, path, store);//store 性能分析
 }
 
 bool OBSApp::OBSInit()
 {
-	ProfileScope("OBSApp::OBSInit");
+    ProfileScope("OBSApp::OBSInit11111111");
 
 	bool licenseAccepted = config_get_bool(globalConfig, "General",
 			"LicenseAccepted");
@@ -940,7 +943,7 @@ bool OBSApp::OBSInit()
 			config_save(globalConfig);
 		}
 
-		if (!StartupOBS(locale.c_str(), GetProfilerNameStore()))
+        if (!StartupOBS(locale.c_str(), GetProfilerNameStore()))//
 			return false;
 
 		blog(LOG_INFO, "Portable mode: %s",
@@ -1313,21 +1316,21 @@ static auto ProfilerFree = [](void *)
 	profiler_free();
 };
 
-static const char *run_program_init = "run_program_init";
+static const char *run_program_init = "run_program_init11111111111";//只是一个字符标识而已
 static int run_program(fstream &logFile, int argc, char *argv[])
 {
 	int ret = -1;
 
-	auto profilerNameStore = CreateNameStore();
+    auto profilerNameStore = CreateNameStore();//性能分析创建
 
 	std::unique_ptr<void, decltype(ProfilerFree)>
 		prof_release(static_cast<void*>(&ProfilerFree),
 				ProfilerFree);
 
-	profiler_start();
-	profile_register_root(run_program_init, 0);
+    profiler_start();//性能分析开始 分析使能
+    profile_register_root(run_program_init, 0);//性能分析？？？
 
-	ScopeProfiler prof{run_program_init};
+    ScopeProfiler prof{run_program_init};//C++ 11扩展了大括号{}的适用范围
 
 	QCoreApplication::addLibraryPath(".");
 
@@ -1385,7 +1388,7 @@ static int run_program(fstream &logFile, int argc, char *argv[])
         if (!program.OBSInit())//obs初始化
 			return 0;
 
-		prof.Stop();
+        prof.Stop();//停止性能分析
 
 		return program.exec();
 
@@ -1928,7 +1931,6 @@ int main(int argc, char *argv[])
 			os_file_exists(BASE_PATH "/obs_portable_mode.txt");
 	}
 #endif
-
     upgrade_settings();//更新设置
 
 	fstream logFile;
@@ -1936,7 +1938,7 @@ int main(int argc, char *argv[])
     curl_global_init(CURL_GLOBAL_ALL);//curl
 	int ret = run_program(logFile, argc, argv);
 
-	blog(LOG_INFO, "Number of memory leaks: %ld", bnum_allocs());
-    base_set_log_handler(nullptr, nullptr);//设置log处理函数，nullptr即为没有log处理hanshu
+    blog(LOG_INFO, "Number of memory leaks: %ld", bnum_allocs());//base_set_log_handler可以设置log处理，默认是打印在终端
+    base_set_log_handler(nullptr, nullptr);//设置log处理函数（blog的），nullptr即为log处理为默认(默认是打印到终端)
 	return ret;
 }

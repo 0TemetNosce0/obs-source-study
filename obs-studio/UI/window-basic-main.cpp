@@ -1334,6 +1334,7 @@ void OBSBasic::OBSInit()
 
     InitPrimitives();
 
+    //工作室模式的  复制场景，  复制源 ，输出场景
     sceneDuplicationMode = config_get_bool(App()->GlobalConfig(),
                                            "BasicWindow", "SceneDuplicationMode");
     swapScenesMode = config_get_bool(App()->GlobalConfig(),
@@ -1345,7 +1346,7 @@ void OBSBasic::OBSInit()
         SetPreviewProgramMode(config_get_bool(App()->GlobalConfig(),
                                               "BasicWindow", "PreviewProgramMode"));
     } else {
-        SetPreviewProgramMode(true);
+        SetPreviewProgramMode(true);//工作室模式
         opt_studio_mode = false;
     }
 //_asm int 3;
@@ -1753,7 +1754,7 @@ OBSBasic::~OBSBasic()
      * normal C++ behavior for your data to be freed in the order that you
      * expect or want it to. */
     QApplication::sendPostedEvents(this);
-
+//GlobalConfig 在析构的时候保存  config_save_safe(App()->GlobalConfig(), "tmp", nullptr);
     config_set_int(App()->GlobalConfig(), "General", "LastVersion",
                    LIBOBS_API_VER);
 
@@ -1767,7 +1768,7 @@ OBSBasic::~OBSBasic()
     config_set_bool(App()->GlobalConfig(), "BasicWindow", "PreviewEnabled",
                     previewEnabled);
     config_set_bool(App()->GlobalConfig(), "BasicWindow", "AlwaysOnTop",
-                    alwaysOnTop);
+                    alwaysOnTop);//窗口置顶
     config_set_bool(App()->GlobalConfig(), "BasicWindow",
                     "SceneDuplicationMode", sceneDuplicationMode);
     config_set_bool(App()->GlobalConfig(), "BasicWindow",
@@ -5259,8 +5260,7 @@ void OBSBasic::OpenSceneWindow()
 void OBSBasic::OpenSavedProjectors()
 {
     bool projectorSave = config_get_bool(GetGlobalConfig(),
-                                         "BasicWindow", "SaveProjectors");
-
+                                         "BasicWindow", "SaveProjectors");//投影仪  退出时保存投影仪
     if (projectorSave) {
         for (size_t i = 0; i < projectorArray.size(); i++) {
             if (projectorArray.at(i).empty() == false) {

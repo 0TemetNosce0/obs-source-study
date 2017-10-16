@@ -8,7 +8,7 @@
 #include "window-basic-preview.hpp"
 #include "window-basic-main.hpp"
 #include "obs-app.hpp"
-
+#include <QDebug>
 #define HANDLE_RADIUS     4.0f
 #define HANDLE_SEL_RADIUS (HANDLE_RADIUS * 1.5f)
 
@@ -122,7 +122,7 @@ static vec3 GetTransformedPosScaled(float x, float y, const matrix4 &mat,
 	vec3_mulf(&result, &result, scale);
 	return result;
 }
-//获取场景尺寸，也就是显示区域大小
+//显示区域大小(基础分辨率)
 static inline vec2 GetOBSScreenSize()
 {
 	obs_video_info ovi;
@@ -133,10 +133,10 @@ static inline vec2 GetOBSScreenSize()
 		size.x = float(ovi.base_width);
 		size.y = float(ovi.base_height);
 	}
-
 	return size;
 }
 
+//snap效果，设置里面的 源对齐
 vec3 OBSBasicPreview::GetSnapOffset(const vec3 &tl, const vec3 &br)
 {
 	OBSBasic *main = reinterpret_cast<OBSBasic*>(App()->GetMainWindow());
@@ -145,50 +145,50 @@ vec3 OBSBasicPreview::GetSnapOffset(const vec3 &tl, const vec3 &br)
 
 	vec3_zero(&clampOffset);
 
-	const bool snap = config_get_bool(GetGlobalConfig(),
-			"BasicWindow", "SnappingEnabled");
-	if (snap == false)
-		return clampOffset;
+    const bool snap = config_get_bool(GetGlobalConfig(),
+            "BasicWindow", "SnappingEnabled");//snap效果(源对齐)是否启用
+    if (snap == false)
+        return clampOffset;
 
-	const bool screenSnap = config_get_bool(GetGlobalConfig(),
-			"BasicWindow", "ScreenSnapping");
-	const bool centerSnap = config_get_bool(GetGlobalConfig(),
-			"BasicWindow", "CenterSnapping");
+    const bool screenSnap = config_get_bool(GetGlobalConfig(),
+            "BasicWindow", "ScreenSnapping");
+    const bool centerSnap = config_get_bool(GetGlobalConfig(),
+            "BasicWindow", "CenterSnapping");
 
-	const float clampDist = config_get_double(GetGlobalConfig(),
-			"BasicWindow", "SnapDistance") / main->previewScale;
-	const float centerX = br.x - (br.x - tl.x) / 2.0f;
-	const float centerY = br.y - (br.y - tl.y) / 2.0f;
+    const float clampDist = config_get_double(GetGlobalConfig(),
+            "BasicWindow", "SnapDistance") / main->previewScale;
+    const float centerX = br.x - (br.x - tl.x) / 2.0f;
+    const float centerY = br.y - (br.y - tl.y) / 2.0f;
 
-	// Left screen edge.
-	if (screenSnap &&
-	    fabsf(tl.x) < clampDist)
-		clampOffset.x = -tl.x;
-	// Right screen edge.
-	if (screenSnap &&
-	    fabsf(clampOffset.x) < EPSILON &&
-	    fabsf(screenSize.x - br.x) < clampDist)
-		clampOffset.x = screenSize.x - br.x;
-	// Horizontal center.
-	if (centerSnap &&
-	    fabsf(screenSize.x - (br.x - tl.x)) > clampDist &&
-	    fabsf(screenSize.x / 2.0f - centerX) < clampDist)
-		clampOffset.x = screenSize.x / 2.0f - centerX;
+    // Left screen edge.
+    if (screenSnap &&
+        fabsf(tl.x) < clampDist)
+        clampOffset.x = -tl.x;
+    // Right screen edge.
+    if (screenSnap &&
+        fabsf(clampOffset.x) < EPSILON &&
+        fabsf(screenSize.x - br.x) < clampDist)
+        clampOffset.x = screenSize.x - br.x;
+    // Horizontal center.
+    if (centerSnap &&
+        fabsf(screenSize.x - (br.x - tl.x)) > clampDist &&
+        fabsf(screenSize.x / 2.0f - centerX) < clampDist)
+        clampOffset.x = screenSize.x / 2.0f - centerX;
 
-	// Top screen edge.
-	if (screenSnap &&
-	    fabsf(tl.y) < clampDist)
-		clampOffset.y = -tl.y;
-	// Bottom screen edge.
-	if (screenSnap &&
-	    fabsf(clampOffset.y) < EPSILON &&
-	    fabsf(screenSize.y - br.y) < clampDist)
-		clampOffset.y = screenSize.y - br.y;
-	// Vertical center.
-	if (centerSnap &&
-	    fabsf(screenSize.y - (br.y - tl.y)) > clampDist &&
-	    fabsf(screenSize.y / 2.0f - centerY) < clampDist)
-		clampOffset.y = screenSize.y / 2.0f - centerY;
+    // Top screen edge.
+    if (screenSnap &&
+        fabsf(tl.y) < clampDist)
+        clampOffset.y = -tl.y;
+    // Bottom screen edge.
+    if (screenSnap &&
+        fabsf(clampOffset.y) < EPSILON &&
+        fabsf(screenSize.y - br.y) < clampDist)
+        clampOffset.y = screenSize.y - br.y;
+    // Vertical center.
+    if (centerSnap &&
+        fabsf(screenSize.y - (br.y - tl.y)) > clampDist &&
+        fabsf(screenSize.y / 2.0f - centerY) < clampDist)
+        clampOffset.y = screenSize.y / 2.0f - centerY;
 
 	return clampOffset;
 }

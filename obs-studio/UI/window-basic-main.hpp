@@ -319,7 +319,7 @@ private:
     float programScale = 0.0f;
 
     int disableOutputsRef = 0;
-
+//是否是预览模式/工作室模式  false 工作室模式 true 预览模式
     inline bool IsPreviewProgramMode() const
     {
         return os_atomic_load_bool(&previewProgramMode);
