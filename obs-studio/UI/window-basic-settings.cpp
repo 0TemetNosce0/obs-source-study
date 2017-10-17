@@ -1227,7 +1227,7 @@ void OBSBasicSettings::LoadDownscaleFilters()
 			QT_UTF8("lanczos"));
 
 	const char *scaleType = config_get_string(main->Config(),
-			"Video", "ScaleType");
+            "Video", "ScaleType");//缩放过滤器
 
 	if (astrcmpi(scaleType, "bilinear") == 0)
 		ui->downscaleFilter->setCurrentIndex(0);
@@ -2576,7 +2576,7 @@ void OBSBasicSettings::SaveVideoSettings()
 	SaveSpinBox(ui->fpsInteger, "Video", "FPSInt");
 	SaveSpinBox(ui->fpsNumerator, "Video", "FPSNum");
 	SaveSpinBox(ui->fpsDenominator, "Video", "FPSDen");
-	SaveComboData(ui->downscaleFilter, "Video", "ScaleType");
+    SaveComboData(ui->downscaleFilter, "Video", "ScaleType");//缩放过滤器
 
 #ifdef _WIN32
 	if (toggleAero) {

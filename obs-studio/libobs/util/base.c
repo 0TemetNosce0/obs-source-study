@@ -30,10 +30,12 @@ static int  crashing     = 0;
 static void *log_param   = NULL;
 static void *crash_param = NULL;
 
+// blog默认处理函数，默认是打印到终端
 static void def_log_handler(int log_level, const char *format,
 		va_list args, void *param)
 {
 	char out[4096];
+
 	vsnprintf(out, sizeof(out), format, args);
 
 	if (log_level <= log_output_level) {
@@ -89,7 +91,7 @@ void base_get_log_handler(log_handler_t *handler, void **param)
 	if (param)
 		*param = log_param;
 }
-//设置log处理函数
+//设置blog处理函数
 void base_set_log_handler(log_handler_t handler, void *param)
 {
     if (!handler)//
@@ -130,7 +132,7 @@ void blogva(int log_level, const char *format, va_list args)
 void blog(int log_level, const char *format, ...)
 {
 	va_list args;
-
+//va_start，函数名称，读取可变参数的过程其实就是在堆栈中，使用指针,遍历堆栈段中的参数列表,从低地址到高地址一个一个地把参数内容读出来的过程·
 	va_start(args, format);
 	blogva(log_level, format, args);
 	va_end(args);

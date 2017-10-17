@@ -2779,7 +2779,7 @@ static inline int AttemptToResetVideo(struct obs_video_info *ovi)
 {
     return obs_reset_video(ovi);
 }
-//获取缩放比例类型： 缩放比例在滤镜-缩放比例中
+//缩放过滤器
 static inline enum obs_scale_type GetScaleType(ConfigFile &basicConfig)
 {
     const char *scaleTypeStr = config_get_string(basicConfig,
@@ -3017,7 +3017,7 @@ void OBSBasic::EnumDialogs()
     for (QDialog *dialog : dialogs) {
         if (dialog->isVisible())
             visDialogs.append(dialog);
-        if (dialog->isModal())
+        if (dialog->isModal())//是否是模态对框框，是的话添加进去，隐藏就不会执行
             modalDialogs.append(dialog);
     }
 
@@ -5465,16 +5465,17 @@ void OBSBasic::SetShowing(bool showing)
     }
 }
 
+//显示/隐藏
 void OBSBasic::ToggleShowHide()
 {
     bool showing = isVisible();
     if (showing) {
         /* check for modal dialogs */
-        EnumDialogs();
-        if (!modalDialogs.isEmpty() || !visMsgBoxes.isEmpty())
+        EnumDialogs();//所有的对话框
+        if (!modalDialogs.isEmpty() || !visMsgBoxes.isEmpty())//有模态对话框就直接返回
             return;
     }
-    SetShowing(!showing);
+    SetShowing(!showing);//所有的对话框显示或隐藏
 }
 
 void OBSBasic::SystemTrayInit()

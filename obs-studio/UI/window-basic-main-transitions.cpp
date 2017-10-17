@@ -704,7 +704,7 @@ void OBSBasic::CreateProgramOptions()
 					&menu, menu.actionGeometry(act));
 		};
 
-		action = menu.addAction(QTStr("QuickTransitions.DuplicateScene"));
+        action = menu.addAction(QTStr("QuickTransitions.DuplicateScene"));
 		action->setToolTip(QTStr("QuickTransitions.DuplicateSceneTT"));
 		action->setCheckable(true);
 		action->setChecked(sceneDuplicationMode);
@@ -1047,38 +1047,39 @@ void OBSBasic::SetPreviewProgramMode(bool enabled)
 	UpdateTitleBar();
 }
 
+//工作室模式的另一个画面渲染
 void OBSBasic::RenderProgram(void *data, uint32_t cx, uint32_t cy)
 {
-	OBSBasic *window = static_cast<OBSBasic*>(data);
-	obs_video_info ovi;
+    OBSBasic *window = static_cast<OBSBasic*>(data);
+    obs_video_info ovi;
 
-	obs_get_video_info(&ovi);
+    obs_get_video_info(&ovi);
 
-	window->programCX = int(window->programScale * float(ovi.base_width));
-	window->programCY = int(window->programScale * float(ovi.base_height));
+    window->programCX = int(window->programScale * float(ovi.base_width));
+    window->programCY = int(window->programScale * float(ovi.base_height));
 
-	gs_viewport_push();
-	gs_projection_push();
+    gs_viewport_push();
+    gs_projection_push();
 
-	/* --------------------------------------- */
+    /* --------------------------------------- */
 
-	gs_ortho(0.0f, float(ovi.base_width), 0.0f, float(ovi.base_height),
-			-100.0f, 100.0f);
-	gs_set_viewport(window->programX, window->programY,
-			window->programCX, window->programCY);
+    gs_ortho(0.0f, float(ovi.base_width), 0.0f, float(ovi.base_height),
+            -100.0f, 100.0f);
+    gs_set_viewport(window->programX, window->programY,
+            window->programCX, window->programCY);
 
-	window->DrawBackdrop(float(ovi.base_width), float(ovi.base_height));
+    window->DrawBackdrop(float(ovi.base_width), float(ovi.base_height));
 
-	obs_render_main_view();
-	gs_load_vertexbuffer(nullptr);
+    obs_render_main_view();
+    gs_load_vertexbuffer(nullptr);
 
-	/* --------------------------------------- */
+    /* --------------------------------------- */
 
-	gs_projection_pop();
-	gs_viewport_pop();
+    gs_projection_pop();
+    gs_viewport_pop();
 
-	UNUSED_PARAMETER(cx);
-	UNUSED_PARAMETER(cy);
+    UNUSED_PARAMETER(cx);
+    UNUSED_PARAMETER(cy);
 }
 
 void OBSBasic::ResizeProgram(uint32_t cx, uint32_t cy)

@@ -340,11 +340,11 @@ private:
 
     void EnumDialogs();
 
-    QList<QDialog*> visDialogs;
-    QList<QDialog*> modalDialogs;
-    QList<QMessageBox*> visMsgBoxes;
+    QList<QDialog*> visDialogs;//显示的对话框
+    QList<QDialog*> modalDialogs;//模态对话框
+    QList<QMessageBox*> visMsgBoxes;//消息对话框
 
-    QList<QPoint> visDlgPositions;
+    QList<QPoint> visDlgPositions;//对话框位置保存
 
     obs_data_array_t *SaveProjectors();
     void LoadSavedProjectors(obs_data_array_t *savedProjectors);

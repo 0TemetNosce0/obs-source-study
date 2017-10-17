@@ -65,6 +65,7 @@ enum {
 	LOG_DEBUG   = 400
 };
 
+// lvl：log等级，msg：args，
 typedef void (*log_handler_t)(int lvl, const char *msg, va_list args, void *p);
 
 EXPORT void base_get_log_handler(log_handler_t *handler, void **param);

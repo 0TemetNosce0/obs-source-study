@@ -114,8 +114,8 @@ enum obs_allow_direct_render {
 enum obs_scale_type {
 	OBS_SCALE_DISABLE,//默认
 	OBS_SCALE_POINT,//点
-	OBS_SCALE_BICUBIC,//双三次插值
-	OBS_SCALE_BILINEAR,//双线性插值
+    OBS_SCALE_BICUBIC,//双三次插值,两立方
+    OBS_SCALE_BILINEAR,//双线性插值，双直线
 	OBS_SCALE_LANCZOS//Lanczos算法
 };
 

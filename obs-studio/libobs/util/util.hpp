@@ -30,7 +30,7 @@
 template<typename T> class BPtr {
 	T *ptr;
 
-	BPtr(BPtr const&) = delete;
+        BPtr(BPtr const&) = delete;//deletec++11关键字，禁止使用此函数，而default显式地指示编译器生成该函数的默认版本。
 
 	BPtr &operator=(BPtr const&) = delete;
 
@@ -80,7 +80,7 @@ public:
 		other.config = config;
 		config = newConfig;
 	}
-
+//打开文件，解析文件到config
 	inline int Open(const char *file, config_open_type openType)
 	{
 		Close();

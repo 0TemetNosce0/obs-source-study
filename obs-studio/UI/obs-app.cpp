@@ -14,7 +14,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
-
+#include <QDebug>
 #include <time.h>
 #include <stdio.h>
 #include <wchar.h>
@@ -194,6 +194,7 @@ QObject *CreateShortcutFilter()
 	});
 }
 
+//获取当前时间 eg: 10:39:19.389  10点39分19秒
 string CurrentTimeString()
 {
 	using namespace std::chrono;
@@ -216,7 +217,6 @@ string CurrentTimeString()
 		snprintf(buf + written, sizeof(buf) - written, ".%03u",
 				static_cast<unsigned>(millis));
 	}
-
 	return buf;
 }
 
@@ -229,47 +229,59 @@ string CurrentDateTimeString()
 	strftime(buf, sizeof(buf), "%Y-%m-%d, %X", &tstruct);
 	return buf;
 }
-
+/***************************
+ * brief:    写入到logfile
+ * input:
+ * output:
+ * return:
+ **************************/
 static inline void LogString(fstream &logFile, const char *timeString,
 		char *str)
 {
-	logFile << timeString << str << endl;
+    logFile << timeString << str << endl;
 }
 
 static inline void LogStringChunk(fstream &logFile, char *str)
 {
-	char *nextLine = str;
-	string timeString = CurrentTimeString();
+    char *nextLine = str;
+
+    string timeString = CurrentTimeString();//获取当前时间
 	timeString += ": ";
 
-	while (*nextLine) {
-		char *nextLine = strchr(str, '\n');
-		if (!nextLine)
+    while (*nextLine) {//一行一行的LogString
+        char *nextLine = strchr(str, '\n');//可以查找字符串s中首次出现字符c的位置
+        if (!nextLine) //没找到 NULL
 			break;
 
-		if (nextLine != str && nextLine[-1] == '\r') {
-			nextLine[-1] = 0;
-		} else {
-			nextLine[0] = 0;
-		}
+        if (nextLine != str && nextLine[-1] == '\r') {//nextLine != str:不只有一行，nextLine[-1] == '\r'nextLine前一个字符
+            nextLine[-1] = 0;//nextLine前一个字符设为0
 
-		LogString(logFile, timeString.c_str(), str);
+        } else {
+            nextLine[0] = 0;
+        }
+
+        LogString(logFile, timeString.c_str(), str);//写入logFile
 		nextLine++;
 		str = nextLine;
 	}
 
-	LogString(logFile, timeString.c_str(), str);
+    LogString(logFile, timeString.c_str(), str);//写入logFile
 }
 
 #define MAX_REPEATED_LINES 30
 #define MAX_CHAR_VARIATION (255 * 3)
 
-static inline int sum_chars(const char *str)
+/***************************
+ * brief:计算str的所有字符ascc码值和，\0结束
+ * input:
+ * output:
+ * return:
+ **************************/
+static inline int  sum_chars(const char *str)
 {
-	int val = 0;
+    int val = 0;
 	for (; *str != 0; str++)
 		val += *str;
-
 	return val;
 }
 
@@ -282,11 +294,11 @@ static inline bool too_many_repeated_entries(fstream &logFile, const char *msg,
 	static char cmp_str[4096];
 	static int rep_count = 0;
 
-	int new_sum = sum_chars(output_str);
+    int new_sum = sum_chars(output_str);//所有字符ascc码值和
 
 	lock_guard<mutex> guard(log_mutex);
 
-	if (unfiltered_log) {
+    if (unfiltered_log) {//未滤过
 		return false;
 	}
 
@@ -311,7 +323,7 @@ static inline bool too_many_repeated_entries(fstream &logFile, const char *msg,
 
 	return false;
 }
-//log 处理，
+//blog 处理，log_level:log等级，msg:eg Loading module: %s args:%s对应的数据 param
 static void do_log(int log_level, const char *msg, va_list args, void *param)
 {
 	fstream &logFile = *static_cast<fstream*>(param);
@@ -321,7 +333,7 @@ static void do_log(int log_level, const char *msg, va_list args, void *param)
 	va_list args2;
 	va_copy(args2, args);
 #endif
-
+qDebug()<<"qqqqqqqqq"<<msg;
 	vsnprintf(str, 4095, msg, args);
 
 #ifdef _WIN32
@@ -345,11 +357,11 @@ static void do_log(int log_level, const char *msg, va_list args, void *param)
 	def_log_handler(log_level, msg, args2, nullptr);
 #endif
 
-	if (log_level <= LOG_INFO || log_verbose) {
-		if (too_many_repeated_entries(logFile, msg, str))
-			return;
-		LogStringChunk(logFile, str);
-	}
+    if (log_level <= LOG_INFO || log_verbose) {
+        if (too_many_repeated_entries(logFile, msg, str))
+            return;
+        LogStringChunk(logFile, str);//str写入logFile
+    }
 
 #if defined(_WIN32) && defined(OBS_DEBUGBREAK_ON_ERROR)
 	if (log_level <= LOG_ERROR && IsDebuggerPresent())
@@ -365,11 +377,11 @@ bool OBSApp::InitGlobalConfigDefaults()
 {
 	config_set_default_string(globalConfig, "General", "Language",
 			DEFAULT_LANG);
-	config_set_default_uint(globalConfig, "General", "MaxLogs", 10);
+    config_set_default_uint(globalConfig, "General", "MaxLogs", 10);//最大日志数
 	config_set_default_string(globalConfig, "General", "ProcessPriority",
-			"Normal");
+            "Normal");//进程优先级
 	config_set_default_bool(globalConfig, "General", "EnableAutoUpdates",
-			true);
+            true);//自动更新
 
 #if _WIN32
 	config_set_default_string(globalConfig, "Video", "Renderer",
@@ -379,15 +391,17 @@ bool OBSApp::InitGlobalConfigDefaults()
 #endif
 
 	config_set_default_bool(globalConfig, "BasicWindow", "PreviewEnabled",
-            true);//预览使能，true打开预览，false挂壁预览
+            true);//预览使能，true打开预览，false关闭预览
 	config_set_default_bool(globalConfig, "BasicWindow",
             "PreviewProgramMode", false);//false 预览模式，true工作室模式
-	config_set_default_bool(globalConfig, "BasicWindow",
+
+    config_set_default_bool(globalConfig, "BasicWindow",
 			"SceneDuplicationMode", true);
 	config_set_default_bool(globalConfig, "BasicWindow",
 			"SwapScenesMode", true);
-	config_set_default_bool(globalConfig, "BasicWindow",
-			"SnappingEnabled", true);
+
+    config_set_default_bool(globalConfig, "BasicWindow",
+            "SnappingEnabled", true);//snap效果，就是设置里的对齐方式
 	config_set_default_bool(globalConfig, "BasicWindow",
 			"ScreenSnapping", true);
 	config_set_default_bool(globalConfig, "BasicWindow",
@@ -396,6 +410,7 @@ bool OBSApp::InitGlobalConfigDefaults()
 			"CenterSnapping", false);
 	config_set_default_double(globalConfig, "BasicWindow",
 			"SnapDistance", 10.0);
+
 	config_set_default_bool(globalConfig, "BasicWindow",
 			"RecordWhenStreaming", false);
 	config_set_default_bool(globalConfig, "BasicWindow",
@@ -405,7 +420,8 @@ bool OBSApp::InitGlobalConfigDefaults()
 	config_set_default_bool(globalConfig, "BasicWindow",
 			"SysTrayWhenStarted", false);
 	config_set_default_bool(globalConfig, "BasicWindow",
-			"SaveProjectors", false);
+            "SaveProjectors", false);//退出时保存投影仪
+
 	config_set_default_bool(globalConfig, "BasicWindow",
 			"ShowTransitions", true);
 	config_set_default_bool(globalConfig, "BasicWindow",
@@ -425,7 +441,12 @@ bool OBSApp::InitGlobalConfigDefaults()
 #endif
 	return true;
 }
-
+/***************************
+ * brief:创建目录path
+ * input:
+ * output:
+ * return:
+ **************************/
 static bool do_mkdir(const char *path)
 {
 	if (os_mkdirs(path) == MKDIR_ERROR) {
@@ -439,10 +460,9 @@ static bool do_mkdir(const char *path)
 static bool MakeUserDirs()
 {
 	char path[512];
-
-	if (GetConfigPath(path, sizeof(path), "obs-studio/basic") <= 0)
+    if (GetConfigPath(path, sizeof(path), "obs-studio/basic") <= 0)//
 		return false;
-	if (!do_mkdir(path))
+    if (!do_mkdir(path))//创建path目录
 		return false;
 
 	if (GetConfigPath(path, sizeof(path), "obs-studio/logs") <= 0)
@@ -476,7 +496,7 @@ static bool MakeUserDirs()
 }
 
 /***************************
- * brief:创建
+ * brief:创建profiles scenes目录
  * input:
  * output:
  * return:
@@ -600,41 +620,41 @@ bool OBSApp::InitGlobalConfig()
 		return false;
 	}
 
-	int errorcode = globalConfig.Open(path, CONFIG_OPEN_ALWAYS);
+    int errorcode = globalConfig.Open(path, CONFIG_OPEN_ALWAYS);//ConfigFile
 	if (errorcode != CONFIG_SUCCESS) {
 		OBSErrorBox(NULL, "Failed to open global.ini: %d", errorcode);
 		return false;
 	}
 
-	if (!opt_starting_collection.empty()) {
+    if (!opt_starting_collection.empty()) {//通过参数--collection来的
 		string path = GetSceneCollectionFileFromName(
 				opt_starting_collection.c_str());
 		if (!path.empty()) {
 			config_set_string(globalConfig,
 					"Basic", "SceneCollection",
-					opt_starting_collection.c_str());
+                    opt_starting_collection.c_str());//场景集合名  scenes目录下的对应的文件里的name属性
 			config_set_string(globalConfig,
 					"Basic", "SceneCollectionFile",
-					path.c_str());
+                    path.c_str());//场景集合文件名  eg：scenes目录下的对应的文件名
 			changed = true;
 		}
 	}
 
-	if (!opt_starting_profile.empty()) {
+    if (!opt_starting_profile.empty()) {//opt_starting_profile通过参数--profile来的
 		string path = GetProfileDirFromName(
 				opt_starting_profile.c_str());
 		if (!path.empty()) {
 			config_set_string(globalConfig, "Basic", "Profile",
-					opt_starting_profile.c_str());
+                    opt_starting_profile.c_str());//配置文件名//菜单的配置文件菜单
 			config_set_string(globalConfig, "Basic", "ProfileDir",
-					path.c_str());
+                    path.c_str());//配置文件目录
 			changed = true;
 		}
 	}
 
 	if (!config_has_user_value(globalConfig, "General", "Pre19Defaults")) {
 		uint32_t lastVersion = config_get_int(globalConfig, "General",
-				"LastVersion");
+                "LastVersion");//最新版本号
 		bool useOldDefaults = lastVersion &&
 		    lastVersion < MAKE_SEMANTIC_VERSION(19, 0, 0);
 
@@ -643,8 +663,8 @@ bool OBSApp::InitGlobalConfig()
 		changed = true;
 	}
 
-	if (changed)
-		config_save_safe(globalConfig, "tmp", nullptr);
+    if (changed)
+        config_save_safe(globalConfig, "tmp", nullptr);//保存到文件
 
 	return InitGlobalConfigDefaults();
 }
@@ -785,6 +805,7 @@ OBSApp::~OBSApp()
 	os_inhibit_sleep_destroy(sleepInhibitor);
 }
 
+//profiles目录创建起
 static void move_basic_to_profiles(void)
 {
 	char path[512];
@@ -794,52 +815,52 @@ static void move_basic_to_profiles(void)
 	/* if not first time use */
 	if (GetConfigPath(path, 512, "obs-studio/basic") <= 0)
 		return;
-	if (!os_file_exists(path))
+    if (!os_file_exists(path))//basic目录是否存在，不存在直接返回
 		return;
 
 	/* if the profiles directory doesn't already exist */
 	if (GetConfigPath(new_path, 512, "obs-studio/basic/profiles") <= 0)
 		return;
-	if (os_file_exists(new_path))
+    if (os_file_exists(new_path))//profiles存在直接返回，不存在创建
 		return;
 
 	if (os_mkdir(new_path) == MKDIR_ERROR)
 		return;
-
+  //后面的好像没啥用
 	strcat(new_path, "/");
 	strcat(new_path, Str("Untitled"));
 	if (os_mkdir(new_path) == MKDIR_ERROR)
 		return;
 
-	strcat(path, "/*.*");
-	if (os_glob(path, 0, &glob) != 0)
-		return;
+    strcat(path, "/*.*");
+    if (os_glob(path, 0, &glob) != 0)
+        return;
 
-	strcpy(path, new_path);
+    strcpy(path, new_path);
 
-	for (size_t i = 0; i < glob->gl_pathc; i++) {
-		struct os_globent ent = glob->gl_pathv[i];
-		char *file;
+    for (size_t i = 0; i < glob->gl_pathc; i++) {
+        struct os_globent ent = glob->gl_pathv[i];
+        char *file;
 
-		if (ent.directory)
-			continue;
+        if (ent.directory)
+            continue;
 
-		file = strrchr(ent.path, '/');
-		if (!file++)
-			continue;
+        file = strrchr(ent.path, '/');
+        if (!file++)
+            continue;
 
-		if (astrcmpi(file, "scenes.json") == 0)
-			continue;
+        if (astrcmpi(file, "scenes.json") == 0)
+            continue;
 
-		strcpy(new_path, path);
-		strcat(new_path, "/");
-		strcat(new_path, file);
-		os_rename(ent.path, new_path);
-	}
+        strcpy(new_path, path);
+        strcat(new_path, "/");
+        strcat(new_path, file);
+        os_rename(ent.path, new_path);
+    }
 
-	os_globfree(glob);
+    os_globfree(glob);
 }
-
+//scenes目录创建起
 static void move_basic_to_scene_collections(void)
 {
 	char path[512];
@@ -852,18 +873,19 @@ static void move_basic_to_scene_collections(void)
 
 	if (GetConfigPath(new_path, 512, "obs-studio/basic/scenes") <= 0)
 		return;
-	if (os_file_exists(new_path))
+    if (os_file_exists(new_path))//存在返回，不存在就创建
 		return;
 
 	if (os_mkdir(new_path) == MKDIR_ERROR)
 		return;
 
-	strcat(path, "/scenes.json");
-	strcat(new_path, "/");
-	strcat(new_path, Str("Untitled"));
-	strcat(new_path, ".json");
+    //后面的好像没啥用
+    strcat(path, "/scenes.json");
+    strcat(new_path, "/");
+    strcat(new_path, Str("Untitled"));
+    strcat(new_path, ".json");
 
-	os_rename(path, new_path);
+    os_rename(path, new_path);
 }
 
 void OBSApp::AppInit()
@@ -872,13 +894,13 @@ void OBSApp::AppInit()
 
 	if (!InitApplicationBundle())
 		throw "Failed to initialize application bundle";
-	if (!MakeUserDirs())
+    if (!MakeUserDirs())//目录创建
 		throw "Failed to create required user directories";
-	if (!InitGlobalConfig())
+    if (!InitGlobalConfig())//global.ini初始化
 		throw "Failed to initialize global config";
-	if (!InitLocale())
+    if (!InitLocale())//local初始化，
 		throw "Failed to load locale";
-	if (!InitTheme())
+    if (!InitTheme())//主题初始化
 		throw "Failed to load theme";
 
 	config_set_default_string(globalConfig, "Basic", "Profile",
@@ -901,11 +923,11 @@ void OBSApp::AppInit()
 	if (config_get_bool(globalConfig, "Video", "DisableOSXVSync"))
 		EnableOSXVSync(false);
 #endif
+//这两个函数不知道有啥用，去了好型也没啥影响
+    move_basic_to_profiles();
+    move_basic_to_scene_collections();
 
-	move_basic_to_profiles();
-	move_basic_to_scene_collections();
-
-	if (!MakeUserProfileDirs())
+    if (!MakeUserProfileDirs())//创建profiles scenes目录
 		throw "Failed to create profile directories";
 }
 
@@ -1229,11 +1251,11 @@ static void create_log_file(fstream &logFile)
 
 	get_last_log();
 
-	currentLogFile = GenerateTimeDateFilename("txt");
-	dst << "obs-studio/logs/" << currentLogFile.c_str();
-
+    currentLogFile = GenerateTimeDateFilename("txt");//生成时间日期的文件名
+    dst << "obs-studio/logs/" << currentLogFile.c_str();//文件目录及文件名
+    //GetConfigPathPtr(dst.str().c_str()):C:\Users\giga\AppData\Roaming\obs-studio/logs/2017-10-17 11-24-11.txt
 	BPtr<char> path(GetConfigPathPtr(dst.str().c_str()));
-
+//qDebug()<<"qqqqqqqq"<<path.Get();
 #ifdef _WIN32
 	BPtr<wchar_t> wpath;
 	os_utf8_to_wcs_ptr(path, 0, &wpath);
@@ -1243,7 +1265,7 @@ static void create_log_file(fstream &logFile)
 	logFile.open(path,
 			ios_base::in | ios_base::out | ios_base::trunc);
 #endif
-
+//qDebug()<<"1111111111"<<dst;
 	if (logFile.is_open()) {
 		delete_oldest_file("obs-studio/logs");
         base_set_log_handler(do_log, &logFile);//设置log 到do_log
@@ -1341,7 +1363,7 @@ static int run_program(fstream &logFile, int argc, char *argv[])
 		OBSTranslator translator;
 
         create_log_file(logFile);//创建日志文件
-		delete_oldest_file("obs-studio/profiler_data");
+        delete_oldest_file("obs-studio/profiler_data");//删除老的日志文件
 
 		program.installTranslator(&translator);
 
@@ -1493,7 +1515,9 @@ static void load_debug_privilege(void)
 #ifndef OBS_UNIX_STRUCTURE
 #define OBS_UNIX_STRUCTURE 0
 #endif
-//获取config目录路径
+//获取配置目录路径到path：path：配置目录/name eg：C:\Users\giga\AppData\Roaming\obs-studio/basic
+//name:配置目录下的目录或文件 eg：obs-studio/logs
+//返回值：path长度
 int GetConfigPath(char *path, size_t size, const char *name)
 {
 	if (!OBS_UNIX_STRUCTURE && portable_mode) {
@@ -1518,7 +1542,7 @@ char *GetConfigPathPtr(const char *name)
 			return NULL;
 		}
 	} else {
-		return os_get_config_path_ptr(name);
+        return os_get_config_path_ptr(name);//。。。
 	}
 }
 
