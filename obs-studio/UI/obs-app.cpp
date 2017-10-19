@@ -1276,14 +1276,18 @@ static void create_log_file(fstream &logFile)
 
 static auto ProfilerNameStoreRelease = [](profiler_name_store_t *store)
 {
-	profiler_name_store_free(store);
+    profiler_name_store_free(store);//释放
 };
 
+//decltype，类型推导，根据变量来推导出类型
+//unique_ptr默认的资源删除操作是delete/delete[]，若需要，可以进行自定义
 using ProfilerNameStore =
 	std::unique_ptr<profiler_name_store_t,
 			decltype(ProfilerNameStoreRelease)>;
 
-ProfilerNameStore CreateNameStore()
+
+
+ProfilerNameStore CreateNameStore()//创建
 {
 	return ProfilerNameStore{profiler_name_store_create(),
 					ProfilerNameStoreRelease};
@@ -1291,7 +1295,7 @@ ProfilerNameStore CreateNameStore()
 
 static auto SnapshotRelease = [](profiler_snapshot_t *snap)
 {
-	profile_snapshot_free(snap);
+    profile_snapshot_free(snap);//释放
 };
 
 using ProfilerSnapshot =
@@ -1302,6 +1306,7 @@ ProfilerSnapshot GetSnapshot()
 	return ProfilerSnapshot{profile_snapshot_create(), SnapshotRelease};
 }
 
+//保存分析数据
 static void SaveProfilerData(const ProfilerSnapshot &snap)
 {
 	if (currentLogFile.empty())
@@ -1326,16 +1331,16 @@ static void SaveProfilerData(const ProfilerSnapshot &snap)
 
 static auto ProfilerFree = [](void *)
 {
-	profiler_stop();
+    profiler_stop();//停止
 
-	auto snap = GetSnapshot();
+    auto snap = GetSnapshot();//获取快照
 
 	profiler_print(snap.get());
 	profiler_print_time_between_calls(snap.get());
 
-	SaveProfilerData(snap);
+    SaveProfilerData(snap);//保存分析数据
 
-	profiler_free();
+    profiler_free();//释放
 };
 
 static const char *run_program_init = "run_program_init11111111111";//只是一个字符标识而已
