@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <graphics/matrix4.h>
 #include <graphics/quat.h>
 
-
+//É«²ÊÐ£Õý
 #define SETTING_GAMMA                  "gamma"
 #define SETTING_CONTRAST               "contrast"
 #define SETTING_BRIGHTNESS             "brightness"

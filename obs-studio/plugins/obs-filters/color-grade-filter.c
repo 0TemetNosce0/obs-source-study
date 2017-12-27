@@ -7,7 +7,7 @@
 
 #define TEXT_IMAGE_PATH                obs_module_text("Path")
 #define TEXT_AMOUNT                    obs_module_text("Amount")
-
+//”¶”√ LUT
 struct lut_filter_data {
 	obs_source_t                   *context;
 	gs_effect_t                    *effect;

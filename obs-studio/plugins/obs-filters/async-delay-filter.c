@@ -1,6 +1,6 @@
 #include <obs-module.h>
 #include <util/circlebuf.h>
-
+//Œ¥”√
 #ifndef SEC_TO_NSEC
 #define SEC_TO_NSEC 1000000000ULL
 #endif
@@ -12,7 +12,7 @@
 #define SETTING_DELAY_MS               "delay_ms"
 
 #define TEXT_DELAY_MS                  obs_module_text("DelayMs")
-
+°¢°¢ ”∆µ—”≥Ÿ(“Ï≤Ω)
 struct async_delay_data {
 	obs_source_t                   *context;
 

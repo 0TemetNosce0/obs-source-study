@@ -3,7 +3,7 @@
 #include <graphics/vec4.h>
 #include <graphics/image-file.h>
 #include <util/dstr.h>
-
+//Í¼ÏñÑÚÂë/»ìºÏ
 #define SETTING_TYPE                   "type"
 #define SETTING_IMAGE_PATH             "image_path"
 #define SETTING_COLOR                  "color"
