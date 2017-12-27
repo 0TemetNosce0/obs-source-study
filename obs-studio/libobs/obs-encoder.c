@@ -790,7 +790,7 @@ static void full_stop(struct obs_encoder *encoder)
 }
 
 static const char *do_encode_name = "do_encode";
-//编码推流
+//编码,推流
 static inline void do_encode(struct obs_encoder *encoder,
 		struct encoder_frame *frame)
 {
@@ -836,7 +836,7 @@ static inline void do_encode(struct obs_encoder *encoder,
         for (size_t i = encoder->callbacks.num; i > 0; i--) {
             struct encoder_callback *cb;
             cb = encoder->callbacks.array+(i-1);
-            send_packet(encoder, cb, &pkt);//编码保存，推流
+            send_packet(encoder, cb, &pkt);//发送编码后的packet
         }
 
 		pthread_mutex_unlock(&encoder->callbacks_mutex);

@@ -20,7 +20,7 @@
 #include "graphics/vec4.h"
 #include "media-io/format-conversion.h"
 #include "media-io/video-frame.h"
-//获取捕获的视频帧
+//获取捕获的视频帧cur_async_frame
 static uint64_t tick_sources(uint64_t cur_time, uint64_t last_time)
 {
 	struct obs_core_data *data = &obs->data;
@@ -39,7 +39,7 @@ static uint64_t tick_sources(uint64_t cur_time, uint64_t last_time)
 
 	/* call the tick function of each source */
 	source = data->first_source;
-	while (source) {
+	while (source) {//获取视频帧
 		obs_source_video_tick(source, seconds);
 		source = (struct obs_source*)source->context.next;
 	}
