@@ -6,7 +6,7 @@
 #include <speex/speex_preprocess.h>
 
 /* -------------------------------------------------------- */
-
+//ÔëÉùÒÖÖÆ
 #define do_log(level, format, ...) \
 	blog(level, "[noise suppress: '%s'] " format, \
 			obs_source_get_name(ng->context), ##__VA_ARGS__)

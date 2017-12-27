@@ -1,6 +1,6 @@
 #include <obs-module.h>
 #include <graphics/vec2.h>
-
+//ІГјф/Моід
 struct crop_filter_data {
 	obs_source_t                   *context;
 

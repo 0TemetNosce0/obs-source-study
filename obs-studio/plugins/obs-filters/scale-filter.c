@@ -23,7 +23,7 @@
 #define S_SAMPLING_BILINEAR             "bilinear"
 #define S_SAMPLING_BICUBIC              "bicubic"
 #define S_SAMPLING_LANCZOS              "lanczos"
-
+//Ëõ·Å±ÈÀý
 struct scale_filter_data {
 	obs_source_t                    *context;
 	gs_effect_t                     *effect;

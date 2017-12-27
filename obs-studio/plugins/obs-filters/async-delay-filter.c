@@ -12,7 +12,7 @@
 #define SETTING_DELAY_MS               "delay_ms"
 
 #define TEXT_DELAY_MS                  obs_module_text("DelayMs")
-°¢°¢ ”∆µ—”≥Ÿ(“Ï≤Ω)
+// ”∆µ—”≥Ÿ(“Ï≤Ω)
 struct async_delay_data {
 	obs_source_t                   *context;
 

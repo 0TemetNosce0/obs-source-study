@@ -2,7 +2,7 @@
 #include <graphics/matrix4.h>
 #include <graphics/vec2.h>
 #include <graphics/vec4.h>
-
+//É«¶È¼ü
 #define SETTING_OPACITY                "opacity"
 #define SETTING_CONTRAST               "contrast"
 #define SETTING_BRIGHTNESS             "brightness"

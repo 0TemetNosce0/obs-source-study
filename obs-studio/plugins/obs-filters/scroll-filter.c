@@ -1,6 +1,6 @@
 #include <obs-module.h>
 #include <graphics/vec2.h>
-
+//¹ö¶¯
 struct scroll_filter_data {
 	obs_source_t                   *context;
 

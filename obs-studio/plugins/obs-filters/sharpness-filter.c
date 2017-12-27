@@ -2,7 +2,7 @@
 #include <obs-source.h>
 #include <obs.h>
 #include <util/platform.h>
-
+//Èñ»¯
 struct sharpness_data {
 	obs_source_t                   *context;
 

@@ -3,7 +3,7 @@
 
 #define S_DELAY_MS                     "delay_ms"
 #define T_DELAY_MS                     obs_module_text("DelayMs")
-
+//‰÷»æ—”≥Ÿ
 struct frame {
 	gs_texrender_t *render;
 	uint64_t ts;
