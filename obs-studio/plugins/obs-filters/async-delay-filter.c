@@ -1,6 +1,5 @@
 #include <obs-module.h>
 #include <util/circlebuf.h>
-//Œ¥”√
 #ifndef SEC_TO_NSEC
 #define SEC_TO_NSEC 1000000000ULL
 #endif

@@ -2015,6 +2015,7 @@ void OBSBasic::CreatePropertiesWindow(obs_source_t *source)
     properties->setAttribute(Qt::WA_DeleteOnClose, true);
 }
 
+//滤镜窗口
 void OBSBasic::CreateFiltersWindow(obs_source_t *source)
 {
     if (filters)
@@ -4056,7 +4057,7 @@ void OBSBasic::OpenFilters()
     OBSSceneItem item = GetCurrentSceneItem();
     OBSSource source = obs_sceneitem_get_source(item);
 
-    CreateFiltersWindow(source);
+    CreateFiltersWindow(source);//滤镜
 }
 
 void OBSBasic::OpenSceneFilters()

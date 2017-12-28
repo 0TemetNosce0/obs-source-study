@@ -34,7 +34,7 @@
 using namespace std;
 
 Q_DECLARE_METATYPE(OBSSource);
-
+//ÂË¾µ
 OBSBasicFilters::OBSBasicFilters(QWidget *parent, OBSSource source_)
 	: QDialog                      (parent),
 	  ui                           (new Ui::OBSBasicFilters),
@@ -320,7 +320,7 @@ static bool filter_compatible(bool async, uint32_t sourceFlags,
 		(!async && !filterAudio && !filterAsync);
 }
 
-QMenu *OBSBasicFilters::CreateAddFilterPopupMenu(bool async)
+QMenu *OBSBasicFilters::CreateAddFilterPopupMenu(bool async)//ÓÒ¼üÌí¼Ó
 {
 	uint32_t sourceFlags = obs_source_get_output_flags(source);
 	const char *type_str;
@@ -375,7 +375,7 @@ QMenu *OBSBasicFilters::CreateAddFilterPopupMenu(bool async)
 	return popup;
 }
 
-void OBSBasicFilters::AddNewFilter(const char *id)
+void OBSBasicFilters::AddNewFilter(const char *id)//Ìí¼ÓÂË¾µ
 {
 	if (id && *id) {
 		obs_source_t *existing_filter;
@@ -422,7 +422,7 @@ void OBSBasicFilters::AddNewFilter(const char *id)
 	}
 }
 
-void OBSBasicFilters::AddFilterFromAction()
+void OBSBasicFilters::AddFilterFromAction()//Ìí¼ÓÂË¾µ
 {
 	QAction *action = qobject_cast<QAction*>(sender());
 	if (!action)
@@ -616,7 +616,7 @@ void OBSBasicFilters::on_effectFilters_GotFocus()
 	UpdatePropertiesView(ui->effectFilters->currentRow(), false);
 }
 
-void OBSBasicFilters::on_effectFilters_currentRowChanged(int row)
+void OBSBasicFilters::on_effectFilters_currentRowChanged(int row)//
 {
 	UpdatePropertiesView(row, false);
 }
