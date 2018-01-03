@@ -6,13 +6,13 @@
 #include <psapi.h>
 #include "window-helpers.h"
 #include "obfuscate.h"
-//窗口捕获
+//窗口捕获，编码，冒号要换成#3A
 static inline void encode_dstr(struct dstr *str)
 {
 	dstr_replace(str, "#", "#22");
 	dstr_replace(str, ":", "#3A");
 }
-
+//解码：#3A换成冒号
 static inline char *decode_str(const char *src)
 {
 	struct dstr str = {0};
@@ -21,7 +21,7 @@ static inline char *decode_str(const char *src)
 	dstr_replace(&str, "#22", "#");
 	return str.array;
 }
-
+//str提取出标题,类名，exe
 extern void build_window_strings(const char *str,
 		char **class,
 		char **title,
@@ -67,7 +67,7 @@ static inline HANDLE open_process(DWORD desired_access, bool inherit_handle,
 	return open_process_proc(desired_access, inherit_handle, process_id);
 }
 
-//窗口exe
+//根据窗口句柄获取窗口exe,输出：name
 bool get_window_exe(struct dstr *name, HWND window)
 {
 	wchar_t     wname[MAX_PATH];
@@ -228,7 +228,7 @@ static bool check_window_valid(HWND window, enum window_search_mode mode)
 
 	return true;
 }
-
+//是否是uwp应用
 bool is_uwp_window(HWND hwnd)
 {
 	wchar_t name[256];
@@ -237,9 +237,10 @@ bool is_uwp_window(HWND hwnd)
 	if (!GetClassNameW(hwnd, name, sizeof(name) / sizeof(wchar_t)))
 		return false;
 
-	return wcscmp(name, L"ApplicationFrameWindow") == 0;
+	return wcscmp(name, L"ApplicationFrameWindow") == 0;//ApplicationFrameWindow  uwp应用
 }
 
+//获取uwp实际的窗口
 HWND get_uwp_actual_window(HWND parent)
 {
 	DWORD parent_id = 0;
@@ -261,6 +262,7 @@ HWND get_uwp_actual_window(HWND parent)
 	return NULL;
 }
 
+//搜索下一个窗口
 static HWND next_window(HWND window, enum window_search_mode mode,
 		HWND *parent, bool use_findwindowex)
 {
@@ -274,7 +276,7 @@ static HWND next_window(HWND window, enum window_search_mode mode,
 			window = FindWindowEx(GetDesktopWindow(), window, NULL,
 					NULL);
 		else
-			window = GetNextWindow(window, GW_HWNDNEXT);
+			window = GetNextWindow(window, GW_HWNDNEXT);//下一个窗口
 
 		if (!window || check_window_valid(window, mode))
 			break;
@@ -294,11 +296,11 @@ static HWND next_window(HWND window, enum window_search_mode mode,
 static HWND first_window(enum window_search_mode mode, HWND *parent,
 		bool *use_findwindowex)
 {
-	HWND window = FindWindowEx(GetDesktopWindow(), NULL, NULL, NULL);
+	HWND window = FindWindowEx(GetDesktopWindow(), NULL, NULL, NULL);//GetDesktopWindow()的第一个子窗口
 
-	if (!window) {
+	if (!window) {//没有
 		*use_findwindowex = false;
-		window = GetWindow(GetDesktopWindow(), GW_CHILD);
+		window = GetWindow(GetDesktopWindow(), GW_CHILD);//该函数返回与指定窗口有特定关系（如Z序或所有者）的窗口句柄
 	} else {
 		*use_findwindowex = true;
 	}
@@ -329,6 +331,7 @@ static HWND first_window(enum window_search_mode mode, HWND *parent,
 	return window;
 }
 
+//枚举出窗口到obs_property_t
 void fill_window_list(obs_property_t *p, enum window_search_mode mode,
 		add_window_cb callback)
 {
@@ -338,8 +341,8 @@ void fill_window_list(obs_property_t *p, enum window_search_mode mode,
 	HWND window = first_window(mode, &parent, &use_findwindowex);
 
 	while (window) {
-		add_window(p, window, callback);
-		window = next_window(window, mode, &parent, use_findwindowex);
+		add_window(p, window, callback);//添加一个窗口
+		window = next_window(window, mode, &parent, use_findwindowex);//下一个窗口
 	}
 }
 
@@ -390,6 +393,7 @@ static int window_rating(HWND window,
 	return val;
 }
 
+//查找窗口,找到匹配的显示出来，fill_window_list这个只是保存所有的窗口供选择用
 HWND find_window(enum window_search_mode mode,
 		enum window_priority priority,
 		const char *class,
