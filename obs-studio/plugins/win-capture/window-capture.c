@@ -34,13 +34,15 @@ struct window_capture {
 
 static void update_settings(struct window_capture *wc, obs_data_t *s)
 {
+	////#3A是冒号的替换
+	//eg:"CMake 3.8.2 - F#3A / obs_git / obs - jp9000 / build - syn - vs:Qt5QWindowIcon:cmake - gui.exe"  标题:类名:exe
 	const char *window     = obs_data_get_string(s, "window");
-	int        priority    = (int)obs_data_get_int(s, "priority");
+	int        priority    = (int)obs_data_get_int(s, "priority");//匹配等级
 
 	bfree(wc->title);
 	bfree(wc->class);
 	bfree(wc->executable);
-
+	//标题，类，exe
 	build_window_strings(window, &wc->class, &wc->title, &wc->executable);
 
 	wc->priority      = (enum window_priority)priority;

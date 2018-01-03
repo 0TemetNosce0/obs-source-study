@@ -6,7 +6,7 @@
 #include <psapi.h>
 #include "window-helpers.h"
 #include "obfuscate.h"
-
+//窗口捕获
 static inline void encode_dstr(struct dstr *str)
 {
 	dstr_replace(str, "#", "#22");
@@ -67,6 +67,7 @@ static inline HANDLE open_process(DWORD desired_access, bool inherit_handle,
 	return open_process_proc(desired_access, inherit_handle, process_id);
 }
 
+//窗口exe
 bool get_window_exe(struct dstr *name, HWND window)
 {
 	wchar_t     wname[MAX_PATH];
@@ -104,21 +105,23 @@ fail:
 	return true;
 }
 
+//窗口标题
 void get_window_title(struct dstr *name, HWND hwnd)
 {
 	wchar_t *temp;
 	int len;
 
-	len = GetWindowTextLengthW(hwnd);
+	len = GetWindowTextLengthW(hwnd);//标题长度
 	if (!len)
 		return;
 
 	temp = malloc(sizeof(wchar_t) * (len+1));
-	if (GetWindowTextW(hwnd, temp, len+1))
+	if (GetWindowTextW(hwnd, temp, len+1))//获取标题
 		dstr_from_wcs(name, temp);
 	free(temp);
 }
 
+//窗口类名
 void get_window_class(struct dstr *class, HWND hwnd)
 {
 	wchar_t temp[256];
@@ -129,6 +132,7 @@ void get_window_class(struct dstr *class, HWND hwnd)
 }
 
 /* not capturable or internal windows */
+//不捕获win内部窗口
 static const char *internal_microsoft_exes[] = {
 	"applicationframehost",
 	"shellexperiencehost",
@@ -137,6 +141,7 @@ static const char *internal_microsoft_exes[] = {
 	NULL
 };
 
+//是否是win内部程序
 static bool is_microsoft_internal_window_exe(const char *exe)
 {
 	char cur_exe[MAX_PATH];
@@ -200,6 +205,7 @@ static void add_window(obs_property_t *p, HWND hwnd, add_window_cb callback)
 	dstr_free(&exe);
 }
 
+//窗口是否有效
 static bool check_window_valid(HWND window, enum window_search_mode mode)
 {
 	DWORD styles, ex_styles;
