@@ -87,7 +87,7 @@ bool get_window_exe(struct dstr *name, HWND window)
 
 	if (!GetProcessImageFileNameW(process, wname, MAX_PATH))
 		goto fail;
-
+	wprintf(L"aaasssaaa%s\n", wname);
 	dstr_from_wcs(&temp, wname);
 	slash = strrchr(temp.array, '\\');
 	if (!slash)
