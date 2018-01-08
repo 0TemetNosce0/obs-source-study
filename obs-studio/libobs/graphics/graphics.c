@@ -1687,6 +1687,9 @@ void gs_begin_scene(void)
 	graphics->exports.device_begin_scene(graphics->device);
 }
 //vert顶点
+//draw_mode:绘制模式
+//start_vert：开始顶点
+//num_verts顶点数
 void gs_draw(enum gs_draw_mode draw_mode, uint32_t start_vert,
 		uint32_t num_verts)
 {
@@ -1886,6 +1889,9 @@ void gs_stencil_op(enum gs_stencil_side side, enum gs_stencil_op_type fail,
 			zpass);
 }
 
+//设置视口：
+//左上角xy坐标
+//显示的宽高
 void gs_set_viewport(int x, int y, int width, int height)
 {
 	graphics_t *graphics = thread_graphics;

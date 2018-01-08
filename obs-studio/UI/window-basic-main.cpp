@@ -2664,21 +2664,21 @@ void OBSBasic::DrawBackdrop(float cx, float cy)
     gs_technique_t *tech  = gs_effect_get_technique(solid, "Solid");
 
     vec4 colorVal;
-    vec4_set(&colorVal, 0.0f, 0.0f, 0.0f, 1.0f);
-    gs_effect_set_vec4(color, &colorVal);
+    vec4_set(&colorVal, 0.0f, 0.0f, 0.0f, 1.0f);//颜色
+    gs_effect_set_vec4(color, &colorVal);//设置颜色
 
-    gs_technique_begin(tech);
+    gs_technique_begin(tech);//开始
     gs_technique_begin_pass(tech, 0);
-    gs_matrix_push();
+    gs_matrix_push();//矩阵
     gs_matrix_identity();
     gs_matrix_scale3f(float(cx), float(cy), 1.0f);
 
-    gs_load_vertexbuffer(box);
-    gs_draw(GS_TRISTRIP, 0, 0);
+    gs_load_vertexbuffer(box);//vertexbuffer
+    gs_draw(GS_TRISTRIP, 0, 0);//绘制
 
     gs_matrix_pop();
     gs_technique_end_pass(tech);
-    gs_technique_end(tech);
+    gs_technique_end(tech);//结束
 
     gs_load_vertexbuffer(nullptr);
 }
@@ -2701,16 +2701,16 @@ void OBSBasic::RenderMain(void *data, uint32_t cx, uint32_t cy)
     gs_ortho(0.0f, float(ovi.base_width), 0.0f, float(ovi.base_height),
              -100.0f, 100.0f);
     gs_set_viewport(window->previewX, window->previewY,
-                    window->previewCX, window->previewCY);
+                    window->previewCX, window->previewCY);//设置视口
 
     window->DrawBackdrop(float(ovi.base_width), float(ovi.base_height));// 画黑色背景
 
-    if (window->IsPreviewProgramMode()) {
+    if (window->IsPreviewProgramMode()) {//工作室模式
         OBSScene scene = window->GetCurrentScene();
         obs_source_t *source = obs_scene_get_source(scene);
         if (source)
             obs_source_video_render(source);
-    } else {
+    } else {//
 //        window->giga_SourceCrop();
         obs_render_main_view();
     }
