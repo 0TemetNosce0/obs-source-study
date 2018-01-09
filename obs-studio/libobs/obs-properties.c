@@ -556,6 +556,7 @@ static inline struct list_data *get_list_fmt_data(struct obs_property *p,
 
 /* ------------------------------------------------------------------------- */
 
+//下个属性
 bool obs_property_next(obs_property_t **p)
 {
 	if (!p || !*p)

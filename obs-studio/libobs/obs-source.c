@@ -773,6 +773,7 @@ static void obs_source_deferred_update(obs_source_t *source)
 	source->defer_update = false;
 }
 
+//更新源source的设置settings；
 void obs_source_update(obs_source_t *source, obs_data_t *settings)
 {
 	if (!obs_source_valid(source, "obs_source_update"))
